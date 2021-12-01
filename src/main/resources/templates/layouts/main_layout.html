@@ -1,0 +1,195 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="main-fragment (title,mainContent,cssContent,jsContent)">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/assets/css/slick.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/jquery.rateyo.min.css">
+    <link rel="stylesheet" href="/assets/css/index.css">
+    <th:block th:replace="${cssContent}"/>
+    <title th:replace="${title}">Home</title>
+</head>
+<body>
+<!-- Preloader Start -->
+<header>
+    <div class="header container-cus">
+        <div class="logo">
+            <a href="/">
+                <img src="/assets/img/1200px-adidas-logo-svg.webp" alt="" width="80px">
+            </a>
+        </div>
+        <div class="header-r">
+            <div class="header-t">
+                <ul>
+                    <li>
+                        <a href="">Kiểm tra đơn hàng</a>
+                    </li>
+                    <li>
+                        <a href="">Trợ giúp</a>
+                    </li>
+                    <li>
+                        <a href="">Ngôn ngữ</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="header-b">
+                <button class="btn-toggler-nav navbar-toggler"><i class="fas fa-bars"></i></button>
+                <nav class="nav-header navbar-toggler" id="navbarSupportedContent">
+                    <ul>
+                        <li>
+                            <a th:href="@{/brand/1}">Giày Adidas</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/brand/3}">Giày Nike</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/brand/2}">Giày Converse</a>
+                        </li>
+                    </ul>
+                </nav>
+                <img src="/assets/img/1200px-adidas-logo-svg.webp" alt="">
+                <div class="options-header">
+                    <ul>
+                        <li>
+                            <a href="#" id="h-btn-search"><i class="fas fa-search"></i></a>
+                        </li>
+                        <li id="icon-user">
+                            <a href="#">
+                                <i sec:authorize="!isAuthenticated()" class="far fa-user"></i>
+                                <i sec:authorize="isAuthenticated()" class="fas fa-user"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/cart"><i class="fas fa-shopping-bag"></i></a>
+                        </li>
+                    </ul>
+                    <div class="options-user" sec:authorize="!isAuthenticated()">
+                        <a href="/login">Đăng nhập/Đăng ký</a>
+                    </div>
+                    <div class="options-user" sec:authorize="isAuthenticated()">
+                        <a href="/login" sec:authentication="principal.fullName" flag="true">Đăng nhập/Đăng ký</a>
+                        <a href="/logout">Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="h-search" id="h-search">
+            <div class="h-close-search"><a href="#" class="h-btn-close-search"><i class="fal fa-times"></i></a>
+            </div>
+            <div class="h-search-content">
+                <h2>Bạn cần hỗ trợ ?</h2>
+                <div class="h-search-input">
+                    <form action="">
+                        <input type="text" id="keySearch" name="keySearch" placeholder="Nhập tên giày ..." />
+                        <button type="button" class="h-btn-search"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="h-keyword-field row">
+                    <div class="h-recently-keyword col-sm-12">
+                        <div class="h-recently-head">
+                            <div class="head-keyword">Tìm kiếm gần đây</div>
+                            <div class="clear-keyword">Xóa tất cả</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-search">
+                </div>
+            </div>
+        </div>
+        <div class="nav-resp" id="nav-resp">
+            <div class="h-close-search close-nav-resp">
+                <div class="logo-resp">
+                    <a href=""><img src="/assets/img/1200px-adidas-logo-svg.webp" alt="" width="50px"></a>
+                </div>
+                <div class="close-resp">
+                    <a href="#" class="h-btn-close-nav"><i class="fal fa-times"></i></a>
+                </div>
+            </div>
+            <div class="nav-resp-content">
+                <ul>
+                    <li><a href="/category.html">Gày Nike</a></li>
+                    <li><a href="">Giày Adidas</a></li>
+                    <li><a href="">Giày Vans</a></li>
+                    <li><a href="">Giày Converse</a></li>
+                    <li><a href="">Giày Balenciaga</a></li>
+                    <li><a href="">Giày MCQueen</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<main th:replace="${mainContent}">
+    <p style="text-align: center; margin-top: 50px; margin-bottom: 50px;">Nội dung trang web nằm ở đây</p>
+</main>
+<button id="myBtnTop" title="Lên đầu trang"></button>
+<footer>
+    <div class="footer">
+        <div class="footer-item">
+            <h5>Sản phẩm</h5>
+            <ul>
+                <li><a href="">Giày Nike</a></li>
+                <li><a href="">Giày Adidas</a></li>
+                <li><a href="">Giày Vans</a></li>
+                <li><a href="">Giày Converse</a></li>
+                <li><a href="">Giày Balenciaga</a></li>
+                <li><a href="">Giày MCQueen</a></li>
+            </ul>
+        </div>
+        <div class="footer-item">
+            <h5>Hỗ trợ</h5>
+            <ul>
+                <li>
+                    <a href="">Trợ Giúp & Dịch Vụ Khách Hàng</a>
+                </li>
+                <li>
+                    <a href="">Biểu Đồ Kích Thước</a>
+                </li>
+                <li>
+                    <a href="">Giao hàng</a>
+                </li>
+                <li>
+                    <a href="">Trả Lại Hàng & Hoàn Tiền</a>
+                </li>
+                <li>
+                    <a href="">Sơ đồ trang Web</a>
+                </li>
+            </ul>
+        </div>
+        <div class="footer-item">
+            <h5>Thông tin về chúng tôi</h5>
+            <ul>
+                <li><a href="">Giới Thiệu Về Chúng Tôi</a></li>
+                <li><a href="">Cơ Hội Nghề Nghiệp</a></li>
+                <li><a href="">Tin Tức</a></li>
+            </ul>
+            <img src="/assets/img/footer.png" alt="">
+        </div>
+    </div>
+    <div class="footer-b">
+        <div class="national">
+            <img src="/assets/img/vn.svg" alt="" width="30px">
+            <span>Việt Nam</span>
+        </div>
+        <ul>
+            <li><a href="">Chính sách Bảo mật</a></li>
+            <li><a href="">Điều khoản và Điều kiện</a></li>
+            <li><a href="">Thông tin công ty</a></li>
+            <li><span>© 2020 Công ty H Việt Nam</span></li>
+        </ul>
+    </div>
+</footer>
+<!-- JS here -->
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/jquery.validate.js"></script>
+<script src="/assets/js/slick.min.js"></script>
+<script src="/assets/js/jquery.rateyo.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<th:block th:replace="${jsContent}"/>
+</body>
+</html>

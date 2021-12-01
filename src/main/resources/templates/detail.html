@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Giày '+${prod.product.name}">Title</title>
+  <th:block id="cssContent">
+    <link rel="stylesheet" href="/assets/css/detail.css">
+  </th:block>
+</head>
+<body>
+<section>
+  <div class="detail-product">
+    <div class="content-detail">
+      <div class="images-prod-parent">
+        <div class="images-prod">
+          <th:block th:each="image:${images}">
+            <div class="image-item"
+                 th:data-img="'/assets/img/product/prod-detail/pureboots_21/'+${image}">
+              <img th:src="'/assets/img/product/prod-detail/pureboots_21/'+${image}" alt="">
+            </div>
+          </th:block>
+        </div>
+        <div class="dotClass"></div>
+        <div class="url-page-cus">
+          <ul>
+            <li><a href="/">Trang chủ</a></li> /
+            <li><a th:href="'/brand/'+${prod.product.brand.id}" th:text="'Giày '+${prod.product.brand.name}">Giày Nike</a></li> /
+            <li th:text="'Giày '+${prod.product.name}">GIÀY PUREBOOST 21</li>
+          </ul>
+        </div>
+      </div>
+      <div class="same-prod-detail">
+        <div class="same-prod-detail-l">
+          <h6>Các màu có sẵn khác</h6>
+          <p th:text="'Có '+${sameProd.size()}+' màu'">Có 5 màu</p>
+        </div>
+        <div class="same-prod-detail-r">
+          <th:block th:each="same:${sameProd}">
+            <div th:class="${same.color.id==prod.color.id?'same-prod-item same-prod-item-ac':'same-prod-item'}">
+              <a th:href="'/product/'+${same.id}"><img th:src="'/assets/img/product/'+${same.image}" alt=""></a>
+            </div>
+          </th:block>
+        </div>
+      </div>
+      <div class="menu-prod sticky-top">
+        <ul>
+          <li class="menu-prod-ac">
+            <a href-link="#section0">Bộ sưu tập</a>
+          </li>
+          <li>
+            <a href-link="#section1">Mô tả</a>
+          </li>
+          <li>
+            <a href-link="#section2">Thông tin chi tiết</a>
+          </li>
+          <li>
+            <a href-link="#section3">Nhận xét</a>
+          </li>
+        </ul>
+      </div>
+      <div class="content-prod-detail">
+        <div id="section1">
+          <div class="description-prod">
+            <h4>GIÀY PUREBOOST 21</h4>
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum alias ipsa ipsum ad
+              magni
+              dolore nulla enim ullam esse numquam, veritatis nobis corrupti excepturi itaque commodi
+              non
+              voluptatum sapiente fugit!</p>
+          </div>
+          <div class="image-prod">
+            <img th:src="'/assets/img/product/'+${prod.image}" alt="">
+          </div>
+        </div>
+        <div id="section2">
+          <h4>Thông số</h4>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet pariatur reprehenderit, error
+            eveniet non repellat rem accusamus est maxime ut. Nulla earum vel sed veniam, cumque esse
+            nihil.
+            Minus, eveniet?</p>
+        </div>
+        <div id="section3">
+          <h4>Nhận xét</h4>
+          <div class="star-cus">
+            <div class="star-cus-l">
+              <h5>5/<span>0</span></h5>
+            </div>
+            <div class="star-cus-r">
+              <h6>Đánh giá</h6>
+              <div class="rateYo-cus" data-star="4"></div>
+            </div>
+          </div>
+          <hr>
+          <div class="comments">
+            <div class="comments-item">
+              <h6>Sản phẩm tốt</h6>
+              <div class="star-item" data-star="4"></div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit optio magnam officia rerum
+                eaque modi quidem. Tempora animi recusandae, nemo laborum mollitia exercitationem
+                nostrum facere, eos id asperiores labore est?</p>
+              <span>2021-11-20</span>
+              <span> / </span>
+              <span>Dương Tuấn Hiếu</span>
+
+            </div>
+            <div class="comments-item">
+              <h6>Sản phẩm tốt</h6>
+              <div class="star-item" data-star="5"></div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit optio magnam officia rerum
+                eaque modi quidem. Tempora animi recusandae, nemo laborum mollitia exercitationem
+                nostrum facere, eos id asperiores labore est?</p>
+              <span>2021-11-20</span>
+
+            </div>
+            <div class="comments-item">
+              <h6>Sản phẩm tốt</h6>
+              <div class="star-item" data-star="4.5"></div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit optio magnam officia rerum
+                eaque modi quidem. Tempora animi recusandae, nemo laborum mollitia exercitationem
+                nostrum facere, eos id asperiores labore est?</p>
+              <span>2021-11-20</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="flag"></div>
+      <div class="prod-popular-pr">
+        <h3>Sản phẩm mua nhiều</h3>
+        <div class="prod-popular">
+          <div class="item item-prod">
+            <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+            <span class="price">2.300.000 đ</span>
+            <h6>Giày Superstar</h6>
+            <div class="rateYo" data-star="4.8"></div>
+          </div>
+          <div class="item item-prod">
+            <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+            <span class="price">2.300.000 đ</span>
+            <h6>Giày Superstar</h6>
+            <div class="rateYo" data-star="4"></div>
+          </div>
+          <div class="item item-prod">
+            <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+            <span class="price">2.300.000 đ</span>
+            <h6>Giày Superstar</h6>
+            <div class="rateYo" data-star="3"></div>
+          </div>
+          <div class="item item-prod">
+            <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+            <span class="price">2.300.000 đ</span>
+            <h6>Giày Superstar</h6>
+            <div class="rateYo" data-star="5"></div>
+          </div>
+          <div class="item item-prod">
+            <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+            <span class="price">2.300.000 đ</span>
+            <h6>Giày Superstar</h6>
+            <div class="rateYo" data-star="4.5"></div>
+          </div>
+          <div class="item item-prod">
+            <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+            <span class="price">2.300.000 đ</span>
+            <h6>Giày Superstar</h6>
+            <div class="rateYo" data-star="4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="options-parent">
+      <div class="margin-top-prod"></div>
+      <div class="options-detail">
+        <div class="star">
+          <div class="star-prod" data-star="4.8"></div>
+          <span>(10)</span>
+        </div>
+        <h2 th:text="'Giày '+${prod.product.name}">Giày PUREBOOST 21</h2>
+        <p id="price" th:text="${#numbers.formatDecimal(prod.product.price, 0, 'COMMA', 0, 'POINT')}+' VND'" th:price="${prod.product.price}">3.200.000 đ</p>
+        <p>CHỌN SIZE</p>
+        <div class="filter-size">
+          <form id="formSize">
+            <th:block th:each="size:${sizes}">
+              <label th:for="'size-'+${size.size.name}" th:text="${size.size.name}" count="3" th:id="'size-'+${size.id}">38</label>
+              <input type="radio" name="size" th:id="'size-'+${size.size.name}" th:value="${size.id}" hidden>
+            </th:block>
+          </form>
+        </div>
+        <span id="errorSize"></span>
+        <div class="explain-size">
+          <a href=""><i class="fas fa-ruler-horizontal"></i>Bảng kích cỡ</a>
+        </div>
+        <div class="buy-prod">
+          <a onclick="addCart(this)">Thêm vào giỏ hàng <i class="far fa-long-arrow-right"></i></a>
+        </div>
+        <ul>
+          <li><i class="fal fa-shipping-fast"></i>
+            <p>Giao hàng miễn phí</p>
+          </li>
+          <li><i class="fas fa-exchange-alt"></i>
+            <p>Không đúng kích cỡ hoặc màu sắc? Vui lòng truy cập trang Trả lại hàng & Hoàn tiền của
+              chúng
+              tôi để biết chi tiết</p>
+          </li>
+          <li><i class="fal fa-exclamation-triangle"></i>
+            <p>Do ảnh hưởng COVID-19, thời gian giao hàng sẽ dài hơn dự kiến</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+<th:block id="jsContent">
+  <script src="/assets/js/detail.js"></script>
+</th:block>
+</body>
+</html>

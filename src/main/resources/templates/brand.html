@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: main},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Giày '+${products[0].brand.name}">Title</title>
+    <th:block id="cssContent">
+        <link rel="stylesheet" href="/assets/css/category.css">
+    </th:block>
+</head>
+<body>
+    <main>
+        <div class="banner">
+            <img src="/assets/img/Banner-Nike.gif" alt="">
+            <ul>
+                <li><a href="/">Trang chủ</a></li> /
+                <li th:text="'Giày '+${products[0].brand.name}">Giày Nike</li>
+            </ul>
+        </div>
+        <section>
+            <div class="container-cus cate-main">
+                <h1 th:text="'Giày '+${products[0].brand.name}">Giày Nike</h1>
+                <form id="formFilter" class="sticky-top">
+                    <div class="filter sticky-top">
+                        <ul>
+                            <li data-id="cate">Danh mục <i class="fal fa-angle-down"></i></li>
+                            <li data-id="sizeId">Kích cỡ <i class="fal fa-angle-down"></i></li>
+                            <li data-id="colorId">Màu <i class="fal fa-angle-down"></i></li>
+                            <li data-id="price">Giá bán <i class="fal fa-angle-down"></i></li>
+                        </ul>
+                        <ul>
+                            <li data-id="sort">Sắp xếp <i class="fal fa-angle-down"></i></li>
+                        </ul>
+                        <div class="filter-child filter-cate">
+                            <label th:each="brand:${brands}">
+                                <a th:href="'/brand/'+${brand.id}">
+                                    <i th:if="${brand.id==products[0].brand.id}" class="fas fa-dot-circle"></i>
+                                    <i th:unless="${brand.id==products[0].brand.id}" class="far fa-circle"></i>
+                                    <span th:text="'Giày '+${brand.name}">Giày Nike</span>
+                                </a>
+                            </label>
+                        </div>
+                        <div class="filter-child filter-sizeId">
+                            <th:block th:each="size:${sizes}">
+                                <label th:for="'size-'+${size.name}" th:text="${size.name}">38</label>
+                                <input type="radio" name="sizeId" th:id="'size-'+${size.name}" th:value="${size.id}" hidden>
+                            </th:block>
+                            <input type="radio" name="sizeId" id="sizeId-default" value="-1" checked hidden>
+                        </div>
+                        <div class="filter-child filter-colorId">
+                            <th:block th:each="color:${colors}">
+                                <label th:for="${color.name}" th:style="'background-color:'+${color.name}+';'"></label>
+                                <input type="radio" name="colorId" th:id="${color.name}" th:value="${color.id}" hidden>
+                            </th:block>
+                            <input type="radio" name="colorId" id="colorId-default" value="-1" checked hidden>
+                        </div>
+                        <div class="filter-child filter-price">
+                            <label>
+                                <label for="price-1"><i class="far fa-circle"></i></label>
+                                <input type="radio" name="price" id="price-1" value="< 1000000" hidden>
+                                <span> < 1.000.000 VND</span>
+                            </label>
+                            <label>
+                                <label for="price-2"><i class="far fa-circle"></i></label>
+                                <input type="radio" name="price" id="price-2" value="< 3000000" hidden>
+                                <span> < 3.000.000 VND</span>
+                            </label>
+                            <label>
+                                <label for="price-3"><i class="far fa-circle"></i></label>
+                                <input type="radio" name="price" id="price-3" value="> 3000000" hidden>
+                                <span> > 3.000.000 VND</span>
+                            </label>
+                            <input type="radio" name="price" id="price-default" value="" checked hidden>
+                        </div>
+                        <div class="filter-child filter-sort">
+                            <label>
+                                <label for="sort-1"><i class="far fa-circle"></i></label>
+                                <input type="radio" name="sort" id="sort-1" value="price asc" hidden>
+                                <span>Giá tăng dần</span>
+                            </label>
+                            <label>
+                                <label for="sort-2"><i class="far fa-circle"></i></label>
+                                <input type="radio" name="sort" id="sort-2" value="price desc" hidden>
+                                <span>Giá giảm dần</span>
+                            </label>
+                            <label>
+                                <label for="sort-3"><i class="far fa-circle"></i></label>
+                                <input type="radio" name="sort" id="sort-3" value="createdAt asc" hidden>
+                                <span>Sản phẩm mới nhất</span>
+                            </label>
+                            <input type="radio" name="sort" id="sort-default" value="" checked hidden>
+                        </div>
+                    </div>
+                    <input type="number" name="brandId" th:value="${products[0].brand.id}" hidden>
+                </form>
+                <div class="filter-item">
+                    <div class="filter-items">
+                        <div class="filter-item-child active">
+                            <span th:text="${products[0].brand.name}">adidas</span>
+                        </div>
+                        <div class="filter-item-child" id="sizeId">
+                            <span>cỡ</span>
+                            <i class="fal fa-times"></i>
+                        </div>
+                        <div class="filter-item-child" id="colorId">
+                            <span>màu</span>
+                            <i class="fal fa-times"></i>
+                        </div>
+                        <div class="filter-item-child" id="price">
+                            <span>giá</span>
+                            <i class="fal fa-times"></i>
+                        </div>
+                        <div class="filter-item-child" id="sort">
+                            <span>sắp xếp</span>
+                            <i class="fal fa-times"></i>
+                        </div>
+                    </div>
+                    <a href="" id="flagFilter">clear all</a>
+                </div>
+                <div class="list-product">
+
+                    <div class="product" th:each="prod:${products}" onmouseenter="loadSameProd(this)" onmouseleave="unLoadSameProd(this)">
+                        <div class="product-hover">
+                            <a href="">
+                                <img th:id="'product-'+${prod.id}" src="" data-img="" alt="">
+                            </a>
+                            <div class="same-prods">
+                                <th:block th:each="detail:${details}">
+                                    <div class="same-prods-item" th:if="${detail.product.id==prod.id}">
+                                        <a th:href="'/product/'+${detail.id}"><img onmousemove="loadImgSame(this)" th:class="'product-'+${prod.id}" th:src="'/assets/img/product/'+${detail.image}" alt=""></a>
+                                    </div>
+                                </th:block>
+                            </div>
+                            <span class="price" th:text="${#numbers.formatDecimal(prod.price, 0, 'COMMA', 0, 'POINT')}+ VND">2.300.000 đ</span>
+                            <div class="info-prod">
+                                <h6 th:text="${prod.name}">Giày Superstar</h6>
+                                <span>Mới</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${products.size()%4==1}" style="height: 500px"></div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+<th:block id="jsContent">
+    <script src="/assets/js/cate.js"></script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+    <th:block id="cssContent">
+    </th:block>
+</head>
+<body>
+<section>
+    <div class="new-content">
+        <img src="/assets/img/superstar.jpg" alt="" width="100%">
+        <div class="content">
+            <h1>SUPEREARTH SW SUPERSTAR</h1>
+            <p>Out now: a vegan take on the Superstar, designed with Sean Wotherspoon.</p>
+            <a href="">Mua ngay</a>
+        </div>
+    </div>
+    <div class="prod-popular-parent">
+        <div class="container-cus">
+            <h3>Sản phẩm mua nhiều</h3>
+            <div class="prod-popular">
+                <div class="item">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <div class="rateYo" data-star="4.8"></div>
+                </div>
+                <div class="item">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <div class="rateYo" data-star="4"></div>
+                </div>
+                <div class="item">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <div class="rateYo" data-star="3"></div>
+                </div>
+                <div class="item">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <div class="rateYo" data-star="5"></div>
+                </div>
+                <div class="item">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <div class="rateYo" data-star="4.5"></div>
+                </div>
+                <div class="item">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <div class="rateYo" data-star="4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="prod-new-parent">
+        <div class="container-cus">
+            <h3>Sản phẩm mới</h3>
+            <div class="prod-popular">
+                <div class="item item-new">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <span>Mới</span>
+                </div>
+                <div class="item item-new">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <span>Mới</span>
+                </div>
+                <div class="item item-new">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <span>Mới</span>
+                </div>
+                <div class="item item-new">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <span>Mới</span>
+                </div>
+                <div class="item item-new">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <span>Mới</span>
+                </div>
+                <div class="item item-new">
+                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
+                    <span class="price">2.300.000 đ</span>
+                    <h6>Giày Superstar</h6>
+                    <span>Mới</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="brand-popular row">
+        <div class="brand-item col-sm-6">
+            <img src="/assets/img/brand-popular-converse.jpg" alt="" width="100%">
+            <h5>Converse</h5>
+            <a class="btn-shop-now">Mua ngay<i class="fal fa-long-arrow-right"></i></a>
+        </div>
+        <div class="brand-item col-sm-6">
+            <img src="/assets/img/brand-popular-adidas.jpg" alt="" width="100%">
+            <h5>Adidas</h5>
+            <a class="btn-shop-now">Mua ngay<i class="fal fa-long-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+<th:block id="jsContent">
+    <script src="/assets/js/index.js"></script>
+</th:block>
+</body>
+</html>

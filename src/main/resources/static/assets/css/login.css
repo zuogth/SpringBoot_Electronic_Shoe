@@ -1,0 +1,141 @@
+.main-login{
+    padding: 1rem 8rem 3rem;
+    display: flex;
+    justify-content: space-between;
+}
+.main-login .login{
+    width: 40%;
+}
+.main-login .login h1,.main-login-r h1{
+    text-transform: uppercase;
+}
+.main-login .login a{
+    text-decoration: underline;
+    color: black;
+}
+.login form{
+    width: 100%;
+    padding: 1rem 0;
+}
+.main-login .form-group{
+    position: relative;
+    padding: .8rem 0;
+}
+.form-group input{
+    width: 100%;
+    padding: .8rem;
+    border: 1px solid black;
+}
+.form-group span{
+    position: absolute;
+    bottom: 50%;
+    left: 5%;
+    transform: translate(0, 50%);
+    color: #666666;
+    background-color: white;
+    transition: ease .3s;
+    font-weight: 300;
+}
+.form-group span>i{
+    color: rgb(181, 2, 2);
+}
+.span-ac{
+    bottom: 85% !important;
+    font-size: .8rem;
+}
+.btn-login{padding-top: 1rem;}
+.btn-login button,.btn-login a {
+    color: black;
+    text-decoration: none !important;
+    border: 1px solid black;
+    background-color: white;
+    text-transform: uppercase;
+    font-size: .9rem;
+    padding: 0.8rem 1rem;
+    box-shadow: 3px 3px black;
+    position: relative;
+}
+.btn-login button:hover,.btn-login a:hover{
+    color: silver;
+}
+.btn-login button i,.btn-login a i {
+    margin-left: 1rem;
+}
+
+.btn-login button:active, .btn-login a:active {
+    top: 2px;
+    background-color: rgb(228, 227, 227);
+    box-shadow: 3px 3px rgb(228, 227, 227);
+}
+a.loginGG{
+    border: 1px solid black;
+    padding: 1rem;
+    text-decoration: none !important;
+    display: block;
+    width: 40%;
+    position: relative;
+    margin-bottom: .5rem;
+}
+a.loginGG i{
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+.login p{
+    padding-bottom: 1rem;
+    text-transform: uppercase;
+}
+.main-login-r{
+    width: 50%;
+}
+.main-login-r ul {
+    list-style: none;
+}
+
+.main-login-r ul li {
+    display: flex;
+    align-items: baseline;
+}
+
+.main-login-r ul li p {
+    margin-left: .5rem;
+}
+.register>form>label{
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.input-gender{
+    margin: 1rem 0;
+    position: relative;
+    display: flex;
+}
+.input-gender>label{
+    display: flex;
+    padding-right: 1rem;
+}
+.input-gender>label>label>i{
+    font-size: 1.5rem;
+    padding-right: .5rem;
+}
+.input-gender input{width: 0;height: 0;}
+label.errorClass{
+    position: absolute;
+    left: 0;
+    bottom: -1rem;
+    font-size: .9rem;
+    color: #d10909;
+}
+@media only screen and (max-width:768px){
+    .main-login{padding: 1rem 3rem;}
+}
+
+@media only screen and (max-width:576px){
+    .main-login{
+        display: block;
+    }
+    .main-login .login, .main-login-r{
+        width: 100%;
+    }
+    .main-login-r{margin: 3rem 0;}
+}
