@@ -8,7 +8,26 @@
 html {
     font-size: 16px;
 }
-
+.alert-noti {
+    max-width: 20rem;
+    position: fixed;
+    padding: 1rem 2rem 1rem 1rem;
+    background: white;
+    right: 1rem;
+    top: 1rem;
+    z-index: 9;
+    word-break: break-word;
+    border: 1px solid black;
+    box-shadow: 3px 3px black;
+    display: none;
+}
+.alert-noti .close-alert{
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    right: 12px;
+    cursor: pointer;
+}
 .scroll-hand {
     overflow: hidden;
 }

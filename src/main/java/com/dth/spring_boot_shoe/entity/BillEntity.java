@@ -1,5 +1,6 @@
 package com.dth.spring_boot_shoe.entity;
 
+import com.dth.spring_boot_shoe.constant.StatusBill;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,6 +22,12 @@ public class BillEntity extends BaseEntity {
     @Column(name = "bill_type")
     private Integer billType;
 
-    @Column(name = "status", length = 10)
+    @Column(name = "paying")
+    private Integer paying;
+
+    @Column(name = "status", length = 15)
     private String status;
+
+    @Column(name = "address", length = 100)
+    private String address;
 }

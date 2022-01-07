@@ -2,17 +2,9 @@
 function closeItem(element,id){
     $(element).children().children().attr("class","spinner-border spinner-border-sm");
     setTimeout(function (){
-        let list_cart=[];
-        list_cart=JSON.parse(window.localStorage.getItem('list_cart'));
-        for (let item of list_cart) {
-            if(item.productDetailId===id.toString()){
-                list_cart=list_cart.filter(i=>i!=item);
-            }
-        }
-        localStorage.setItem('list_cart', JSON.stringify(list_cart));
         let data={};
         data["productDetailId"]=id;
-        let flagUser=$('.options-user').children().eq(0).attr("flag");
+        let flagUser=$('.options-user').attr("flag");
         if(flagUser==="true"){
             $.ajax({
                 url:'/api/cart/delete',
@@ -28,6 +20,15 @@ function closeItem(element,id){
             })
         }
         $(element).parents().eq(1).remove();
+        updateLocal();
+        let list_cart;
+        list_cart=JSON.parse(window.localStorage.getItem('list_cart'));
+        if(list_cart==null){
+            $('.content-cart').html('<h5>Giỏ hàng của bạn trống</h5>')
+            localStorage.removeItem('list_cart');
+        }else {
+            localStorage.setItem('list_cart', JSON.stringify(list_cart));
+        }
         totalPrice();
     },1000)
 }
@@ -36,7 +37,7 @@ function totalPrice(){
     let totalcount=0;
     $('.info-prod').each(function(index,element){
         let price=$(element).children('.name-prod').children('#price').attr("price");
-        let count=$(element).children('.quantity').children('.quantity-l').children('#quantity').val();
+        let count=$(element).children('.quantity').children('.quantity-l').children().val();
         totalcount+=count*1;
         totalprice+=price*count;
     })
@@ -49,45 +50,33 @@ function totalPrice(){
 
 function minus(element,id){
     let count=$(element).parents().eq(1).children('.quantity-l').children().val();
-    if(count==1){
+    if(count<=1){
         return;
     }
-    $(element).parents().eq(1).children('.quantity-l').children().val(count*1-1);
-    updateCartLocal(0,id)
+    count-=1;
+    $(element).parents().eq(1).children('.quantity-l').children().val(count);
+    updateCartLocal(count,id);
     totalPrice();
 }
 
 function plus(element,id,countMax){
     let count=$(element).parents().eq(1).children('.quantity-l').children().val();
-    if(count*1+1>countMax){
+    if(count>=countMax){
         return;
     }
-    $(element).parents().eq(1).children('.quantity-l').children().val(count*1+1);
-    updateCartLocal(1,id)
+    count-=-1;
+    $(element).parents().eq(1).children('.quantity-l').children().val(count);
+    updateCartLocal(count,id);
     totalPrice();
 }
 
 
-function updateCartLocal(op,id){
-    let quantity;
-    let list_cart=[];
-    list_cart=JSON.parse(window.localStorage.getItem('list_cart'));
-    for (let item of list_cart){
-        if(item.productDetailId===id.toString()){
-            if(op===1){
-                item.quantity+=1;
-            }else {
-                item.quantity-=1;
-            }
-            quantity=item.quantity;
-            break;
-        }
-    }
-    localStorage.setItem('list_cart', JSON.stringify(list_cart));
+function updateCartLocal(count,id){
+    updateLocal();
     let data={};
     data["productDetailId"]=id;
-    data["quantity"]=quantity;
-    let flagUser=$('.options-user').children().eq(0).attr("flag");
+    data["quantity"]=count;
+    let flagUser=$('.options-user').attr("flag");
     if(flagUser==="true"){
         $.ajax({
             url:'/api/cart/update',
@@ -96,31 +85,112 @@ function updateCartLocal(op,id){
             data:JSON.stringify(data),
             success:function (){
 
-            },error:function (){
-                alert("Error");
+            },error:function (result){
+                if(result.responseJSON.httpStatus==="BAD_REQUEST"){
+                    window.location.href="/login";
+                }
             }
 
         })
     }
 }
-
+function updateLocal(){
+    localStorage.removeItem("list_cart");
+    let list_cart=[];
+    $('.info-prod').each(function (i,e){
+        let price=$(e).children('.name-prod').children().eq(1).attr("price");
+        let quantity=$(e).children(".quantity").children(".quantity-l").children().val();
+        let id=$(e).children(".quantity").children(".quantity-l").children().attr("data-id");
+        let data={};
+        data['productDetailId']=id;
+        data['quantity']=quantity;
+        if(price!=null){
+            data['price']=price;
+        }
+        list_cart.push(data);
+    })
+    if(list_cart.length==0){
+        return;
+    }
+    localStorage.setItem('list_cart', JSON.stringify(list_cart));
+}
+function checkCart(){
+    let flag=$('div.options-user').attr("flag");
+    if(flag==="false"){
+        window.location.href="/delivery";
+    }else {
+        let flagC=false;
+        let data=[];
+        $('.quantity .quantity-l input').each(function (i,e){
+            let dt={};
+            dt["productDetailId"]=$(e).attr("data-id");
+            dt["quantity"]=$(e).val();
+            if(dt["quantity"]==0){
+                $(e).parents().eq(3).addClass("errorCount");
+                flagC=true;
+            }
+            data.push(dt);
+        })
+        if(flagC){
+            return;
+        }
+        $.ajax({
+            url:'/api/cart/check',
+            type:'POST',
+            dataType: 'JSON',
+            contentType:'application/json',
+            data:JSON.stringify(data),
+            success:function (result){
+                let flagC=false;
+                for (let item of result.check){
+                    if(item.outQuantity){
+                        flagC=true;
+                        $('div#quantity-'+item.sizeQuantity.productDetailId+' input').val(item.sizeQuantity.quantity);
+                        $('#plus-'+item.sizeQuantity.productDetailId).html(`<a id="plus" onclick="plus(this,${item.sizeQuantity.productDetailId},${item.sizeQuantity.quantity})"><i class="fas fa-plus"></i></a>`);
+                    }
+                }
+                updateLocal();
+                if(!flagC){
+                    window.location.href="/delivery";
+                }
+                totalPrice();
+            },
+            error:function (){
+                alert('Error')
+            }
+        })
+    }
+}
 //Load cart from local storage
 $(()=>{
-    let list_cart;
-    list_cart=window.localStorage.getItem('list_cart');
+    let list_cart=window.localStorage.getItem('list_cart');
+    let req;
     if(list_cart){
-        $.ajax({
+        req={
             url:'/api/cart/load',
             type:'POST',
             dataType:'JSON',
             contentType:'application/json',
-            data:list_cart,
-            success:function (result){
-                let html='<div class="prods-cart">';
-                for(let cart of result) {
-                    html += `<div class="prod-cart">
+            data:list_cart
+        }
+    }else {
+        req={
+            url:'/api/cart/load',
+            type:'GET',
+            dataType:'JSON',
+            contentType:'application/json',
+        }
+    }
+        $.ajax(req).done(function (result){
+            if(result.details==null){
+                return;
+            }
+            let html='<div class="prods-cart">';
+            let index=0;
+            for(let cart of result.details) {
+                html += `<div class="prod-cart">
                       <div class="prod-img">
-                        <a href="detail.html"><img src="/assets/img/product/${cart.detail.image}" alt=""></a>
+                        <a href="/product/${cart.detail.id}"><img src="/assets/img/product/${cart.detail.image}" alt=""></a>
                       </div>
                       <div class="info-prod">
                         <div class="name-prod">
@@ -133,11 +203,11 @@ $(()=>{
                           <div class="change-quantity">
                             <a id="minus" onclick="minus(this,${cart.detail.id})"><i class="fas fa-minus"></i></a>
                           </div>
-                          <div class="quantity-l">
-                            <input type="number" name="quantity" id="quantity" value="${cart.quantity}">
+                          <div class="quantity-l" id="quantity-${cart.detail.id}">
+                            <input type="number" name="quantity" id="quantity" value="${cart.quantity}" data-id="${cart.detail.id}" readonly>
                           </div>
-                          <div class="change-quantity">
-                            <a id="plus" onclick="plus(this,${cart.detail.id},3)"><i class="fas fa-plus"></i></a>
+                          <div class="change-quantity" id="plus-${cart.detail.id}">
+                            <a id="plus" onclick="plus(this,${cart.detail.id},${result.quantities[index++].quantity})"><i class="fas fa-plus"></i></a>
                           </div>
                         </div>
                         <div class="close-item" onclick="closeItem(this,${cart.detail.id})">
@@ -145,8 +215,8 @@ $(()=>{
                         </div>
                       </div>
                     </div>`;
-                }
-                html+=`</div>
+            }
+            html+=`</div>
                       <div class="total-price">
                         <div class="order-info">
                           <h3>Đơn hàng</h3>
@@ -169,7 +239,7 @@ $(()=>{
                         </div>
                         <div class="pay-cart">
                           <div class="pay-cart-btn">
-                            <a href="">Thanh toán <i class="far fa-long-arrow-right"></i></a>
+                            <a onclick="checkCart()">Thanh toán <i class="far fa-long-arrow-right"></i></a>
                           </div>
                           <div class="pay-cart-b">
                             <ul>
@@ -179,14 +249,16 @@ $(()=>{
                           </div>
                         </div>
                       </div>`;
-                $('.content-cart').html(html).ready(function (){
-                    totalPrice();
-                });
-            },error:function (){
-                alert("Error")
+            if(result.details.length==0){
+                html=`<h5>Giỏ hàng của bạn trống</h5>`;
             }
+            $('.content-cart').html(html).ready(function (){
+                totalPrice();
+            });
+            updateLocal();
+        }).fail(function(){
+            alert("Error")
         })
-    }
 })
 
 function toMoney(totalprice){

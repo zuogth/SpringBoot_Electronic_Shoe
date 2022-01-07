@@ -84,7 +84,7 @@
           <h4>Nhận xét</h4>
           <div class="star-cus">
             <div class="star-cus-l">
-              <h5>5/<span>0</span></h5>
+              <h5>5/<span>5</span></h5>
             </div>
             <div class="star-cus-r">
               <h6>Đánh giá</h6>
@@ -93,33 +93,16 @@
           </div>
           <hr>
           <div class="comments">
-            <div class="comments-item">
-              <h6>Sản phẩm tốt</h6>
-              <div class="star-item" data-star="4"></div>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit optio magnam officia rerum
+            <div class="comments-item" th:each="cmt:${comments}">
+              <h6 th:text="${cmt.getTitle()}">Sản phẩm tốt</h6>
+              <div class="star-item" th:data-star="${cmt.getStar()}"></div>
+              <p th:text="${cmt.getContent()}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit optio magnam officia rerum
                 eaque modi quidem. Tempora animi recusandae, nemo laborum mollitia exercitationem
                 nostrum facere, eos id asperiores labore est?</p>
-              <span>2021-11-20</span>
+              <span th:text="${cmt.getCreatedAt()}">2021-11-20</span>
               <span> / </span>
-              <span>Dương Tuấn Hiếu</span>
+              <span th:text="${cmt.user.fullName}">Dương Tuấn Hiếu</span>
 
-            </div>
-            <div class="comments-item">
-              <h6>Sản phẩm tốt</h6>
-              <div class="star-item" data-star="5"></div>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit optio magnam officia rerum
-                eaque modi quidem. Tempora animi recusandae, nemo laborum mollitia exercitationem
-                nostrum facere, eos id asperiores labore est?</p>
-              <span>2021-11-20</span>
-
-            </div>
-            <div class="comments-item">
-              <h6>Sản phẩm tốt</h6>
-              <div class="star-item" data-star="4.5"></div>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit optio magnam officia rerum
-                eaque modi quidem. Tempora animi recusandae, nemo laborum mollitia exercitationem
-                nostrum facere, eos id asperiores labore est?</p>
-              <span>2021-11-20</span>
             </div>
           </div>
         </div>
@@ -180,8 +163,8 @@
         <div class="filter-size">
           <form id="formSize">
             <th:block th:each="size:${sizes}">
-              <label th:for="'size-'+${size.size.name}" th:text="${size.size.name}" count="3" th:id="'size-'+${size.id}">38</label>
-              <input type="radio" name="size" th:id="'size-'+${size.size.name}" th:value="${size.id}" hidden>
+              <label th:for="'size-'+${size.size}" th:data-id="${size.productDetailId}" th:text="${size.size}" th:count="${size.quantity}" th:id="'size-'+${size.productDetailId}">38</label>
+              <input type="radio" name="size" th:id="'size-'+${size.size}" th:value="${size.productDetailId}" hidden>
             </th:block>
           </form>
         </div>

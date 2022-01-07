@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.UniqueElements;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 public class UserDTO extends BaseDTO{
 
     @NotNull(message = "Hãy nhập email của bạn")
+    @Email(message = "Email không hợp lệ")
     private String email;
     @NotBlank(message = "Hãy nhập tên của bạn")
     private String firstName;

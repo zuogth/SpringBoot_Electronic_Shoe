@@ -1,8 +1,5 @@
 package com.dth.spring_boot_shoe.entity;
 
-import com.dth.spring_boot_shoe.entity.BaseEntity;
-import com.dth.spring_boot_shoe.entity.ProductDetailEntity;
-import com.dth.spring_boot_shoe.entity.ReceiptEntity;
 import lombok.Data;
 
 import javax.persistence.*;

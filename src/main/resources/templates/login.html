@@ -10,9 +10,10 @@
 </head>
 <body>
 <section>
-    <div th:if="${param.error}">
-        <div class="alert alert-danger">Invalid username or password</div>
-    </div>
+        <div class="alert-noti" th:if="${param.error}" style="display: block">
+            <i class="fas fa-times close-alert"></i>
+            <span>Tài khoản hoặc mật khẩu không chính xác.</span>
+        </div>
     <div class="main-login">
         <div class="login">
             <h1>Đăng nhập</h1>

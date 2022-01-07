@@ -29,7 +29,7 @@ public class UserEntity extends BaseEntity {
     @Column(name = "gender")
     private Integer gender;
 
-    @Column(name = "address", length = 45)
+    @Column(name = "address", length = 100)
     private String address;
 
     @Column(name = "phone", length = 15)

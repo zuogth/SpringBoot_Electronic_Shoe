@@ -1,0 +1,236 @@
+.main-info{
+    display: flex;
+    padding: 2rem 6rem;
+    justify-content: space-between;
+}
+.info-profile,.info-order,.info-history-order{
+    width: 70%;
+    display: none;}
+.active-content{
+    display: block !important;
+}
+.options-info{
+    width: 25%;
+    background-color: #f7f7f7;
+    max-height: 12rem;
+}
+.options-info ul{
+    list-style: none;
+}
+.options-info ul li{
+    padding: .5rem;
+    border-left: 5px solid transparent;
+    cursor: pointer;
+    text-transform: capitalize;
+    text-decoration: underline;
+}
+.options-info ul li:hover{
+    border-left: 5px solid black;
+    font-weight: 500;
+}
+.options-info ul li.active{
+    border-left: 5px solid black;
+    font-weight: 500;
+}
+.info-profile-item{
+    text-transform: uppercase;
+    padding: 0 2rem;
+    margin-bottom: 4rem;
+}
+.info-profile-item p{
+    margin-bottom: .5rem;
+}
+.info-profile p.note{
+    font-size: .8rem;
+    margin-bottom: 2rem;
+    text-transform: initial;
+}
+.info-profile-item a{
+    font-size: .8rem;
+    font-weight: 500;
+    text-decoration: underline !important;
+    cursor: pointer;
+}
+.info-profile-item a:hover{
+    background-color: black;
+    color: white !important;
+}
+
+/* modal-from */
+.modal-content{border-radius: 0;
+    border: 1px solid black;}
+.form-info-detail{
+    padding: 2rem 3rem !important;
+}
+.modal-body .form-group{
+    position: relative;
+    padding: .8rem 0;
+}
+.modal-body h3{text-transform: uppercase;}
+.modal-body>form>label{
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.form-group input{
+    width: 100%;
+    padding: .8rem;
+    border: 1px solid black;
+}
+.form-group span{
+    position: absolute;
+    bottom: 50%;
+    left: 1.5rem;
+    transform: translate(0, 50%);
+    color: #666666;
+    background-color: white;
+    transition: ease .3s;
+    font-weight: 300;
+}
+.form-group span>i{
+    color: rgb(181, 2, 2);
+}
+.span-ac{
+    bottom: 85% !important;
+    font-size: .8rem;
+}
+.input-gender{
+    margin: 1rem 0;
+    position: relative;
+    display: flex;
+}
+.input-gender>label{
+    display: flex;
+    padding-right: 1rem;
+    cursor: pointer;
+}
+.input-gender>label>label>i{
+    font-size: 1.5rem;
+    padding-right: .5rem;
+}
+.input-gender input{width: 0;height: 0;}
+label.errorClass,small.errorClass{
+    position: absolute;
+    left: 0;
+    bottom: -1rem;
+    font-size: .9rem;
+    color: #d10909;
+}
+.close-modal{
+    position: absolute;
+    z-index: 1051;
+    top: 0;
+    right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+}
+.btn-login{
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+.btn-login button {
+    color: black;
+    text-decoration: none !important;
+    border: 1px solid black;
+    background-color: white;
+    text-transform: uppercase;
+    font-size: .9rem;
+    padding: 0.8rem 1rem;
+    box-shadow: 3px 3px black;
+    position: relative;
+    width: 48%;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+.btn-login button.cancel{
+    box-shadow: none;
+}
+.btn-login button:hover{
+    color: silver;
+}
+.btn-login button:active{
+    top: 2px;
+    background-color: rgb(228, 227, 227);
+    box-shadow: 3px 3px rgb(228, 227, 227);
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button
+{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* đơn đặt hàng */
+.info-order h2,.info-order h4,
+.info-history-order h2,.info-history-order h4{
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+.order-item{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    margin-bottom: 2rem;
+}
+.order-item .info-item{
+    width: 50%;
+    padding: .5rem 1rem;
+}
+.info-item p{
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.info-item p>i{font-weight: 400;}
+.order-item .list-item{
+    width: 40%;
+    max-height: 17rem;
+    overflow: auto;
+}
+.prod-item-order{
+    width: 100%;
+    display: flex;
+    padding: .5rem;
+}
+.prod-item-order .item-order-l{width: 30%;}
+.prod-item-order .item-order-l img{width: 100%;}
+.prod-item-order .item-order-r{
+    padding: 0 1rem;
+    position: relative;
+    font-size: .9rem;
+}
+.prod-item-order .item-order-r p{
+    margin: 0;
+}
+.prod-item-order .item-order-r a.ratting{
+    position: absolute;
+    right: -3rem;
+    top: 0;
+    cursor: pointer;
+    color: black;
+    font-size: .7rem;
+}
+/* !đơn đặt hàng */
+/* lịch sử đặt hàng */
+.star{position: relative;}
+.star input#star{
+    width: 0;
+    height: 0;
+    padding: 0;
+    border: none;
+}
+.form-group textarea{
+    width: 100%;
+    padding: 0.8rem;
+}
+/* !lịch sử đặt hàng */
+@media only screen and (min-width:992px){
+    .modal-lg{
+        max-width: 700px !important;
+    }
+    .modal-dialog{
+        max-width: 600px;
+    }
+}

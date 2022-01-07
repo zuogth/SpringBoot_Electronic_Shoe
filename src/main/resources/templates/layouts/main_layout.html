@@ -17,6 +17,11 @@
 <body>
 <!-- Preloader Start -->
 <header>
+    <div class="alert-noti">
+        <i class="fas fa-times close-alert"></i>
+        <span th:if="${error!=null}" th:text="${error.message}">Mật khẩu không chính xác.</span>
+        <span th:unless="${error!=null}"></span>
+    </div>
     <div class="header container-cus">
         <div class="logo">
             <a href="/">
@@ -27,7 +32,7 @@
             <div class="header-t">
                 <ul>
                     <li>
-                        <a href="">Kiểm tra đơn hàng</a>
+                        <a href="/info/order">Kiểm tra đơn hàng</a>
                     </li>
                     <li>
                         <a href="">Trợ giúp</a>
@@ -68,11 +73,11 @@
                             <a href="/cart"><i class="fas fa-shopping-bag"></i></a>
                         </li>
                     </ul>
-                    <div class="options-user" sec:authorize="!isAuthenticated()">
+                    <div class="options-user" sec:authorize="!isAuthenticated()" flag="false">
                         <a href="/login">Đăng nhập/Đăng ký</a>
                     </div>
-                    <div class="options-user" sec:authorize="isAuthenticated()">
-                        <a href="/login" sec:authentication="principal.fullName" flag="true">Đăng nhập/Đăng ký</a>
+                    <div class="options-user" sec:authorize="isAuthenticated()" flag="true">
+                        <a href="/info/profile" sec:authentication="principal.fullName">Đăng nhập/Đăng ký</a>
                         <a href="/logout">Đăng xuất</a>
                     </div>
                 </div>

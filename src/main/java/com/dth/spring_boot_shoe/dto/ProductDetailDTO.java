@@ -17,6 +17,8 @@ public class ProductDetailDTO extends BaseDTO{
     private SizeEntity size;
     private String image;
     private ProductEntity product;
+    private Integer quantity;
+    private Boolean rate;
 
 
     public static ProductDetailDTO converter(ModelMapper modelMapper,ProductDetailEntity entity,String image){

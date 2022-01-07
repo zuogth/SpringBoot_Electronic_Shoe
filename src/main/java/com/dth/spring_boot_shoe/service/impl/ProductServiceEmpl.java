@@ -1,13 +1,12 @@
 package com.dth.spring_boot_shoe.service.impl;
 
+import com.dth.spring_boot_shoe.entity.ProductReceiptEntity;
+import com.dth.spring_boot_shoe.repository.*;
 import com.dth.spring_boot_shoe.request.ProductFilter;
 import com.dth.spring_boot_shoe.dto.ProductDetailDTO;
 import com.dth.spring_boot_shoe.entity.ProductDetailEntity;
 import com.dth.spring_boot_shoe.entity.ProductEntity;
-import com.dth.spring_boot_shoe.repository.ColorRepository;
-import com.dth.spring_boot_shoe.repository.ProductDetailRepository;
-import com.dth.spring_boot_shoe.repository.ProductRepository;
-import com.dth.spring_boot_shoe.repository.SizeRepository;
+import com.dth.spring_boot_shoe.response.SizeQuantity;
 import com.dth.spring_boot_shoe.service.ImageService;
 import com.dth.spring_boot_shoe.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +29,7 @@ public class ProductServiceEmpl implements ProductService {
     private final EntityManager entityManager;
     private final ProductRepository productRepository;
     private final ProductDetailRepository productDetailRepository;
-    private final SizeRepository sizeRepository;
-    private final ColorRepository colorRepository;
+    private final ProductReceiptRepository productReceiptRepository;
     private final ImageService imageService;
     private final ModelMapper modelMapper;
 
@@ -41,7 +42,7 @@ public class ProductServiceEmpl implements ProductService {
     public List<ProductDetailDTO> findByBrandIdGroupByProductIdAndColorId(Long brand_id) {
         List<ProductDetailEntity> detailEntities=productDetailRepository.findByBrandIdGroupByProductIdAndColorId(brand_id);
         List<ProductDetailDTO> sameDTOS=new ArrayList<>();
-        detailEntities.stream().forEach(entity ->
+        detailEntities.forEach(entity ->
                 sameDTOS.add(ProductDetailDTO.converter(modelMapper,entity,imageService.findByColorIdAndProductIdAndParent(entity.getColor().getId(),entity.getProduct().getId()))));
         return sameDTOS;
     }
@@ -53,9 +54,14 @@ public class ProductServiceEmpl implements ProductService {
     }
 
     @Override
-    public List<ProductDetailEntity> findAllSizeByProductId(Long id,Long color_id) {
-        List<ProductDetailEntity> sizeEntities=productDetailRepository.findByProductIdGroupBySizeId(id,color_id);
-        return sizeEntities;
+    public List<SizeQuantity> findAllSizeByProductId(Long id, Long color_id) {
+        List<ProductDetailEntity> detailEntities=productDetailRepository.findByProductIdAndColorId(id,color_id);
+        List<SizeQuantity> detailDTOS=new ArrayList<>();
+        detailEntities.stream().forEach(entity->{
+            List<Object[]> objects=productReceiptRepository.findByProductIdGroupBySizeId(entity.getId());
+            detailDTOS.add(SizeQuantity.converter(objects.get(0)));
+        });
+        return detailDTOS;
     }
 
     @Override

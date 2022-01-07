@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+    <th:block id="cssContent">
+        <link rel="stylesheet" href="/assets/css/delivery.css">
+    </th:block>
+</head>
+<body>
+<section>
+    <div class="main-deli">
+        <h2>Thông tin giao hàng</h2>
+        <div class="content-deli">
+            <div class="info-deli">
+                <form action="/delivery" id="formPay" method="post" th:object="${user}">
+                    <div class="row-cus">
+                        <div class="form-group">
+                            <input type="text" th:field="*{firstName}" id="firstname" required>
+                            <span>Tên <i>*</i></span>
+                            <label class="errorClass"></label>
+                            <small style="color:red" th:if="${#fields.hasErrors('firstName')}"
+                                    th:errors="*{firstName}" class="errorClass"></small>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" th:field="*{lastName}" id="lastname" required>
+                            <span>Họ <i>*</i></span>
+                            <label class="errorClass"></label>
+                            <small style="color:red" th:if="${#fields.hasErrors('lastName')}"
+                                    th:errors="*{lastName}" class="errorClass"></small>
+                        </div>
+                    </div>
+                    <div class="row-cus">
+                        <div class="form-group getcity">
+                            <input type="text" onkeyup="searchProvince(this)" onfocus="listProvince(this)" id="province" onfocusout="unFocusInput(this)"
+                                   th:field="*{province}" parent_code="" required>
+                            <span id="province">Thành phố <i>*</i></span>
+                            <label class="errorClass"></label>
+                            <small style="color:red" th:if="${#fields.hasErrors('province')}"
+                                    th:errors="*{province}" class="errorClass"></small>
+                            <div class="province" onmouseleave="onMouseLeave()" onmouseenter="onMouseEnter()">
+                                <ul id="listData"></ul>
+                            </div>
+                        </div>
+                        <div class="form-group getcity">
+                            <input type="text" onkeyup="searchDistrict(this)" onfocus="listDistrict(this)" parent="province" onfocusout="unFocusInput(this)"
+                                   th:field="*{district}" id="district" parent_code="" required>
+                            <span>Huyện <i>*</i></span>
+                            <label class="errorClass"></label>
+                            <small style="color:red" th:if="${#fields.hasErrors('district')}"
+                                    th:errors="*{district}" class="errorClass"></small>
+                            <div class="district" onmouseleave="onMouseLeave()" onmouseenter="onMouseEnter()">
+                                <ul class="listData"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-cus">
+                        <div class="form-group getcity">
+                            <input type="text" onkeyup="searchWard(this)" onfocus="listWard(this)" parent="district" onfocusout="unFocusInput(this)"
+                                   th:field="*{ward}" id="ward" parent_code="" required>
+                            <span>Xã <i>*</i></span>
+                            <label class="errorClass"></label>
+                            <small style="color:red" th:if="${#fields.hasErrors('ward')}"
+                                    th:errors="*{ward}" class="errorClass"></small>
+                            <div class="ward" onmouseleave="onMouseLeave()" onmouseenter="onMouseEnter()">
+                                <ul class="listData"></ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <strong>Quốc gia:</strong><i>Việt Nam</i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" th:field="*{village}" id="village" required>
+                        <span>Thôn/Tên đường... <i>*</i></span>
+                        <label class="errorClass"></label>
+                        <small style="color:red" th:if="${#fields.hasErrors('village')}"
+                               th:errors="*{village}" class="errorClass"></small>
+                    </div>
+                    <div class="express">
+                        <h6>Giao hàng tiêu chuẩn</h6>
+                        <div>
+                            <i class="fal fa-shipping-timed"></i>
+                            <p>GHN (Do ảnh hưởng COVID-19, thời gian giao hàng sẽ kéo dài hơn dự kiến và chúng tôi chưa thể giao hàng đến một số khu vực. Thành thật xin lỗi vì sự bất tiện này!)</p>
+                        </div>
+                    </div>
+                    <h2>Thông tin liên hệ</h2>
+                    <p>Chúng tôi sẽ sử dụng các thông tin chi tiết này để thông báo cho bạn về giao hàng.</p>
+                    <div class="row-cus">
+                        <div class="form-group">
+                            <input type="text" th:field="*{email}" id="email" readonly>
+                            <span>Email <i>*</i></span>
+                        </div>
+                    </div>
+                    <div class="row-cus">
+                        <div class="form-group">
+                            <input type="number" minlength="10" th:field="*{phone}" id="phone" required>
+                            <span>Số điện thoại <i>*</i></span>
+                            <small style="color:red" th:if="${#fields.hasErrors('phone')}"
+                                    th:errors="*{phone}" class="errorClass"></small>
+                            <label class="errorClass"></label>
+                        </div>
+                    </div>
+                    <div class="btn-pay">
+                        <button type="submit">Thanh toán <i class="far fa-long-arrow-right"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div class="total-price">
+                <div class="order-info">
+                    <h3>Đơn hàng</h3>
+                    <div class="total-prod">
+                        <span>3 sản phẩm</span>
+                        <span totalprice="">7.000.000 đ</span>
+                    </div>
+                    <div class="ship-prod">
+                        <span>Giao hàng</span>
+                        <span pay-ship="0">Miễn phí</span>
+                    </div>
+                    <div class="total-price-child">
+                        <h6>Tổng</h6>
+                        <span>7.000.000 đ</span>
+                    </div>
+                </div>
+                <div class="code-sale">
+                    <input type="text" name="code" id="code" placeholder="Nhập mã khuyễn mãi">
+                    <a href=""><i class="fal fa-plus"></i></a>
+                </div>
+                <hr>
+                <div class="detail-order">
+                    <h3>Chi tiết đơn hàng</h3>
+                    <div class="detail-order-items">
+                        <div class="prod-item-order" th:each="bill:${bills}">
+                            <div class="item-order-l">
+                                <img th:src="'/assets/img/product/'+${bill.detail.image}" alt="">
+                            </div>
+                            <div class="item-order-r">
+                                <p th:text="'Giày '+${bill.detail.product.name}">Giày Duramo SL</p>
+                                <p th:text="${bill.detail.color.name}">Black</p>
+                                <span>Cỡ: </span><span th:text="${bill.detail.size.name}">40</span> / <span>Số lượng: </span><span th:text="${bill.quantity}" id="count">1</span>
+                                <p id="price" th:data-price="${bill.detail.product.price}" th:text="${#numbers.formatDecimal(bill.detail.product.price, 0, 'COMMA', 0, 'POINT')}+' VND'">2.500.000 VND</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<th:block id="jsContent">
+    <script src="/assets/js/deli.js"></script>
+    <script src="/assets/js/getcities.js"></script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+  <meta charset="UTF-8">
+  <title>Giỏ hàng</title>
+  <th:block id="cssContent">
+    <link rel="stylesheet" href="/assets/css/info.css">
+  </th:block>
+</head>
+<body>
+<section>
+  <div class="main-info">
+    <div class="options-info">
+      <ul>
+        <li id="info-profile">Thông tin cá nhân</li>
+        <li id="info-order">Đơn đặt hàng</li>
+        <li id="info-history-order">Lịch sử đặt hàng</li>
+      </ul>
+    </div>
+    <div class="info-profile main-info-item">
+      <div class="info-profile-item">
+        <h2>Thông tin cá nhân</h2>
+        <p th:text="${user.fullName}">Dương Tuấn Hiếu</p>
+        <p th:if="${user.gender!=null}" th:text="${user.gender==1?'Nam':'Nữ'}">Nam</p>
+        <p th:unless="${user.gender!=null}">Giới tính</p>
+        <p th:text="${user.phone==null?'Số điện thoại':user.phone}" id="phone_user">0953242***</p>
+        <a data-toggle="modal" data-target="#info-detail" id="profile-detail">Chỉnh sửa</a>
+      </div>
+      <div class="info-profile-item">
+        <h2>Chi tiết đăng nhập</h2>
+        <h5>Email</h5>
+        <p th:text="${user.email}">tuanhieu@gmail.com</p>
+        <p class="note">Email là thông tin tên tài khoản để bạn đăng nhập, không thể thay đổi nội dung này.</p>
+        <h5>Mật khẩu</h5>
+        <p>*******</p>
+        <a id="change-pw-btn" data-toggle="modal" data-target="#change-pw">Chỉnh sửa</a>
+      </div>
+    </div>
+    <div class="info-order main-info-item">
+      <h2>Đơn đặt hàng của bạn</h2>
+      <h5 th:unless="${bills.size()>0}">Bạn không có đơn đặt hàng nào</h5>
+      <div class="order-list-items" th:if="${bills.size()>0}">
+        <div class="order-item" th:each="bill:${bills}">
+          <div class="info-item">
+            <h4>Thông tin đơn</h4>
+            <p>Tổng tiền: <i th:text="${#numbers.formatDecimal(bill.totalPrice, 0, 'COMMA', 0, 'POINT')}+' VND'">10.500.000 VND</i> | Phí: <i>Miễn phí</i></p>
+            <p>Ngày đặt: <i th:text="${bill.createdAt}">12/3/2021</i></p>
+            <p>Trạng thái đơn hàng: <i th:text="${bill.status=='waiting'?'Chờ xác nhận':'Đang giao'}">Đang giao</i></p>
+            <p>Địa chỉ: <i th:text="${user.address}">Hà Nội</i></p>
+          </div>
+          <div class="list-item">
+            <div class="prod-item-order" th:each="prod:${bill.dtos}">
+              <div class="item-order-l">
+                <img th:src="'/assets/img/product/'+${prod.detail.image}" alt="">
+              </div>
+              <div class="item-order-r">
+                <p th:text="${prod.detail.product.name}">Giày Duramo SL</p>
+                <p th:text="${prod.detail.color.name}">Black</p>
+                <span>Cỡ: </span><span th:text="${prod.detail.size.name}">40</span> / <span>Số lượng: </span><span th:text="${prod.quantity}">1</span>
+                <p th:text="${#numbers.formatDecimal(prod.price, 0, 'COMMA', 0, 'POINT')}+' VND'">2.500.000 VND</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-history-order main-info-item">
+      <h2>Lịch sử đơn đặt hàng của bạn</h2>
+      <h5 th:unless="${orders.size()>0}">Bạn chưa có đơn hàng nào hoàn thành, kiểm tra đơn hàng đang đặt của bạn</h5>
+      <div class="order-list-items" th:if="${orders.size()>0}">
+        <div class="order-item" th:each="order:${orders}">
+          <div class="info-item">
+            <h4>Thông tin đơn</h4>
+            <p>Tổng tiền: <i th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')}+' VND'">10.500.000 VND</i> | Phí: <i>Miễn phí</i></p>
+            <p>Ngày đặt: <i th:text="${order.createdAt}">12/3/2021</i></p>
+            <p>Ngày giao: <i th:text="${order.modifiedAt}">12/10/2021</i></p>
+            <p>Địa chỉ: <i th:text="${user.address}">Hà Nội</i></p>
+          </div>
+          <div class="list-item">
+            <div class="prod-item-order" th:each="prod:${order.dtos}">
+              <div class="item-order-l">
+                <img th:src="'/assets/img/product/'+${prod.detail.image}" alt="">
+              </div>
+              <div class="item-order-r">
+                <p th:text="${prod.detail.product.name}">Giày Duramo SL</p>
+                <p th:text="${prod.detail.color.name}">Black</p>
+                <span>Cỡ: </span><span th:text="${prod.detail.size.name}">40</span> / <span>Số lượng: </span><span th:text="${prod.quantity}">1</span>
+                <p th:text="${#numbers.formatDecimal(prod.price, 0, 'COMMA', 0, 'POINT')}+' VND'">2.500.000 VND</p>
+                <a class="ratting" th:if="${prod.detail.rate}" >Đã đánh giá</a>
+                <a class="ratting" th:unless="${prod.detail.rate}" th:id="'rate-'+${prod.detail.product.id}" data-toggle="modal" data-target="#ratting-prod" th:data-id="${prod.detail.product.id}">Đánh giá</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="info-detail">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <button type="button" class="close-modal" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+        <div class="modal-body form-info-detail">
+          <form id="form-detail">
+            <h3>Chỉnh sửa thông tin của bạn</h3>
+            <div class="form-group">
+              <input type="text" name="firstName" id="firstName" required>
+              <span>Tên <i>*</i></span>
+              <small id="firstName" class="errorClass"></small>
+            </div>
+            <div class="form-group">
+              <input type="text" name="lastName" id="lastName" required>
+              <span>Họ <i>*</i></span>
+              <small id="lastName" class="errorClass"></small>
+            </div>
+            <label>Giới tính *</label>
+            <div class="input-gender">
+              <label>
+                <label for="male"><i class="far fa-circle"></i></label>
+                <input type="radio" name="gender" id="male" value="1" required>
+                <span>Nam</span>
+              </label>
+              <label>
+                <label for="female"><i class="far fa-circle"></i></label>
+                <input type="radio" name="gender" id="female" value="0" required>
+                <span>Nữ</span>
+              </label>
+              <label>
+                <label for="other"><i class="far fa-circle"></i></label>
+                <input type="radio" name="gender" id="other" value="-1" required>
+                <span>Khác</span>
+              </label>
+              <small id="gender" class="errorClass"></small>
+            </div>
+            <div class="form-group">
+              <input type="number" name="phone" id="phone" minlength="10" required>
+              <span>Số điện thoại <i>*</i></span>
+              <small id="phone" class="errorClass"></small>
+            </div>
+            <div class="btn-login">
+              <button class="cancel" type="button" data-dismiss="modal"><a>Hủy</a> <i class="far fa-long-arrow-right"></i></button>
+              <button type="button" id="btn-update"><a>Cập nhật</a> <i class="far fa-long-arrow-right"></i></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="change-pw">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <button type="button" class="close-modal" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+        <div class="modal-body form-info-detail">
+          <form id="form-change-pw">
+            <h3>Thay đổi mật khẩu của bạn</h3>
+            <div class="form-group">
+              <input type="password" name="password" id="password" minlength="6" required>
+              <span>Mật khẩu cũ <i>*</i></span>
+              <small id="password" class="errorClass"></small>
+            </div>
+            <div class="form-group">
+              <input type="password" name="password_new" id="password_new" minlength="6" required>
+              <span>Mật khẩu mới <i>*</i></span>
+              <small id="password_new" class="errorClass"></small>
+            </div>
+            <div class="form-group">
+              <input type="password" name="re_password_new" id="re_password_new" minlength="6" required>
+              <span>Nhập lại mật khẩu mới <i>*</i></span>
+              <small id="re_password_new" class="errorClass"></small>
+            </div>
+            <div class="btn-login">
+              <button class="cancel" type="button" data-dismiss="modal"><a>Hủy</a> <i class="far fa-long-arrow-right"></i></button>
+              <button type="button" id="btn-change-pw"><a>Cập nhật</a> <i class="far fa-long-arrow-right"></i></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="ratting-prod">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <button type="button" class="close-modal" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+        <div class="modal-body form-info-detail">
+          <form id="form-ratting">
+            <h3>Đánh giá sản phẩm</h3>
+            <div class="star">
+              <div id="rateYo2" onclick="clearError()"></div>
+              <input type="number" name="star" id="star" required>
+              <small id="star" class="errorClass"></small>
+            </div>
+            <div class="form-group">
+              <input type="text" name="title" id="title" required>
+              <span>Tiêu đề <i>*</i></span>
+              <small id="title" class="errorClass"></small>
+            </div>
+            <label for="">Nội dung *</label>
+            <div class="form-group">
+              <textarea type="text" rows="5" name="content" id="content" minlength="30" placeholder="Nhập nội dung đánh giá..." required></textarea>
+              <small id="content" class="errorClass"></small>
+            </div>
+            <div class="btn-login">
+              <button type="button" class="cancel clear-rate" data-dismiss="modal"><a>Hủy</a> <i class="far fa-long-arrow-right"></i></button>
+              <button type="button" id="btn-form-ratting"><a>Cập nhật</a> <i class="far fa-long-arrow-right"></i></button>
+            </div>
+            <input type="number" name="productId" id="productId" hidden>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<th:block id="jsContent">
+  <script src="/assets/js/info.js"></script>
+</th:block>
+</body>
+</html>

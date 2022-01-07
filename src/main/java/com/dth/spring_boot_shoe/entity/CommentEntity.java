@@ -19,6 +19,9 @@ public class CommentEntity extends BaseEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
+    @Column(name = "title",length = 45)
+    private String title;
+
     @Column(name = "content")
     private String content;
 
