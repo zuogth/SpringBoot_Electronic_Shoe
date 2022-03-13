@@ -17,7 +17,7 @@
                 <form action="/delivery" id="formPay" method="post" th:object="${user}">
                     <div class="row-cus">
                         <div class="form-group">
-                            <input type="text" th:field="*{firstName}" id="firstname" required>
+                            <input type="text" th:field="*{firstName}" id="firstname">
                             <span>Tên <i>*</i></span>
                             <label class="errorClass"></label>
                             <small style="color:red" th:if="${#fields.hasErrors('firstName')}"

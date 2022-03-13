@@ -23,4 +23,6 @@ public class ProductDetailEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "size_id")
     private SizeEntity size;
+
+    private Integer status;
 }

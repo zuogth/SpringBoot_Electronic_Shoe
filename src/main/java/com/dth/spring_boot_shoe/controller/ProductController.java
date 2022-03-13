@@ -38,6 +38,9 @@ public class ProductController {
         model.addAttribute("sameProd",sameProd);
         model.addAttribute("images",images);
         model.addAttribute("comments",commentEntities);
+        model.addAttribute("countStar",commentEntities.size());
+        double avg=commentEntities.stream().mapToDouble(CommentEntity::getStar).sum()/commentEntities.size();
+        model.addAttribute("avgStar",(double)Math.round(avg*10)/10);
         return "detail";
     }
 }

@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ImageRepository extends JpaRepository<ImageEntity,Long> {
     List<ImageEntity> findByColorIdAndProductId(Long color_id,Long product_id);
     Optional<ImageEntity> findByColorIdAndProductIdAndParent(Long color_id, Long product_id, Integer parent);
+    List<ImageEntity> findByColorIdAndProductIdAndParentNot(Long color_id, Long product_id, Integer parent);
 }

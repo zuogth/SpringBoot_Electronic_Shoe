@@ -7,4 +7,5 @@ import java.util.List;
 public interface ImageService {
     List<String> findByColorIdAndProductId(Long color_id,Long product_id);
     String findByColorIdAndProductIdAndParent(Long color_id,Long product_id);
+    List<String> findByColorAndProductAndParentNot(Long color_id,Long product_id);
 }

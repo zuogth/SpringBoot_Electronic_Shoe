@@ -77,12 +77,12 @@ $(()=>{
         }
     });
     $('.filter-sizeId label').click(function(){
-        $('.filter-sizeId label').removeClass("size-active");
-        $(this).addClass("size-active");
+        $('.filter-sizeId label').removeClass("sizeId-active");
+        $(this).addClass("sizeId-active");
     })
     $('.filter-colorId label').click(function(){
-        $('.filter-colorId label').removeClass("color-active");
-        $(this).addClass("color-active");
+        $('.filter-colorId label').removeClass("colorId-active");
+        $(this).addClass("colorId-active");
     })
     $('.filter-child>label').click(function(){
         $(this).parent().children('label').children('label').html('<i class="far fa-circle"></i>');
@@ -128,7 +128,6 @@ function searchProduct(element){
     });
     let name=$(element).attr("name");
     $('.filter-items div#'+name).show();
-    console.log(JSON.stringify(data));
     $.ajax({
         url:'/api/filter',
         type:'POST',

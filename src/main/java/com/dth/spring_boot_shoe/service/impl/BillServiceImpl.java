@@ -1,6 +1,6 @@
 package com.dth.spring_boot_shoe.service.impl;
 
-import com.dth.spring_boot_shoe.ProductBillEntity;
+import com.dth.spring_boot_shoe.entity.ProductBillEntity;
 import com.dth.spring_boot_shoe.constant.StatusBill;
 import com.dth.spring_boot_shoe.dto.BillDTO;
 import com.dth.spring_boot_shoe.dto.BillReceiptDTO;

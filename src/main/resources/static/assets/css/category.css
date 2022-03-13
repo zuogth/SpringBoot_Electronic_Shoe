@@ -135,7 +135,7 @@
     background-color: black;
     color: white;
 }
-.size-active{
+.sizeId-active{
     background-color: black;
     color: white;
 }
@@ -145,7 +145,7 @@
     margin: .5rem 1rem;
     cursor: pointer;
 }
-.color-active{
+.colorId-active{
     background: url('/assets/img/check.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;

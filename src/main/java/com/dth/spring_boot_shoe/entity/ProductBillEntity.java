@@ -1,4 +1,4 @@
-package com.dth.spring_boot_shoe;
+package com.dth.spring_boot_shoe.entity;
 
 import com.dth.spring_boot_shoe.entity.BaseEntity;
 import com.dth.spring_boot_shoe.entity.BillEntity;

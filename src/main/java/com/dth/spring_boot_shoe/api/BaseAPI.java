@@ -3,9 +3,8 @@ package com.dth.spring_boot_shoe.api;
 import com.dth.spring_boot_shoe.request.ProductFilter;
 import com.dth.spring_boot_shoe.dto.ProductDetailDTO;
 import com.dth.spring_boot_shoe.entity.ProductEntity;
-import com.dth.spring_boot_shoe.repository.ProductDetailRepository;
 import com.dth.spring_boot_shoe.service.ProductService;
-import com.dth.spring_boot_shoe.service.impl.CommonService;
+import com.dth.spring_boot_shoe.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +17,11 @@ import java.util.Map;
 @RequestMapping("/api")
 public class BaseAPI {
 
-    private final ProductDetailRepository productDetailRepository;
     private final ProductService productService;
-    private final CommonService commonService;
 
     @PostMapping("/search")
     public List<ProductDetailDTO> search(@RequestBody ProductEntity prod) {
-        String keySearch=commonService.removeAccent(prod.getSlug());
+        String keySearch= StringUtils.removeAccent(prod.getSlug());
         return productService.findBySlug(keySearch);
     }
 
@@ -45,5 +42,9 @@ public class BaseAPI {
         }
         map.put("details",detailEntities);
         return map;
+    }
+
+    public static String getBrand(){
+        return "TEST";
     }
 }

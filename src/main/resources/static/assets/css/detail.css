@@ -158,6 +158,7 @@ li.slick-active {
 .star-cus-l h5 {
     margin: 0;
     font-size: 3rem;
+    display: inline;
 }
 
 .star-cus-l span {
@@ -223,9 +224,13 @@ li.slick-active {
 .options-parent {
     width: 30%;
     background-color: white;
-    position: sticky;
     padding: 2rem;
     border-left: 1px solid silver;
+}
+.top-fixed{
+    position: fixed;
+    top: 0px;
+    right: 0px;
 }
 
 .star {

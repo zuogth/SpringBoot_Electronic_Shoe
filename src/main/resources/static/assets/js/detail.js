@@ -3,12 +3,22 @@ $(document).ready(function () {
         var e = $(window).scrollTop();
         let h=$('#flag').offset().top;
         let h1=$('.options-detail').height();
-        if(e<100){
+        // if(e<100){
+        //     $('.margin-top-prod').css("margin-top",0)
+        // }else if(e-100>h-h1){
+        //     $('.margin-top-prod').css("margin-top",h-h1)
+        // }else{
+        //     $('.margin-top-prod').css("margin-top",e-100)
+        // }
+
+        if(e>100 && e-100<h-h1){
+            $('.options-parent').addClass("top-fixed");
             $('.margin-top-prod').css("margin-top",0)
         }else if(e-100>h-h1){
+            $('.options-parent').removeClass("top-fixed");
             $('.margin-top-prod').css("margin-top",h-h1)
         }else{
-            $('.margin-top-prod').css("margin-top",e-100)
+            $('.options-parent').removeClass("top-fixed");
         }
         
     });
@@ -26,13 +36,15 @@ $(document).ready(function () {
         readOnly:true,
         starWidth: "16px"
     });
-    star=$('.star-item').attr('data-star');
-    $('.star-item').rateYo({
-        rating: star,
-        ratedFill: "#101012",
-        readOnly:true,
-        starWidth: "12px"
-    });
+    $('.star-item').each(function(i,e){
+        star=$(e).attr('data-star');
+        $(e).rateYo({
+            rating: star,
+            ratedFill: "#101012",
+            readOnly:true,
+            starWidth: "12px"
+        });
+    })
     $('.rateYo').each(function(index,element){
         star=$(element).attr('data-star');
         $(element).rateYo({
@@ -227,4 +239,12 @@ function addCart(event){
         }
     }
 
+}
+
+function avgStar(cmt){
+    let sum=0;
+    cmt.forEach((e)=>{
+        sum-=-e.star;
+    })
+    return sum/cmt.size();
 }

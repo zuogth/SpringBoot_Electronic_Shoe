@@ -20,7 +20,7 @@ public class ImageServiceImpl implements ImageService {
     public List<String> findByColorIdAndProductId(Long color_id, Long product_id) {
         List<ImageEntity> imageEntities=imageRepository.findByColorIdAndProductId(color_id,product_id);
         List<String> images=new ArrayList<>();
-        imageEntities.stream().forEach(image->images.add(image.getImage()));
+        imageEntities.forEach(image->images.add(image.getImage()));
         return images;
     }
 
@@ -30,7 +30,14 @@ public class ImageServiceImpl implements ImageService {
         if (!entity.isPresent()){
             return "";
         }
-        String image=entity.get().getImage();
-        return image;
+        return entity.get().getImage();
+    }
+
+    @Override
+    public List<String> findByColorAndProductAndParentNot(Long color_id, Long product_id) {
+        List<ImageEntity> imageEntities=imageRepository.findByColorIdAndProductIdAndParentNot(color_id,product_id,1);
+        List<String> images=new ArrayList<>();
+        imageEntities.forEach(image->images.add(image.getImage()));
+        return images;
     }
 }

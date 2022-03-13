@@ -52,37 +52,37 @@ $(()=>{
     })
 })
 
-$(()=>{
-    $('#formPay').validate({
-        relus:{
-            email:{
-                required:true,
-                email:true
-            },
-            phone:{
-                required:true,
-                minlength:10
-            }
-        },
-        messages:{
-            email:{
-                required:"Vui lòng nhập email của bạn",
-                email:"Email bạn nhập không hợp lệ"
-            },
-            phone:{
-                required:"Vui lòng nhập số điện thoại của bạn",
-                minlength:"Số điện thoại không hợp lệ"
-            },
-            firstName:"Vui lòng nhập tên của bạn",
-            lastName:"Vui lòng nhập họ của bạn",
-            province:"Vui lòng chọn thành phố",
-            district:"Vui lòng chọn huyện/quận",
-            ward:"Vui lòng chọn xã",
-            village:"Vui lòng ghi chi tiết địa chỉ giao hàng"
-        },
-        onfocusout: function(element) {
-            this.element(element);
-        },
-        errorClass:"errorClass"
-    });
-})
+// $(()=>{
+//     $('#formPay').validate({
+//         relus:{
+//             email:{
+//                 required:true,
+//                 email:true
+//             },
+//             phone:{
+//                 required:true,
+//                 minlength:10
+//             }
+//         },
+//         messages:{
+//             email:{
+//                 required:"Vui lòng nhập email của bạn",
+//                 email:"Email bạn nhập không hợp lệ"
+//             },
+//             phone:{
+//                 required:"Vui lòng nhập số điện thoại của bạn",
+//                 minlength:"Số điện thoại không hợp lệ"
+//             },
+//             firstName:"Vui lòng nhập tên của bạn",
+//             lastName:"Vui lòng nhập họ của bạn",
+//             province:"Vui lòng chọn thành phố",
+//             district:"Vui lòng chọn huyện/quận",
+//             ward:"Vui lòng chọn xã",
+//             village:"Vui lòng ghi chi tiết địa chỉ giao hàng"
+//         },
+//         onfocusout: function(element) {
+//             this.element(element);
+//         },
+//         errorClass:"errorClass"
+//     });
+// })
