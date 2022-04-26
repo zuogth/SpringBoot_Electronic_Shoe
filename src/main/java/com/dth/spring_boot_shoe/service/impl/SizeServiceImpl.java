@@ -25,8 +25,8 @@ public class SizeServiceImpl implements SizeService {
         List<ProductDetailEntity> list=productDetailRepository.findByProductIdAndColorIdAndStatusNot(productId,colorId,-1);
         List<SoldReceiptProdDetail> soldReceiptProdDetails=new ArrayList<>();
         list.forEach(e->soldReceiptProdDetails.add(SoldReceiptProdDetail.converter(e.getId(),e.getStatus(),e.getSize(),
-                Integer.valueOf(productBillRepository.findSumSoldByEachProductDetail(e.getId()).get(0)[0].toString()),
-                Integer.valueOf(productReceiptRepository.findSumReceiptByEachProductDetail(e.getId()).get(0)[0].toString()))));
+                productBillRepository.findSumSoldByEachProductDetail(e.getId()),
+                productReceiptRepository.findSumReceiptByEachProductDetail(e.getId()))));
 
         return soldReceiptProdDetails;
     }

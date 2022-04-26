@@ -8,6 +8,25 @@
 html {
     font-size: 16px;
 }
+/*loader*/
+.preloader-cus{
+    background-color: rgb(238, 237, 237);
+    display: flex;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 1100;
+    transition: height 1s;
+}
+.non-active-loader{
+    height: 0px;
+    transition-timing-function: ease;
+}
+.non-active-loader img{
+    display: none;
+}
+/*end loader*/
 .alert-noti {
     max-width: 20rem;
     position: fixed;
@@ -193,11 +212,25 @@ ul.child-ul-header li a:hover {
     margin: 0 0 3rem 0;
 }
 
-.h-search-input {
+.h-search-input,.form-search-error {
     position: relative;
 }
-
-.h-search-input input {
+.page-error{
+    padding: 2rem 0;
+    width: 70%;
+    margin: auto;
+}
+.page-error h3{
+    text-transform: uppercase;
+}
+.page-error p{
+    margin: 1rem 0;
+}
+.page-error p a{
+    text-decoration: revert;
+    color: black;;
+}
+.h-search-input input,.form-search-error input {
     width: 100%;
     padding: 1rem;
     border: none;
@@ -207,7 +240,7 @@ ul.child-ul-header li a:hover {
     background-color: transparent;
 }
 
-.h-search-input .h-btn-search {
+.h-search-input .h-btn-search,.form-search-error .h-btn-search {
     border: none;
     background: transparent;
     position: absolute;
@@ -230,7 +263,7 @@ ul.child-ul-header li a:hover {
     font-size: 0.8em;
     margin-bottom: 1em;
 }
-.result-search{
+.result-search,.result-search-err{
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -364,7 +397,7 @@ ul.child-ul-header li a:hover {
 .item span.price {
     position: absolute;
     left: .3rem;
-    bottom: 50px;
+    bottom: 65px;
     font-size: .9rem;
     background: #eceff1;
     transition: all .2s;
@@ -383,6 +416,7 @@ ul.child-ul-header li a:hover {
     padding: .5rem 0;
     font-weight: 400;
     margin: 0;
+    height: 3rem;
 }
 
 .item:hover {
@@ -391,7 +425,7 @@ ul.child-ul-header li a:hover {
 }
 
 .item:hover span.price {
-    bottom: 60px;
+    bottom: 75px;
 }
 
 .btn-slick-cus {
@@ -431,21 +465,11 @@ ul.child-ul-header li a:hover {
 #myBtnTop {
     display: none;
     position: fixed;
-    bottom: 30px;
+    cursor: pointer;
+    opacity: 0.9;
+    bottom: 20px;
     right: 20px;
     z-index: 99;
-    border: none;
-    background-color: #d3cdcd;
-    cursor: pointer;
-    border-radius: 50%;
-    background-image: url(../img/arrow-up-nightrider.svg);
-    width: 3em;
-    height: 3em;
-    background-repeat: no-repeat;
-    background-size: 50% 50%;
-    background-position: center;
-    animation-name: scrollTop;
-    animation-duration: 1s;
 }
 
 @keyframes scrollTop {
@@ -573,7 +597,7 @@ ul.child-ul-header li a:hover {
         padding: .5rem 2rem;
         display: block;
     }
-    .footer-item img{width: 100%Fh-search;}
+    .footer-item img{width: 100%;}
     .footer-b .national{text-align: center;}
 }
 @media only screen and (max-width:578px){

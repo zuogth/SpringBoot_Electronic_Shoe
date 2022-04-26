@@ -46,6 +46,7 @@
 
 .dotClass img {
     width: 100%;
+    height: 100%;
 }
 
 li.slick-active {
@@ -144,6 +145,7 @@ li.slick-active {
 
 #section1 .image-prod {
     width: 40%;
+    padding-left: 1rem;
 }
 
 #section1 .image-prod img {
@@ -231,6 +233,7 @@ li.slick-active {
     position: fixed;
     top: 0px;
     right: 0px;
+    bottom: 0px;
 }
 
 .star {

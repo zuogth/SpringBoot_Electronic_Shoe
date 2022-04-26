@@ -9,10 +9,13 @@ import com.dth.spring_boot_shoe.entity.BillEntity;
 import com.dth.spring_boot_shoe.entity.CommentEntity;
 import com.dth.spring_boot_shoe.entity.ProductDetailEntity;
 import com.dth.spring_boot_shoe.entity.UserEntity;
+import com.dth.spring_boot_shoe.exception.ApiRequestException;
 import com.dth.spring_boot_shoe.exception.RequestException;
 import com.dth.spring_boot_shoe.repository.*;
 import com.dth.spring_boot_shoe.request.CartRequest;
 import com.dth.spring_boot_shoe.request.UserRequest;
+import com.dth.spring_boot_shoe.response.BillDetailResponse;
+import com.dth.spring_boot_shoe.response.BillResponse;
 import com.dth.spring_boot_shoe.response.CheckQuantity;
 import com.dth.spring_boot_shoe.response.SizeQuantity;
 import com.dth.spring_boot_shoe.service.BillService;
@@ -20,6 +23,9 @@ import com.dth.spring_boot_shoe.service.ImageService;
 import com.dth.spring_boot_shoe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -153,6 +159,10 @@ public class BillServiceImpl implements BillService {
         BillEntity bill=billRepository.findByUserIdAndBillType(user.getId(),0);
         ProductBillEntity productBill=productBillRepository.findByBillIdAndProductDetailId(bill.getId(),request.getProductDetailId());
         productBillRepository.delete(productBill);
+        List<ProductBillEntity> entities=productBillRepository.findByBillId(bill.getId());
+        if(entities.size()<1){
+            billRepository.delete(bill);
+        }
     }
 
     @Override
@@ -232,7 +242,7 @@ public class BillServiceImpl implements BillService {
                         ProductDetailDTO.converter(modelMapper,prodBill.getProductDetail(),
                                 imageService.findByColorIdAndProductIdAndParent(prodBill.getProductDetail().getColor().getId(),prodBill.getProductDetail().getProduct().getId())),
                                 prodBill.getPrice())));
-            dtos.add(new BillDTO(billReceiptDTOS,entity.getTotalprice(),entity.getStatus(),entity.getCreatedAt(),entity.getModifiedAt()));
+            dtos.add(new BillDTO(billReceiptDTOS,entity.getTotalprice(),entity.getStatus(),entity.getAddress(),entity.getCreatedAt(),entity.getModifiedAt()));
         });
         return dtos;
     }
@@ -253,7 +263,7 @@ public class BillServiceImpl implements BillService {
                 }
                     billReceiptDTOS.add(new BillReceiptDTO(prodBill.getQuantity(),dto,prodBill.getPrice()));
             });
-                dtos.add(new BillDTO(billReceiptDTOS,entity.getTotalprice(),entity.getStatus(),entity.getCreatedAt(),entity.getModifiedAt()));
+                dtos.add(new BillDTO(billReceiptDTOS,entity.getTotalprice(),entity.getStatus(),entity.getAddress(),entity.getCreatedAt(),entity.getModifiedAt()));
         });
         return dtos;
     }
@@ -264,6 +274,35 @@ public class BillServiceImpl implements BillService {
                 .orElseThrow(()->new RequestException("Bạn chưa đăng nhập","login"));
         BillEntity bill=billRepository.findByUserIdAndBillType(user.getId(),0);
         bill.setPaying(0);
+        billRepository.save(bill);
+    }
+
+    @Override
+    public Map<String,Object> getAll(int page,boolean now) {
+        Map<String,Object> map=new HashMap<>();
+        Pageable pageable= PageRequest.of(page-1,10);
+        Page<BillEntity> entities=now?billRepository.findAllByBillTypeAndMonthNow(pageable)
+                :billRepository.findAllByBillType(1,pageable);
+        List<BillResponse> responses=new ArrayList<>();
+        entities.getContent().forEach(e->responses.add(BillResponse.converter(e)));
+        map.put("totalItems",entities.getTotalElements());
+        map.put("bills",responses);
+        return map;
+    }
+
+    @Override
+    public List<BillDetailResponse> findByBillId(Long billId) {
+        List<BillDetailResponse> responses=new ArrayList<>();
+        List<ProductBillEntity> list=productBillRepository.findByBillId(billId);
+        list.forEach(e->responses.add(BillDetailResponse.converter(e,
+                imageService.findByColorIdAndProductIdAndParent(e.getProductDetail().getColor().getId(),e.getProductDetail().getProduct().getId()))));
+        return responses;
+    }
+
+    @Override
+    public void updateBill(Long id,String status) {
+        BillEntity bill=billRepository.findById(id).orElseThrow(()->new ApiRequestException("Hóa đơn không tồn tại!"));
+        bill.setStatus(status);
         billRepository.save(bill);
     }
 }

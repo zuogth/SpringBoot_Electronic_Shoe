@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+    <th:block id="cssContent">
+        <link rel="stylesheet" href="/assets/css/cart.css">
+    </th:block>
+</head>
+<body>
+<section>
+    <div class="page-error">
+        <h3>Không tìm thấy trang bạn cần!</h3>
+        <div class="form-search-error">
+            <form action="">
+                <input type="text" placeholder="Tìm kiếm" />
+                <button type="button" class="h-btn-search"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <p>Quay lại <a href="/">trang chủ</a>.</p>
+        <div class="result-search-err">
+        </div>
+    </div>
+</section>
+<th:block id="jsContent">
+    <script src="/assets/js/cart.js"></script>
+</th:block>
+</body>
+</html>

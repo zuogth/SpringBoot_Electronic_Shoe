@@ -190,7 +190,7 @@ $(()=>{
             for(let cart of result.details) {
                 html += `<div class="prod-cart">
                       <div class="prod-img">
-                        <a href="/product/${cart.detail.id}"><img src="/assets/img/product/${cart.detail.image}" alt=""></a>
+                        <a href="/products/${cart.detail.product.slug+'/'+cart.detail.color.slug}"><img src="${cart.detail.image}" alt=""></a>
                       </div>
                       <div class="info-prod">
                         <div class="name-prod">

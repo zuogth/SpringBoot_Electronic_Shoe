@@ -7,6 +7,7 @@ import com.dth.spring_boot_shoe.repository.UserRepository;
 import com.dth.spring_boot_shoe.security.provider.Provider;
 import com.dth.spring_boot_shoe.security.user.CustomOAuth2User;
 import com.dth.spring_boot_shoe.security.user.OAuth2UserInfo;
+import com.dth.spring_boot_shoe.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -31,6 +32,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return processOAuthPostLogin(user,userRequest);
     }
 
+    //Nhận vào thông tin user, kiểm tra xem có tồn tại hay chưa -> chỉnh sửa hoặc thêm mới
     public OAuth2User processOAuthPostLogin(OAuth2User auth2User,OAuth2UserRequest userRequest) {
         Optional<UserEntity> existUser = userRepository.findByEmailAndStatus(auth2User.getAttribute("email"),1);
         UserEntity user;
@@ -44,6 +46,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return CustomOAuth2User.createCustomUser(user,auth2User.getAttributes());
     }
 
+    //Thêm mới thông tin của người dùng
     private UserEntity createUser(OAuth2UserRequest userRequest,OAuth2UserInfo auth2UserInfo){
         UserEntity user=new UserEntity();
         Optional<RoleEntity> role=roleRepository.findByCode("ROLE_USER");
@@ -55,10 +58,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setProvider(Provider.valueOf(userRequest.getClientRegistration().getRegistrationId()));
         user.setRoles(Arrays.asList(role.get()));
         user.setStatus(1);
+        user.setSlug(StringUtils.removeAccent(auth2UserInfo.getName()));
         return userRepository.save(user);
     }
+
+    //chỉnh sửa thông tin người dùng
     private UserEntity updateUser(UserEntity user,OAuth2UserInfo auth2UserInfo){
         user.setFullName(auth2UserInfo.getName());
+        user.setSlug(StringUtils.removeAccent(auth2UserInfo.getName()));
         return userRepository.save(user);
     }
 }

@@ -173,20 +173,10 @@
 .list-product .product:hover .product-hover{
     border: 1px solid black;
 }
-.list-product .product:hover span.price{
-    top: 260px;
-}
-.product span.price{
-    position: absolute;
-    background-color: white;
-    left: .5rem;
-    top: 270px;
-    transition: all .2s;
-    color: black;
-}
 .list-product .product img{width: 100%;}
 .product .info-prod{
     padding: .5rem;
+    position: relative;
 }
 .same-prods{
     margin: auto;
@@ -218,4 +208,16 @@
 }
 .btn-slick-same-next{
     right: 0;
+}
+
+@media only screen and (max-width:991px){
+    .list-product{
+        grid-template-columns: repeat(3,33%);
+    }
+}
+
+@media only screen and (max-width:578px){
+    .list-product{
+        grid-template-columns: repeat(2,50%);
+    }
 }

@@ -10,6 +10,6 @@ import javax.persistence.Table;
 @Entity
 @Data
 public class SizeEntity extends BaseEntity {
-    @Column(name = "name")
+    @Column(name = "name",unique = true)
     private Integer name;
 }

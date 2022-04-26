@@ -9,10 +9,13 @@ import com.dth.spring_boot_shoe.entity.ProductDetailEntity;
 import com.dth.spring_boot_shoe.entity.UserEntity;
 import com.dth.spring_boot_shoe.request.CartRequest;
 import com.dth.spring_boot_shoe.request.UserRequest;
+import com.dth.spring_boot_shoe.response.BillDetailResponse;
+import com.dth.spring_boot_shoe.response.BillResponse;
 import com.dth.spring_boot_shoe.response.CheckQuantity;
 import com.dth.spring_boot_shoe.response.SizeQuantity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BillService {
     BillEntity findByUserId(Long userId);
@@ -38,5 +41,13 @@ public interface BillService {
     List<BillDTO> findAllHisOrderByUser(Long userId);
 
     void changePaying();
+
+    //admin
+
+    Map<String,Object> getAll(int page,boolean now);
+
+    List<BillDetailResponse> findByBillId(Long billId);
+
+    void updateBill(Long id,String status);
 
 }

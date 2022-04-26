@@ -1,55 +1,56 @@
 'use strict';
 app.service('ProductService',['BaseServices',function (BaseServices){
     let urls={
-        getAll:"/product",
-        getDetailById:"/product",
-        getById:"/product/edit",
-        update:"/product/update",
-        insert:"/product/insert",
-        lock:"/product/lock"
+        getAll:"/products",
+        getDetailById:"/products/productDetails",
+        lock:"/products/status",
+        process:"/products"
     };
 
     let urlChrs={
-        getById:"/productdetail/edit",
-        insert: "/productdetail/insert",
-        updateSize:"/productdetail/update/size",
-        getSizes:"/productdetail/sizes",
-        insertSize:"/productdetail/insert/size",
-        lock:"/productdetail/lock"
+        process:"/productdetails",
+        processSize:"/productdetails/sizes",
+        lock:"/productdetails/status"
     }
 
     //product parent
-    function getAll(brand_id,page){
-        return BaseServices.callAPI(urls.getAll+"?page="+page+""+brand_id,"GET");
+    function getAll(brandSlug,page){
+        return BaseServices.callAPI(urls.getAll+"?page="+page+""+brandSlug,"GET");
     }
     function getDetailById(id,page){
         return BaseServices.callAPI(urls.getDetailById+"/"+id+"?page="+page,"GET");
     }
     function getById(id){
-        return BaseServices.callAPI(urls.getById+"/"+id,"GET")
+        return BaseServices.callAPI(urls.process+"/"+id,"GET")
     }
     function process(data){
         if(data.id){
-            return BaseServices.callAPI(urls.update,"PUT",data);
+            return BaseServices.callAPI(urls.process,"PUT",data);
         }
-        return BaseServices.callAPI(urls.insert,"POST",data);
+        return BaseServices.callAPI(urls.process,"POST",data);
+    }
+    function deletePr(id){
+        return BaseServices.callAPI(urls.process+"/"+id,"DELETE");
     }
 
     //product detail
-    function getDetailByIdDetail(id){
-        return BaseServices.callAPI(urlChrs.getById+"/"+id,"GET");
+    function getDetailByIdDetail(productId,colorId){
+        return BaseServices.callAPI(urlChrs.process+"?productId="+productId+"&colorId="+colorId,"GET");
     }
     function getSizes(data){
-        return BaseServices.callAPI(urlChrs.getSizes+"?productId="+data.productId+"&colorId="+data.colorId,"GET");
+        return BaseServices.callAPI(urlChrs.processSize+"?productId="+data.productId+"&colorId="+data.colorId,"GET");
     }
 
     function processSize(data,flag){
         if(flag==0){
-            return BaseServices.callAPI(urlChrs.updateSize+"?sizeId="+data.sizeChange,"PUT",data);
+            return BaseServices.callAPI(urlChrs.processSize+"?sizeId="+data.sizeChange,"PUT",data);
         }
-        return BaseServices.callAPI(urlChrs.insertSize+"?sizeId="+data.sizeChange,"POST",data);
+        return BaseServices.callAPI(urlChrs.processSize+"?sizeId="+data.sizeChange,"POST",data);
     }
 
+    function deleteCh(id,flag){
+        return BaseServices.callAPI(urlChrs.process+"/"+id+"?flag="+flag,"DELETE");
+    }
 
     function lockProd(flag,id,data){
         if(flag=='pr'){
@@ -65,6 +66,8 @@ app.service('ProductService',['BaseServices',function (BaseServices){
         getDetailByIdDetail:getDetailByIdDetail,
         getSizes:getSizes,
         processSize:processSize,
-        lockProd:lockProd
+        lockProd:lockProd,
+        deleteCh:deleteCh,
+        deletePr:deletePr
     };
 }])

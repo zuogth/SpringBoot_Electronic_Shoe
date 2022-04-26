@@ -133,7 +133,7 @@
                     <div class="detail-order-items">
                         <div class="prod-item-order" th:each="bill:${bills}">
                             <div class="item-order-l">
-                                <img th:src="'/assets/img/product/'+${bill.detail.image}" alt="">
+                                <img th:src="${bill.detail.image}" alt="">
                             </div>
                             <div class="item-order-r">
                                 <p th:text="'Giày '+${bill.detail.product.name}">Giày Duramo SL</p>

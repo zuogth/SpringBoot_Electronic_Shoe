@@ -18,8 +18,12 @@ import com.dth.spring_boot_shoe.security.provider.Provider;
 import com.dth.spring_boot_shoe.security.user.CustomOAuth2User;
 import com.dth.spring_boot_shoe.service.RoleService;
 import com.dth.spring_boot_shoe.service.UserService;
+import com.dth.spring_boot_shoe.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,6 +58,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRoles(Arrays.asList(role));
         user.setProvider(Provider.local);
+        user.setSlug(StringUtils.removeAccent(userDTO.getFullName()));
         return userRepository.save(user);
     }
 
@@ -84,11 +89,13 @@ public class UserServiceImpl implements UserService {
     public void update(InfoRequest request) {
         UserEntity user=userRepository.findByEmailAndStatus(SecurityContextHolder.getContext().getAuthentication().getName(),1)
                         .orElseThrow(()->new ApiRequestException("Qua thời gian chờ, hãy đăng nhập lại"));
+        String fullName=request.getLastName()+" "+request.getFirstName();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setFullName(request.getLastName()+" "+request.getFirstName());
+        user.setFullName(fullName);
         user.setPhone(request.getPhone());
         user.setGender(request.getGender());
+        user.setSlug(StringUtils.removeAccent(fullName));
         userRepository.save(user);
         Authentication authentication= new PreAuthenticatedAuthenticationToken(CustomOAuth2User.createCustomUser(user),user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -135,6 +142,16 @@ public class UserServiceImpl implements UserService {
         commentRepository.save(comment);
         HashMap<String,String> map=new HashMap<>();
         map.put("success","Cảm ơn bạn đã đánh giá");
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> findAll(int page) {
+        Map<String,Object> map=new HashMap<>();
+        Pageable pageable= PageRequest.of(page-1,10);
+        Page<UserEntity> entities=userRepository.findByStatus(1,pageable);
+        map.put("totalItems",entities.getTotalElements());
+        map.put("users",entities.getContent());
         return map;
     }
 

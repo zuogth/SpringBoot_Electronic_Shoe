@@ -47,12 +47,12 @@
             <p>Tổng tiền: <i th:text="${#numbers.formatDecimal(bill.totalPrice, 0, 'COMMA', 0, 'POINT')}+' VND'">10.500.000 VND</i> | Phí: <i>Miễn phí</i></p>
             <p>Ngày đặt: <i th:text="${bill.createdAt}">12/3/2021</i></p>
             <p>Trạng thái đơn hàng: <i th:text="${bill.status=='waiting'?'Chờ xác nhận':'Đang giao'}">Đang giao</i></p>
-            <p>Địa chỉ: <i th:text="${user.address}">Hà Nội</i></p>
+            <p>Địa chỉ: <i th:text="${bill.address}">Hà Nội</i></p>
           </div>
           <div class="list-item">
             <div class="prod-item-order" th:each="prod:${bill.dtos}">
               <div class="item-order-l">
-                <img th:src="'/assets/img/product/'+${prod.detail.image}" alt="">
+                <img th:src="${prod.detail.image}" alt="">
               </div>
               <div class="item-order-r">
                 <p th:text="${prod.detail.product.name}">Giày Duramo SL</p>
@@ -75,12 +75,12 @@
             <p>Tổng tiền: <i th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')}+' VND'">10.500.000 VND</i> | Phí: <i>Miễn phí</i></p>
             <p>Ngày đặt: <i th:text="${order.createdAt}">12/3/2021</i></p>
             <p>Ngày giao: <i th:text="${order.modifiedAt}">12/10/2021</i></p>
-            <p>Địa chỉ: <i th:text="${user.address}">Hà Nội</i></p>
+            <p>Địa chỉ: <i th:text="${order.address}">Hà Nội</i></p>
           </div>
           <div class="list-item">
             <div class="prod-item-order" th:each="prod:${order.dtos}">
               <div class="item-order-l">
-                <img th:src="'/assets/img/product/'+${prod.detail.image}" alt="">
+                <img th:src="${prod.detail.image}" alt="">
               </div>
               <div class="item-order-r">
                 <p th:text="${prod.detail.product.name}">Giày Duramo SL</p>

@@ -17,25 +17,26 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/brand")
+@RequestMapping("/products")
 public class BrandController {
     private final ProductService productService;
     private final SizeRepository sizeRepository;
     private final ColorRepository colorRepository;
     private final BrandRepository brandRepository;
 
-    @GetMapping("/{brand_id}")
-    public String shop(Model model, @PathVariable("brand_id") Long brand_id){
-        List<ProductEntity> products=productService.findByBrandId(brand_id);
-        List<ProductDetailDTO> details=productService.findByBrandIdGroupByProductIdAndColorId(brand_id);
-        List<SizeEntity> sizes=sizeRepository.findSizeByProduct(brand_id);
-        List<ColorEntity> colors=colorRepository.findColorByProduct(brand_id);
+    @GetMapping("/{brandSlug}")
+    public String shop(Model model, @PathVariable("brandSlug") String brandSlug){
+        List<ProductEntity> products=productService.findByBrandSlug(brandSlug);
+        List<ProductDetailDTO> details=productService.findByBrandSlugGroupByProductIdAndColorId(brandSlug);
+        List<SizeEntity> sizes=sizeRepository.findSizeByProduct(brandSlug);
+        List<ColorEntity> colors=colorRepository.findColorByProduct(brandSlug);
         List<BrandEntity> brands=brandRepository.findAll();
         model.addAttribute("products",products);
         model.addAttribute("details",details);
         model.addAttribute("sizes",sizes);
         model.addAttribute("colors",colors);
         model.addAttribute("brands",brands);
+        model.addAttribute("brand",brandRepository.findBySlug(brandSlug));
         return "brand";
     }
 }

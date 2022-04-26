@@ -59,6 +59,33 @@ $(document).ready(function () {
         $(this).addClass("size-active");
     });
 
+
+
+    $('#formSize label').click(function (){
+        let count=$(this).attr("count");
+        $('#errorSize').html('Còn '+count+' sản phẩm');
+    })
+})
+
+$(()=>{
+    $('#formSize label').each(function (index,element){
+        let id=$(element).attr("data-id");
+        let count=$(element).attr("count");
+        let list_cart=[];
+        list_cart=JSON.parse(window.localStorage.getItem('list_cart'));
+        if(list_cart!=null){
+            for (let item of list_cart){
+                if(item.productDetailId==id){
+                    count-=item.quantity;
+                }
+            }
+        }
+        count=count<0?0:count;
+        $(element).attr("count",count);
+    })
+})
+
+$(window).on("load",function (){
     $('.prod-popular').slick({
         slidesToShow: 4,
         slidesToScroll: 4,
@@ -100,29 +127,6 @@ $(document).ready(function () {
         prevArrow: '<a class="btn-slick-cus btn-slick-pre"><i class="fal fa-long-arrow-left"></i></a>',
         nextArrow: '<a class="btn-slick-cus btn-slick-next"><i class="fal fa-long-arrow-right"></i></a>'
     });
-
-    $('#formSize label').click(function (){
-        let count=$(this).attr("count");
-        $('#errorSize').html('Còn '+count+' sản phẩm');
-    })
-})
-
-$(()=>{
-    $('#formSize label').each(function (index,element){
-        let id=$(element).attr("data-id");
-        let count=$(element).attr("count");
-        let list_cart=[];
-        list_cart=JSON.parse(window.localStorage.getItem('list_cart'));
-        if(list_cart!=null){
-            for (let item of list_cart){
-                if(item.productDetailId==id){
-                    count-=item.quantity;
-                }
-            }
-        }
-        count=count<0?0:count;
-        $(element).attr("count",count);
-    })
 })
 // menu-prod
 $(document).ready(function(){

@@ -17,6 +17,7 @@ public class BillDTO{
     private List<BillReceiptDTO> dtos;
     private BigDecimal totalPrice;
     private String status;
+    private String address;
     private LocalDate createdAt;
     private LocalDate modifiedAt;
 }

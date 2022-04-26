@@ -1,15 +1,17 @@
 package com.dth.spring_boot_shoe.service.impl;
 
-import com.dth.spring_boot_shoe.entity.BrandEntity;
+import com.dth.spring_boot_shoe.dto.ProductListDTO;
+import com.dth.spring_boot_shoe.entity.*;
 import com.dth.spring_boot_shoe.exception.ApiRequestException;
+import com.dth.spring_boot_shoe.exception.RequestException;
 import com.dth.spring_boot_shoe.repository.*;
 import com.dth.spring_boot_shoe.request.ProductFilter;
 import com.dth.spring_boot_shoe.dto.ProductDetailDTO;
-import com.dth.spring_boot_shoe.entity.ProductDetailEntity;
-import com.dth.spring_boot_shoe.entity.ProductEntity;
+import com.dth.spring_boot_shoe.response.ChartResponse;
 import com.dth.spring_boot_shoe.response.Product;
-import com.dth.spring_boot_shoe.response.ProductDetail;
+import com.dth.spring_boot_shoe.response.ProductDetailResponse;
 import com.dth.spring_boot_shoe.response.SizeQuantity;
+import com.dth.spring_boot_shoe.service.CommentService;
 import com.dth.spring_boot_shoe.service.ImageService;
 import com.dth.spring_boot_shoe.service.ProductService;
 import com.dth.spring_boot_shoe.utils.StringUtils;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -34,18 +38,21 @@ public class ProductServiceEmpl implements ProductService {
     private final ProductReceiptRepository productReceiptRepository;
     private final ProductBillRepository productBillRepository;
     private final BrandRepository brandRepository;
+    private final BillRepository billRepository;
+    private final UserRepository userRepository;
     private final ImageService imageService;
+    private final CommentService commentService;
     private final ModelMapper modelMapper;
 
     @Override
-    public List<ProductEntity> findByBrandId(Long brand_id) {
+    public List<ProductEntity> findByBrandSlug(String brandSlug) {
         Pageable pageable=PageRequest.of(0,10);
-        return productRepository.findAllByBrandIdAndStatusNot(brand_id,-1,pageable).getContent();
+        return productRepository.findAllByBrandSlugAndStatusNot(brandSlug,-1,pageable).getContent();
     }
 
     @Override
-    public List<ProductDetailDTO> findByBrandIdGroupByProductIdAndColorId(Long brand_id) {
-        List<ProductDetailEntity> detailEntities=productDetailRepository.findByBrandIdGroupByProductIdAndColorId(brand_id);
+    public List<ProductDetailDTO> findByBrandSlugGroupByProductIdAndColorId(String brandSlug) {
+        List<ProductDetailEntity> detailEntities=productDetailRepository.findByBrandSlugGroupByProductIdAndColorId(brandSlug);
         List<ProductDetailDTO> sameDTOS=new ArrayList<>();
         detailEntities.forEach(entity ->
                 sameDTOS.add(ProductDetailDTO.converter(modelMapper,entity,imageService.findByColorIdAndProductIdAndParent(entity.getColor().getId(),entity.getProduct().getId()))));
@@ -53,9 +60,10 @@ public class ProductServiceEmpl implements ProductService {
     }
 
     @Override
-    public ProductDetailDTO findById(Long id) {
-        Optional<ProductDetailEntity> prod= productDetailRepository.findByIdAndStatusNot(id,-1);
-        return ProductDetailDTO.converter(modelMapper,prod.get(),imageService.findByColorIdAndProductIdAndParent(prod.get().getColor().getId(),prod.get().getProduct().getId()));
+    public ProductDetailDTO findBySlugAndColor(String slug,String color) {
+        ProductDetailEntity prod= productDetailRepository.findByProductSlugAndColorAndStatusNot(slug,color)
+                .orElseThrow(()->new RequestException("Sản phẩm không tồn tại",""));
+        return ProductDetailDTO.converter(modelMapper,prod,imageService.findByColorIdAndProductIdAndParent(prod.getColor().getId(),prod.getProduct().getId()));
     }
 
     @Override
@@ -161,18 +169,18 @@ public class ProductServiceEmpl implements ProductService {
 
     //get list product parent
     @Override
-    public Map<String,Object> findAllByBrand(Long brand_id, int page) {
+    public Map<String,Object> findAllByBrand(String brandSlug, int page) {
         Map<String,Object> map=new HashMap<>();
         Pageable pageable= PageRequest.of(page-1,10);
         Page<ProductEntity> entities=
-                brand_id==null?productRepository.findByStatusNot(-1,pageable):
-                        productRepository.findAllByBrandIdAndStatusNot(brand_id,-1,pageable);
+                brandSlug.equals("")?productRepository.findByStatusNot(-1,pageable):
+                        productRepository.findAllByBrandSlugAndStatusNot(brandSlug,-1,pageable);
         map.put("totalItems",entities.getTotalElements());
         List<Product> list=new ArrayList<>();
         entities.forEach(entity->
             list.add(Product.converter(entity,null,
-                    Integer.valueOf(productBillRepository.findSumProductSold(entity.getId()).get(0)[0].toString()),
-                    Integer.valueOf(productReceiptRepository.findSumProductReceipt(entity.getId()).get(0)[0].toString())))
+                    productBillRepository.findSumProductSold(entity.getId()),
+                    productReceiptRepository.findSumProductReceipt(entity.getId())))
         );
         map.put("products",list);
         return map;
@@ -184,13 +192,13 @@ public class ProductServiceEmpl implements ProductService {
         Map<String,Object> map=new HashMap<>();
         ProductEntity product=productRepository.findByIdAndStatusNot(product_id,-1)
                 .orElseThrow(()->new ApiRequestException("Sản phẩm không được tìm thấy"));
-        List<ProductDetail> detailList=new ArrayList<>();
+        List<ProductDetailResponse> detailList=new ArrayList<>();
         Pageable pageable=PageRequest.of(page-1,5);
         Page<ProductDetailEntity> entities=productDetailRepository.findByProductIdGroupByColor(product_id,pageable);
         entities.forEach(e->
-                detailList.add(ProductDetail.converter(e,
-                        Integer.valueOf(productBillRepository.findSumProductDetailSold(e.getProduct().getId(),e.getColor().getId()).get(0)[0].toString()),
-                        Integer.valueOf(productReceiptRepository.findSumProductDetailReceipt(e.getProduct().getId(),e.getColor().getId()).get(0)[0].toString()),
+                detailList.add(ProductDetailResponse.converter(e,
+                        productBillRepository.findSumProductDetailSold(e.getProduct().getId(),e.getColor().getId()),
+                        productReceiptRepository.findSumProductDetailReceipt(e.getProduct().getId(),e.getColor().getId()),
                         imageService.findByColorIdAndProductIdAndParent(e.getColor().getId(),e.getProduct().getId()),null)));
         map.put("totalItems",entities.getTotalElements());
         map.put("product",Product.converter(product,detailList,0,0));
@@ -247,4 +255,105 @@ public class ProductServiceEmpl implements ProductService {
         productRepository.save(product);
     }
 
+    @Override
+    public void delete(Long id) {
+        ProductEntity product=productRepository.findByIdAndStatusNot(id,-1)
+                .orElseThrow(()-> new ApiRequestException("Sản phẩm không tồn tại!"));
+        List<ProductDetailEntity> detailEntities=productDetailRepository.findByProductIdAndStatusNot(id,-1);
+        detailEntities.forEach(e->{
+            e.setStatus(-1);
+            productDetailRepository.save(e);
+        });
+        product.setStatus(-1);
+        productRepository.save(product);
+    }
+
+    @Override
+    public List<ProductListDTO> findTopBuy() {
+        List<ProductListDTO> list=new ArrayList<>();
+        List<ProductDetailEntity> entities=productDetailRepository.findTopBySumQuantity();
+        entities.forEach(e->{
+            List<CommentEntity> commentEntities=commentService.findByProductId(e.getProduct().getId());
+            double avg=commentEntities.stream().mapToDouble(CommentEntity::getStar).sum()/commentEntities.size();
+            list.add(ProductListDTO.converter(e,
+                    imageService.findByColorIdAndProductIdAndParent(e.getColor().getId(),e.getProduct().getId()),
+                    (double)Math.round(avg*10)/10));
+        });
+        return list;
+    }
+
+    @Override
+    public List<ProductListDTO> findTopProductNew() {
+        List<ProductListDTO> list=new ArrayList<>();
+        List<ProductDetailEntity> entities=productDetailRepository.findTopByProductNew();
+        entities.forEach(e->list.add(ProductListDTO.converter(e,
+                    imageService.findByColorIdAndProductIdAndParent(e.getColor().getId(),e.getProduct().getId()),
+                    0)));
+        return list;
+    }
+
+    @Override
+    public Map<String,Object> getChart(int year) {
+        Map<String,Object> map=new HashMap<>();
+        List<ChartResponse> responses=new ArrayList<>();
+        List<BrandEntity> brandEntities=brandRepository.findAll();
+        List<String> labels=getMonths(year);
+        brandEntities.forEach(brand->{
+            int yearNow= LocalDate.now().getYear();
+            List<BigDecimal> data=new ArrayList<>();
+            int monthNow=year==yearNow?LocalDate.now().getMonthValue():12;
+            for(int i=1;i<=monthNow;i++){
+                data.add(productBillRepository.SUM_BY_BRAND(brand.getId(),i,year));
+            }
+            responses.add(new ChartResponse(brand.getName(),getColor(brand.getName()),getColor(brand.getName()),data));
+        });
+        map.put("labels",labels);
+        map.put("chart",responses);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getAll() {
+        Map<String,Object> map=new HashMap<>();
+        List<String> labels=getMonths(2022);
+        List<ChartResponse> responses=new ArrayList<>();
+        responses.add(new ChartResponse("Năm nay","blue","blue",getDataBar(LocalDate.now().getYear())));
+        responses.add(new ChartResponse("Năm trước","grey","grey",getDataBar(LocalDate.now().getYear()-1)));
+        map.put("labels",labels);
+        map.put("chart",responses);
+        map.put("countBill",Integer.valueOf(billRepository.findByBillTypeAndCreatedAt().get(0)[0].toString()));
+        map.put("countUser",Integer.valueOf(userRepository.getCountUsers().get(0)[0].toString()));
+        return map;
+    }
+
+    private static Map<String,String> map;
+    static {
+        map=new HashMap<>();
+        map.put("adidas","red");
+        map.put("converse","blue");
+        map.put("nike","green");
+    }
+
+    private String getColor(String brandName){
+        return map.get(brandName.toLowerCase());
+    }
+
+    private List<String> getMonths(int year){
+        int yearNow= LocalDate.now().getYear();
+        List<String> labels=new ArrayList<>();
+        int monthNow=year==yearNow?LocalDate.now().getMonthValue():12;
+        for(int i=1;i<=monthNow;i++){
+            labels.add(LocalDate.of(year,i,1).getMonth().toString());
+        }
+        return labels;
+    }
+
+    private List<BigDecimal> getDataBar(int year){
+        int monthNow=LocalDate.now().getMonthValue();
+        List<BigDecimal> data=new ArrayList<>();
+        for(int i=1;i<=monthNow;i++){
+            data.add(productBillRepository.SUM_PRICE_BY_MONTH(i,year));
+        }
+        return data;
+    }
 }

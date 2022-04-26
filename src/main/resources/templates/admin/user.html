@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin_layout :: admin-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Người dùng</title>
+
+    <th:block id="cssContent">
+
+    </th:block>
+</head>
+<body>
+<section class="content" ng-controller="UsersController">
+    {{setTitle('Người dùng','user')}}
+    <div class="alert-noti" ng-show="message.show">
+        <i class="fas fa-times close-alert" ng-click="message={}"></i>
+        <span>{{message.content}}</span>
+    </div>
+    <div class="container-fluid">
+        <div class="my-card-header">
+            <div style="display: flex;">
+            </div>
+            <div style="width: 20%;">
+                <input class="form-control" type="text" id="myInput" placeholder="Search..." onkeyup="searchTable(this,'user')"/>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <table id="user" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Tên</th>
+                        <th>Giới tính</th>
+                        <th>Điện thoại</th>
+                        <th>Địa chỉ</th>
+                        <th>Phương thức</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="user in users">
+                        <td>{{user.email}}</td>
+                        <td>{{user.fullName}}</td>
+                        <td>{{gender(user.gender)}}</td>
+                        <td>{{user.phone}}</td>
+                        <td>{{user.address}}</td>
+                        <td>{{user.provider}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <ul uib-pagination total-items="totalItems"
+                    ng-model="currentPage" max-size="3"
+                    class="pagination-sm" rotate="false"
+                    previous-text="&lsaquo;" next-text="&rsaquo;"
+                    ng-change="pageChanged()"></ul>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<th:block id="jsContent">
+    <script src="/assets/admin/script/users/UsersService.js"></script>
+    <script src="/assets/admin/script/users/UsersController.js"></script>
+</th:block>
+</body>
+</html>

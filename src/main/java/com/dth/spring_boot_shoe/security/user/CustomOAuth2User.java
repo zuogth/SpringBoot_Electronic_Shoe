@@ -30,6 +30,8 @@ public class CustomOAuth2User implements UserDetails, OAuth2User {
     @Setter
     private Map<String, Object> attributes;
 
+
+    //social
     public static CustomOAuth2User createCustomUser(UserEntity user,Map<String,Object> attributes){
         List<GrantedAuthority> authorities=Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         return new CustomOAuth2User(user.getEmail(),user.getPassword(),user.getFullName(),
@@ -37,6 +39,7 @@ public class CustomOAuth2User implements UserDetails, OAuth2User {
     }
 
 
+    //local
     public static CustomOAuth2User createCustomUser(UserEntity user){
         List<GrantedAuthority> authorities= user.getRoles().stream().
                 map(role -> new SimpleGrantedAuthority(role.getCode())).collect(Collectors.toList());

@@ -36,9 +36,9 @@ public class Product {
     private LocalDate createdDate;
     private Integer receipt;
     private Integer sold;
-    private List<ProductDetail> detailList;
+    private List<ProductDetailResponse> detailList;
 
-    public static Product converter(ProductEntity entity,List<ProductDetail> detailList,Integer sold,Integer receipt){
+    public static Product converter(ProductEntity entity, List<ProductDetailResponse> detailList, Integer sold, Integer receipt){
         return Product.builder().id(entity.getId()).createdDate(entity.getCreatedAt())
                 .name(entity.getName()).brand(entity.getBrand().getId().toString())
                 .description(entity.getDescription()).content(entity.getContent())

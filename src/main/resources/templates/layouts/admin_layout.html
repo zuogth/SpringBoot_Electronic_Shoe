@@ -18,7 +18,11 @@
     <title th:replace="${title}">Home</title>
 </head>
 <body class="hold-transition sidebar-mini">
+<div class="preloader-cus justify-content-center align-items-center">
+    <img src="/assets/img/loader.gif" alt="loading" height="100" width="100">
+</div>
 <div class="wrapper">
+
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
@@ -122,7 +126,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="../../index3.html" class="brand-link">
+        <a href="/admin" class="brand-link">
             <img src="/assets/admin/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">AdminLTE 3</span>
         </a>
@@ -135,7 +139,7 @@
                     <img src="/assets/admin/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block" sec:authentication="principal.fullName">Alexander Pierce</a>
+                    <a href="#" class="d-block" sec:authentication="principal.fullName" id="fullNameUser">Alexander Pierce</a>
                     <a href="/logout" class="d-block">Đăng xuất</a>
                 </div>
             </div>
@@ -158,11 +162,47 @@
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <a href="/admin/product" class="nav-link">
+                        <a href="/admin/products" class="nav-link" id="nav-product">
                             <i class="nav-icon fab fa-product-hunt"></i>
                             <p>
-                                Product
-                                <i class="fas fa-angle-left right"></i>
+                                Sản phẩm
+                                <i class="fas fa-angle-double-right right"></i>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/receipts" class="nav-link" id="nav-receipt">
+                            <i class="nav-icon fas fa-receipt"></i>
+                            <p>
+                                Hóa đơn nhập
+                                <i class="fas fa-angle-double-right right"></i>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/bills" class="nav-link" id="nav-bill">
+                            <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                            <p>
+                                Hóa đơn bán
+                                <i class="fas fa-angle-double-right right"></i>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/users" class="nav-link" id="nav-user">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>
+                                Người dùng
+                                <i class="fas fa-angle-double-right right"></i>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/properties" class="nav-link" id="nav-properties">
+                            <i class="nav-icon fas fa-align-left"></i>
+                            <p>
+                                Khác
+                                <i class="fas fa-angle-double-right right"></i>
                             </p>
                         </a>
                     </li>
@@ -218,6 +258,7 @@
 <script src="/assets/admin/js/ui-bootstrap-custom-tpls-2.5.0.min.js"></script>
 <script src="/assets/admin/js/module.js"></script>
 <script src="/assets/admin/js/BaseServices.js"></script>
+<script src="/assets/admin/js/main.js"></script>
 
 <th:block th:replace="${jsContent}"/>
 </body>

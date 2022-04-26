@@ -16,8 +16,11 @@ public class ImageEntity extends BaseEntity{
     @Column(name = "color_id", nullable = false)
     private Long colorId;
 
-    @Column(name = "image")
+    @Column(name = "image",length = 45)
     private String image;
+
+    @Column(name = "url")
+    private String url;
 
     @Column(name = "parent")
     private Integer parent;

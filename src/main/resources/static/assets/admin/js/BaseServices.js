@@ -18,4 +18,24 @@ app.service('BaseServices',function ($http,$log,$q,$rootScope){
         });
         return def.promise;
     }
+
+    $rootScope.toMoney=function (price){
+        return price?price.toLocaleString('it-IT', {
+            style: 'currency',
+            currency: 'VND'
+        }):'';
+    }
+
+
+    $rootScope.setTitle=function (title,id) {
+        $("h1#title").html(title);
+        $("a#nav-"+id).addClass("active");
+    }
 })
+
+function searchTable (e,id){
+    let value = $(e).val().toLowerCase();
+    $("#"+id+" tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+}

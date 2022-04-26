@@ -1,3 +1,11 @@
+// loader
+$(window).on("load",function(){
+    setTimeout(function (){
+        $(".preloader-cus").addClass("non-active-loader");
+    },1000);
+
+})
+
 // Lên đầu trang
 
 $(document).ready(function () {
@@ -27,6 +35,7 @@ $(document).ready(function () {
     $(".h-btn-close-search").click(function () {
         $("#h-search").removeClass("search-nav-active");
         $("body").removeClass("scroll-hand");
+        $(".result-search").html('');
     });
     $(".btn-toggler-nav").click(function () {
         $("#nav-resp").addClass("search-nav-active");
@@ -41,33 +50,42 @@ $(document).ready(function () {
 $(()=>{
     $('.h-search-input input').keyup(function (){
         //let key=ChangeToSlug($(this).val());
-        let data={};
-        data['slug']=$(this).val();
-        $.ajax({
-            url:'/api/search',
-            type:'POST',
-            dataType:'JSON',
-            contentType:'application/json',
-            data:JSON.stringify(data),
-            success:function (result){
-                let html='';
-                for (let prod of result){
-                    html+=`<div class="result-item">
-                                <img src="/assets/img/product/${prod.image}" alt="img">
+        search(this,'result-search');
+    })
+
+    $('.form-search-error input').keyup(function (){
+        //let key=ChangeToSlug($(this).val());
+        search(this,'result-search-err');
+    })
+})
+
+function search(elm,genClass){
+    let data={};
+    data['slug']=$(elm).val();
+    $.ajax({
+        url:'/api/search',
+        type:'POST',
+        dataType:'JSON',
+        contentType:'application/json',
+        data:JSON.stringify(data),
+        success:function (result){
+            let html='';
+            for (let prod of result){
+                html+=`<div class="result-item">
+                                <img src="${prod.image}" alt="img">
                                 <div class="info-result">
                                     <h5>${prod.product.name}</h5>
                                     <p>${toMoney(prod.product.price)}</p>
                                 </div>
                                 <a href="/product/${prod.id}">Xem chi tiết</a>
                             </div>`;
-                }
-                $('.result-search').html(html);
-            },error:function (){
-                alert("Error");
             }
-        })
+            $('.'+genClass).html(html);
+        },error:function (){
+            alert("Error");
+        }
     })
-})
+}
 
 $(()=>{
     $('li#icon-user').mouseenter(function(){

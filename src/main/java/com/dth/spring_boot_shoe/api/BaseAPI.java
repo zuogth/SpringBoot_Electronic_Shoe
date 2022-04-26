@@ -27,7 +27,7 @@ public class BaseAPI {
 
     @GetMapping("/brand")
     public List<ProductDetailDTO> brand() {
-        return productService.findByBrandIdGroupByProductIdAndColorId(1L);
+        return productService.findByBrandSlugGroupByProductIdAndColorId("adidas");
     }
 
     @PostMapping("/filter")

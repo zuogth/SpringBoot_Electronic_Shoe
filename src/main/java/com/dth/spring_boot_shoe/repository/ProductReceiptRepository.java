@@ -1,6 +1,8 @@
 package com.dth.spring_boot_shoe.repository;
 
 import com.dth.spring_boot_shoe.entity.ProductReceiptEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,24 +34,49 @@ public interface ProductReceiptRepository extends JpaRepository<ProductReceiptEn
             "group by pd.id) as b " +
             "where b.product_id=:product_id and color_id=:color_id " +
             "group by b.product_id,b.color_id",nativeQuery = true)
-    List<Object[]> findQuantityByProductIdAndColorId(@Param("product_id") Long product_id,
+    Integer findQuantityByProductIdAndColorId(@Param("product_id") Long product_id,
                                                      @Param("color_id") Long color_id);
 
     //sum product receipt
     @Query(value = "select if(sum(pr.quantity) is null,0,sum(pr.quantity)) receipt " +
             "from product_detail pd left join product_receipt pr on pd.id=pr.product_detail_id " +
             "where pd.product_id=:product_id",nativeQuery = true)
-    List<Object[]> findSumProductReceipt(@Param("product_id") Long product_id);
+    Integer findSumProductReceipt(@Param("product_id") Long product_id);
 
     //sum product detail receipt
     @Query(value = "select if(sum(pr.quantity) is null,0,sum(pr.quantity)) receipt " +
             "from product_detail pd left join product_receipt pr on pd.id=pr.product_detail_id " +
             "where pd.product_id=:product_id and pd.color_id=:color_id",nativeQuery = true)
-    List<Object[]> findSumProductDetailReceipt(@Param("product_id") Long product_id,
+    Integer findSumProductDetailReceipt(@Param("product_id") Long product_id,
                                                @Param("color_id") Long color_id);
 
     //sum receipt by each product detail
     @Query(value = "select if(sum(quantity) is null,0,sum(quantity)) receipt from product_receipt " +
             "where product_detail_id=:id",nativeQuery = true)
-    List<Object[]> findSumReceiptByEachProductDetail(@Param("id") Long id);
+    Integer findSumReceiptByEachProductDetail(@Param("id") Long id);
+
+    //sum quantity total by each receipt
+
+    @Query("select sum(pr.quantity) as quantity from ProductReceiptEntity pr " +
+            "where pr.receipt.id=:receipt_id")
+    Integer findQuantityTotal(@Param("receipt_id") Long receipt_id);
+
+    //get receipt detail by receipt_id
+    @Query("select pr from ProductReceiptEntity pr " +
+            "where pr.receipt.id=:receiptId " +
+            "group by pr.productDetail.product.id, pr.productDetail.color.id")
+    Page<ProductReceiptEntity> findByReceiptIdAndGroupByProductAndColor(@Param("receiptId") Long receiptId,
+                                                              Pageable pageable);
+
+    //get sum receipt by color
+    @Query("select sum(pr.quantity) as quantity from ProductReceiptEntity pr " +
+            "where pr.receipt.id=:receiptId and " +
+            "pr.productDetail.product.id=:productId and " +
+            "pr.productDetail.color.id=:colorId")
+    Integer findSumReceiptByReceiptIdAndGroupByColor(@Param("receiptId") Long receiptId,
+                                                            @Param("colorId") Long colorId,
+                                                            @Param("productId") Long productId);
+    @Query(value = "select sum(pr.quantity) from ProductReceiptEntity pr " +
+            "where pr.productDetail.product.brand.slug=:brandSlug")
+    Integer findSumProductByBrand(@Param("brandSlug") String brandSlug);
 }

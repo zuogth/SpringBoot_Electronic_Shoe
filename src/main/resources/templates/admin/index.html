@@ -3,14 +3,84 @@
       th:replace="~{layouts/admin_layout :: admin-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
 <head>
     <meta charset="UTF-8">
-    <title>Product</title>
+    <title>Trang chủ</title>
     <th:block id="cssContent">
+        <style>
+            .getYear{
+                display: flex;
+                width: 10rem;
+                margin: auto;
+            }
+            .getYear button{
+                background: transparent;
+                border: none;
+            }
+            .getYear .year{
+                width: 50%;
+                text-align: center;
+            }
+        </style>
     </th:block>
 </head>
 <body>
-<section class="content"></section>
+<section class="content" ng-controller="HomesController">
+    {{setTitle('Trang chủ','home')}}
+    <div class="alert-noti" ng-show="message.show">
+        <i class="fas fa-times close-alert" ng-click="message={}"></i>
+        <span>{{message.content}}</span>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{countBill}}</h3>
+                        <p>Đơn đặt tháng này</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <a href="/admin/bills?now=true" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{countUser}}</h3>
+                        <p>Số người dùng</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <a href="/admin/users" class="small-box-footer">Chi tiết<i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        <div class="row">
+            <div class="card-body col-sm-6">
+                <div class="getYear">
+                    <button ng-click="getYear('pre')"><i class="fas fa-caret-left"></i></button>
+                    <div class="year">{{year}}</div>
+                    <button ng-click="getYear('next')"><i class="fas fa-caret-right"></i></button>
+                </div>
+                <canvas id="myChart"></canvas>
+            </div>
+            <div class="card-body col-sm-6">
+                <canvas id="sales-chart" height="200"></canvas>
+            </div>
+        </div>
+
+    </div>
+</section>
 
 <th:block id="jsContent">
+    <script src="/assets/admin/js/chart.min.js"></script>
+    <script src="/assets/admin/script/homes/HomesService.js"></script>
+    <script src="/assets/admin/script/homes/HomesController.js"></script>
 </th:block>
 </body>
 </html>

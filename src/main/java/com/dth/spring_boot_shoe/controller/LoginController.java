@@ -3,6 +3,7 @@ package com.dth.spring_boot_shoe.controller;
 import com.dth.spring_boot_shoe.dto.UserDTO;
 import com.dth.spring_boot_shoe.entity.UserEntity;
 import com.dth.spring_boot_shoe.service.UserService;
+import com.dth.spring_boot_shoe.utils.SendMailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 public class LoginController {
 
     private final UserService userService;
+    private final SendMailService sendMailService;
 
 
     @GetMapping("/login")
@@ -36,7 +38,8 @@ public class LoginController {
         if(bindingResult.hasErrors()){
             return "/register";
         }
-        userService.save(user);
+        //userService.save(user);
+        sendMailService.sendHtml(user.getEmail());
         return "redirect:/login";
     }
 

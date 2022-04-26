@@ -29,13 +29,16 @@ public class ApiHandleException {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public List<ExceptionResponse> handleValidationExceptions(MethodArgumentNotValidException e){
+    public Map<String,Object> handleValidationExceptions(MethodArgumentNotValidException e){
+        Map<String,Object> map=new HashMap<>();
         List<ExceptionResponse> responses=new ArrayList<>();
         e.getBindingResult().getAllErrors().forEach(err->{
             String fieldName=((FieldError)err).getField();
             String message=err.getDefaultMessage();
             responses.add(new ExceptionResponse(fieldName,message));
         });
-        return responses;
+        map.put("statusCode","3400");
+        map.put("valid",responses);
+        return map;
     }
 }

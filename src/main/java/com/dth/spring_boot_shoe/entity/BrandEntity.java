@@ -2,9 +2,7 @@ package com.dth.spring_boot_shoe.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Table(name = "brand")
 @Entity
@@ -15,4 +13,14 @@ public class BrandEntity extends BaseEntity {
 
     @Column(name = "slug", length = 45)
     private String slug;
+
+    @Column(name = "banner", length = 45)
+    private String banner;
+
+    @Column(name = "url")
+    private String url;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "discount_id")
+    private DiscountEntity discount;
 }

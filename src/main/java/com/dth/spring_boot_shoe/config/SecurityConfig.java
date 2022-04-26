@@ -22,49 +22,80 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserService userService;
-    private final CustomOAuth2UserService customOAuth2UserService;
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler(){
         return new CustomAuthenticationFailureHandler();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+    @Configuration
+    @Order(1)
+    public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.csrf().disable();
+            http.antMatcher("/api/**")
+                    .authorizeRequests()
+                    .antMatchers("/api/admin/**").hasRole("ADMIN")
+                    .antMatchers("/api/**").permitAll()
+                    .and()
+                    .exceptionHandling().accessDeniedPage("/api/login-page?accessDenied")
+                    .and()
+                    .formLogin()
+                    .loginPage("/api/login-page").usernameParameter("email")
+                    .failureUrl("/api/login-fail")
+                    .defaultSuccessUrl("/api/default")
+                    .and()
+                    .logout()
+                    .logoutUrl("/api/logout-url");
+        }
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.antMatcher("/**").authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .and()
-                .exceptionHandling().accessDeniedPage("/login?accessDenied")
-                .and()
-                .formLogin()
-                .loginPage("/login").usernameParameter("email")
-                .defaultSuccessUrl("/")
-                .failureUrl("/login?error")
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true)
-                .permitAll()
-                .and()
-                .oauth2Login()
-                .loginPage("/login")
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService);
+    @Configuration
+    @Order(2)
+    @RequiredArgsConstructor
+    public static class WebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter{
 
+        private final UserService userService;
+        private final CustomOAuth2UserService customOAuth2UserService;
+
+        @Bean
+        public BCryptPasswordEncoder passwordEncoder(){
+            return new BCryptPasswordEncoder();
+        }
+
+        @Override
+        public void configure(AuthenticationManagerBuilder auth) throws Exception {
+            auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        }
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.csrf().disable();
+            http.antMatcher("/**").authorizeRequests()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/info/**","/delivery/**").authenticated()
+                    .and()
+                    .exceptionHandling().accessDeniedPage("/login?accessDenied")
+                    .and()
+                    .formLogin()
+                    .loginPage("/login").usernameParameter("email")
+                    .defaultSuccessUrl("/")
+                    .failureUrl("/login?error")
+                    .permitAll()
+                    .and()
+                    .logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login?logout")
+                    .deleteCookies("JSESSIONID")
+                    .invalidateHttpSession(true)
+                    .permitAll()
+                    .and()
+                    .oauth2Login()
+                    .loginPage("/login")
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService);
+        }
     }
+
 }

@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
     Optional<ProductEntity> findByIdAndStatusNot(Long id,Integer status);
     Page<ProductEntity> findByStatusNot(Integer status, Pageable pageable);
-    Page<ProductEntity> findAllByBrandIdAndStatusNot(Long brand_id,Integer status, Pageable pageable);
+    Page<ProductEntity> findAllByBrandSlugAndStatusNot(String brandSlug,Integer status, Pageable pageable);
     @Query("select p from ProductEntity p join ProductDetailEntity pd on p.id=pd.product.id " +
             "where p.brand.id=:brand_id and pd.color.id=:color_id and pd.size.id=:size_id " +
             "group by p.id")
@@ -26,5 +26,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
             "group by pd.product.id")
     List<ProductEntity> findProductByBrandAndSize(@Param("brand_id") Long brand_id,
                                                   @Param("size_id") Long size_id);
+
+    List<ProductEntity> findByBrandIdAndStatusNot(Long brandId,Integer status);
 
 }

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin_layout :: admin-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Các thuộc tính</title>
+    <th:block id="cssContent">
+        <style>
+            .card-color{
+                display: block;
+                width: 2rem;
+                height: 1rem;
+                margin: auto;
+                border: 1px solid;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<section class="content" ng-controller="PropertiesController">
+    {{setTitle('Các thuộc tính','properties')}}
+    <div class="alert-noti" ng-show="message.show">
+        <i class="fas fa-times close-alert" ng-click="message={}"></i>
+        <span>{{message.content}}</span>
+    </div>
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body row">
+                <div class="col-sm-12">
+                    <label>Brand</label>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Banner</th>
+                            <th>Tên</th>
+                            <th>Số lượng đã nhập</th>
+                            <th>Số lượng đã bán</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="brand in brands">
+                            <td style="width: 200px;">
+                                <img src="{{brand.info.url}}" alt="banner" width="200px"/>
+                            </td>
+                            <td>{{brand.info.name}}</td>
+                            <td>{{brand.receipt}}</td>
+                            <td>{{brand.sold}}</td>
+                            <td><i class="far fa-edit btn" data-toggle="modal"
+                                   data-target="#brandOption" ng-click="getBrandById($index)"></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--modal edit brand-->
+                    <div class="modal fade" id="brandOption" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Brand</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" id="formBrand" name="formBrand">
+                                        <div class="form-group">
+                                            <label for="fileBanner" style="display: block">
+                                                <img src="{{brand.info.url}}" id="imgBanner" style='width:100%;height: 100%;' alt="Chọn banner">
+                                            </label>
+                                            <input hidden type="file" id="fileBanner" name="url" data-img="imgBanner" onchange="selectImg(this)" accept="image/png, image/jpeg, image/jpg" ng-required="true">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" ng-disabled="formBrand.url.$error.required" ng-click="brandProcess()">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label>Màu</label>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Màu</th>
+                                <th>Code</th>
+                                <th><i class="fas fa-plus-circle" data-toggle="modal"
+                                       data-target="#colorOption" ng-click="showFormColor()" style="color: rgb(0, 157, 104);"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="color in colors">
+                                <td>{{color.name}}</td>
+                                <td>
+                                    <span class="card-color" style="background-color: {{color.code}}"></span>
+                                </td>
+                                <td><i class="far fa-edit btn" data-toggle="modal"
+                                       data-target="#colorOption" ng-click="getColorById(color.id)"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ul uib-pagination total-items="totalColors"
+                        ng-model="currentColorPage" max-size="3"
+                        class="pagination-sm" rotate="false"
+                        previous-text="&lsaquo;" next-text="&rsaquo;"
+                        ng-change="colorPageChanged()"></ul>
+                    <!--modal add color-->
+                    <div class="modal fade" id="colorOption" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Màu</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" id="formColor">
+                                        <div class="form-group">
+                                            <label for="name">Tên</label>
+                                            <input type="text" name="name" id="name" ng-model="color.name" class="form-control">
+                                            <span id="nameEr" class="errors"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="code">Code</label>
+                                            <input type="color" name="code" id="code" ng-model="color.code" class="form-control col-2">
+                                            <span id="codeEr" class="errors"></span>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="colorProcess()">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label>Cỡ</label>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Cỡ</th>
+                                <th><i class="fas fa-plus-circle" data-toggle="modal"
+                                       data-target="#sizeOption" ng-click="showFormSize()" style="color: rgb(0, 157, 104);"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="size in sizes">
+                                <td>{{size.name}}</td>
+                                <td><i class="far fa-edit btn" data-toggle="modal"
+                                       data-target="#sizeOption" ng-click="getSizeById(size.id)"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ul uib-pagination total-items="totalSizes"
+                        ng-model="currentSizePage" max-size="3"
+                        class="pagination-sm" rotate="false"
+                        previous-text="&lsaquo;" next-text="&rsaquo;"
+                        ng-change="sizePageChanged()"></ul>
+                    <!--modal add size-->
+                    <div class="modal fade" id="sizeOption" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Cỡ</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" id="formSize" name="formSize">
+                                        <div class="form-group">
+                                            <label>Cỡ</label>
+                                            <input type="number" id="sizeName" name="sizeName" ng-model="size.name" class="form-control" ng-required="true">
+                                            <span id="sizeNameEr" class="errors"></span>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" ng-click="sizeProcess()">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<th:block id="jsContent">
+    <script src="/assets/admin/script/properties/PropertiesService.js"></script>
+    <script src="/assets/admin/script/properties/PropertiesController.js"></script>
+</th:block>
+</body>
+</html>

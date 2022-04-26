@@ -152,16 +152,16 @@ function searchProduct(element){
                         for(let detail of result.details){
                             if(detail.product.id===prod.id){
                                 html+=`<div class="same-prods-item">
-                                        <a href="/product/${detail.id}"><img onmousemove="loadImgSame(this)" class="product-${prod.id}" src="/assets/img/product/${detail.image}" alt=""></a>
+                                        <a href="/product/${detail.id}"><img onmousemove="loadImgSame(this)" class="product-${prod.id}" src="${detail.image}" alt=""></a>
                                     </div>`;
                             }
                         }
 
                         html+=`</div>
-                            <span class="price">${toMoney(prod.price)}</span>
                             <div class="info-prod">
                                 <h6>${prod.name}</h6>
-                                <span>Mới</span>
+                                <span>${toMoney(prod.price)}</span>
+                                <p>Mới</p>
                             </div>
                         </div>
                     </div>`;
@@ -179,13 +179,13 @@ function searchProduct(element){
                         html+=`<div class="product"  onmouseenter="loadSameProd(this)" onmouseleave="unLoadSameProd(this)">
                         <div class="product-hover">
                             <a href="">
-                                <img id="product-${detail.product.id}" src="/assets/img/product/${detail.image}"  data-img="/assets/img/product/${detail.image}" alt="">
+                                <img id="product-${detail.product.id}" src="${detail.image}"  data-img="${detail.image}" alt="">
                             </a>
                             <div class="same-prods"></div>
-                            <span class="price">${toMoney(detail.product.price)}</span>
                             <div class="info-prod">
                                 <h6>${detail.product.name}</h6>
-                                <span>Mới</span>
+                                <span>${toMoney(detail.product.price)}</span>
+                                <p>Mới</p>
                             </div>
                         </div>
                     </div>`;

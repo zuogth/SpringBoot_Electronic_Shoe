@@ -21,41 +21,11 @@
         <div class="container-cus">
             <h3>Sản phẩm mua nhiều</h3>
             <div class="prod-popular">
-                <div class="item">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <div class="rateYo" data-star="4.8"></div>
-                </div>
-                <div class="item">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <div class="rateYo" data-star="4"></div>
-                </div>
-                <div class="item">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <div class="rateYo" data-star="3"></div>
-                </div>
-                <div class="item">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <div class="rateYo" data-star="5"></div>
-                </div>
-                <div class="item">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <div class="rateYo" data-star="4.5"></div>
-                </div>
-                <div class="item">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <div class="rateYo" data-star="4"></div>
+                <div class="item" th:each="item:${buyALot}">
+                    <a th:href="'/products/'+${item.slug+'/'+item.color}"><img th:src="${item.image}" alt=""></a>
+                    <span class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}+' đ'">2.300.000 đ</span>
+                    <h6 th:text="'Giày '+${item.name}">Giày Superstar</h6>
+                    <div class="rateYo" th:data-star="${item.avg}"></div>
                 </div>
             </div>
         </div>
@@ -64,40 +34,10 @@
         <div class="container-cus">
             <h3>Sản phẩm mới</h3>
             <div class="prod-popular">
-                <div class="item item-new">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <span>Mới</span>
-                </div>
-                <div class="item item-new">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <span>Mới</span>
-                </div>
-                <div class="item item-new">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <span>Mới</span>
-                </div>
-                <div class="item item-new">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <span>Mới</span>
-                </div>
-                <div class="item item-new">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
-                    <span>Mới</span>
-                </div>
-                <div class="item item-new">
-                    <a href=""><img src="/assets/img/sst-aec-superearth-sw.jpg" alt=""></a>
-                    <span class="price">2.300.000 đ</span>
-                    <h6>Giày Superstar</h6>
+                <div class="item item-new" th:each="item:${productsNew}">
+                    <a th:href="'/products/'+${item.slug+'/'+item.color}"><img th:src="${item.image}" alt=""></a>
+                    <span class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}+' đ'">2.300.000 đ</span>
+                    <h6 th:text="'Giày '+${item.name}">Giày Superstar</h6>
                     <span>Mới</span>
                 </div>
             </div>

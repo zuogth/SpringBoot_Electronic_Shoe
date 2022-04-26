@@ -26,4 +26,6 @@ public interface UserService extends UserDetailsService {
 
     Map<String,String> createComment(CommentDTO commentDTO);
 
+    Map<String,Object> findAll(int page);
+
 }

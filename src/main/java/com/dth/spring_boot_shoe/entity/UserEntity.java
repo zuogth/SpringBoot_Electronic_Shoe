@@ -26,6 +26,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "fullname", length = 45)
     private String fullName;
 
+    @Column(name = "slug", length = 45)
+    private String slug;
+
     @Column(name = "gender")
     private Integer gender;
 

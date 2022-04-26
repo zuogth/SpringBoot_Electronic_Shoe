@@ -2,17 +2,17 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
 
     $scope.listPr=true;
     $scope.editPr=false;
-    $scope.listDetailPr={display:'none'};
-    $scope.insertDetail={display:'none'};
-    $scope.editDetail={display:'none'};
-    $scope.tableListDetail={display:'none'};
+    $scope.listDetailPr=false;
+    $scope.insertDetail=false;
+    $scope.editDetail=false;
+    $scope.tableListDetail=false;
     $scope.btnAddChr=true;
     $scope.preViewEdit=true;
     $scope.changeSize=false;
     $scope.flagSize=0;
     $scope.message='';
     $scope.error={};
-    $scope.brandId='';
+    $scope.brandSlug='';
     $scope.products=[];
     $scope.product={};
     $scope.productDetails=[];
@@ -27,37 +27,39 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
         $scope.currentPageChr=1;
         $scope.listPr=true;
         $scope.editPr=false;
-        $scope.listDetailPr={display:'none'};
-        $scope.insertDetail={display:'none'};
-        $scope.editDetail={display:'none'};
+        $scope.listDetailPr=false;
+        $scope.insertDetail=false;
+        $scope.editDetail=false;
         return ProductService.getAll(brand_id,page).then(function (data){
             $scope.products=data.data.products;
             $scope.totalItems = data.data.totalItems;
             angular.element("h1#title").html("Product");
         },function (error){
-            console.log(error);
+            showErr(error);
         })
     }
     //add product parent
     $scope.addPr=function (){
         $scope.listPr=false;
         $scope.editPr=true;
-        $scope.listDetailPr={display:'none'};
-        $scope.insertDetail={display:'none'};
-        $scope.editDetail={display:'none'};
+        $scope.listDetailPr=false;
+        $scope.insertDetail=false;
+        $scope.editDetail=false;
         $scope.product={};
+        resetValid();
     }
     //get product parent by id
     $scope.getById=function (id){
         $scope.listPr=false;
         $scope.editPr=true;
-        $scope.listDetailPr={display:'none'};
-        $scope.insertDetail={display:'none'};
-        $scope.editDetail={display:'none'};
+        $scope.listDetailPr=false;
+        $scope.insertDetail=false;
+        $scope.editDetail=false;
+        resetValid();
         return ProductService.getById(id).then(function (data){
             $scope.product=data.data;
         },function (error){
-            console.log(error.data);
+            showErr(error);
         });
     }
     //process product parent
@@ -66,10 +68,11 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
             $scope.message={content:data.data.message,show:true};
             $scope.getByBrand();
         },function (error){
-            if(error.data.type=='valid'){
-                mapErrValid(error.data.data,'');
+            if(error.data.statusCode=="3400"){
+                mapErrValid(error.data.valid,'');
+            }else {
+                showErr(error);
             }
-            console.log(error.data);
         })
     }
 
@@ -79,17 +82,17 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
             $scope.currentPage=1;
         }
         $scope.products=[];
-        init("&brand_id="+$scope.brandId,$scope.currentPage);
+        init("&brandSlug="+$scope.brandSlug,$scope.currentPage);
     }
 
     //get list product detail by id product
     $scope.getDetailById=function (id){
         $scope.listPr=false;
         $scope.editPr=false;
-        $scope.listDetailPr={display:'block'};
-        $scope.insertDetail={display:'none'};
-        $scope.editDetail={display:'none'};
-        $scope.tableListDetail={display:'block'}
+        $scope.listDetailPr=true;
+        $scope.insertDetail=false;
+        $scope.editDetail=false;
+        $scope.tableListDetail=true
         $scope.btnAddChr=true;
         $scope.product.id=id;
         $scope.productDetail={};
@@ -98,23 +101,34 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
             $scope.productDetails=data.data;
             $scope.totalItemsChr=data.data.totalItems;
         },function (error){
-            console.log(error);
+            showErr(error);
         });
     }
 
+    $scope.deletePr=function (id){
+        if(confirm("Sản phẩm đã xóa sẽ không thể khôi phục! Xóa?")) {
+            return ProductService.deletePr(id).then(function (data) {
+                $scope.message = {content: data.data.message, show: true};
+                init("&brand_id="+$scope.brandSlug,$scope.currentPage);
+            }, function (error) {
+                showErr(error);
+            })
+        }
+    }
 
     //product detail
     //add product detail
     $scope.addChr=function (){
         $scope.listPr=false;
         $scope.editPr=false;
-        $scope.listDetailPr={display:'block'};
-        $scope.insertDetail={display:'block'};
-        $scope.editDetail={display:'none'};
-        $scope.tableListDetail={display:'none'}
+        $scope.listDetailPr=true;
+        $scope.insertDetail=true;
+        $scope.editDetail=false;
+        $scope.tableListDetail=false
         $scope.btnAddChr=false;
         $scope.productDetail={};
         addView();
+        resetValid();
     }
     //process prod detail
     $scope.processDetail=function(type){
@@ -123,26 +137,27 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
             $scope.currentPageChr=1;
             $scope.getDetailById($scope.product.id);
         },function (error){
-            showErr(error,'');
+            showErrValid(error,'');
         })
     }
 
     //get product detail by id
-    $scope.getDetailByIdDetail=function (id){
+    $scope.getDetailByIdDetail=function (productId,colorId){
         resetForm();
         $scope.listPr=false;
         $scope.editPr=false;
-        $scope.listDetailPr={display:'block'};
-        $scope.insertDetail={display:'none'};
-        $scope.editDetail={display:'block'};
-        $scope.tableListDetail={display:'none'}
+        $scope.listDetailPr=true;
+        $scope.insertDetail=false;
+        $scope.editDetail=true;
+        $scope.tableListDetail=false
         $scope.btnAddChr=false;
-        return ProductService.getDetailByIdDetail(id).then(function (data){
+        resetValid();
+        return ProductService.getDetailByIdDetail(productId,colorId).then(function (data){
             $scope.productDetail=data.data.productDetail;
             $scope.colors=data.data.colors;
             $scope.sizes=data.data.sizes;
         },function (error){
-            console.log(error)
+            showErr(error);
         })
     }
 
@@ -154,7 +169,7 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
         return ProductService.getSizes($scope.productDetail).then(function (data){
             $scope.sizeNots=data.data;
         },function (error){
-            console.log(error);
+            showErr(error);
         })
     }
 
@@ -163,7 +178,7 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
                 $scope.changeSize=false;
                 $scope.sizes=data.data;
             },function (error){
-            console.log(error);
+            showErr(error);
         })
     }
 
@@ -175,9 +190,9 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
     };
 
     $scope.updateStatus=function (elm,id){
-        let lock=angular.element('#'+elm+""+id).prop("checked");
+        let lock=$('#'+elm+""+id).prop("checked");
         let status;
-        if(!lock){
+        if(lock){
             str='khóa';
             status=0;
         }else {
@@ -185,10 +200,35 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
             status=1;
         }
         if(confirm("Bạn có muốn "+str+" sản phẩm này không?")){
+            $('#'+elm+""+id).prop('checked',!lock);
+            lock=!lock;
+            if(!lock){
+                $('#'+elm+""+id).parent().children('label').addClass('my-custom-control-label-un');
+            }else{
+                $('#'+elm+""+id).parent().children('label').removeClass('my-custom-control-label-un');
+            }
             return ProductService.lockProd(elm,id,status).then(function (data){
                 $scope.message={content:data.data.message,show:true};
             },function (error){
-                console.log(error);
+                showErr(error);
+            })
+        }
+    }
+
+    $scope.deleteCh=function (id,flag){
+        if(confirm("Sản phẩm đã xóa sẽ không thể khôi phục! Xóa?")){
+            return ProductService.deleteCh(id,flag).then(function (data){
+                $scope.message={content:data.data.message,show:true};
+                if(flag==1){
+                    if(data.data.httpStatus=='NOT_FOUND'){
+                        return $scope.getDetailById($scope.product.id);
+                    }
+                    return $scope.getDetailByIdDetail($scope.productDetail.productId,$scope.productDetail.colorId);
+                }else {
+                    return $scope.getDetailById($scope.product.id);
+                }
+            },function (error){
+                showErr(error);
             })
         }
     }
@@ -196,15 +236,21 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
     $scope.closeForm=function (){
         $scope.listPr=false;
         $scope.editPr=false;
-        $scope.listDetailPr={display:'block'};
-        $scope.insertDetail={display:'none'};
-        $scope.editDetail={display:'none'};
-        $scope.tableListDetail={display:'block'}
+        $scope.listDetailPr=true;
+        $scope.insertDetail=false;
+        $scope.editDetail=false;
+        $scope.tableListDetail=true
         $scope.btnAddChr=true;
         $scope.productDetail={};
         $scope.preViewEdit=true;
     }
 
+    function showErr(error){
+        $scope.message = {content: error.data.message, show: true};
+        if(error.status==401){
+            window.location.href="/login";
+        }
+    }
 
 }]);
 
@@ -280,11 +326,11 @@ function submitForm(type){
     let method;
     if(type=='insert'){
         formId='formInsertDetail';
-        url='/api/admin/productdetail/insert';
+        url='/api/admin/productdetails';
         method='POST';
     }else{
         formId='formEditDetail';
-        url='/api/admin/productdetail/update';
+        url='/api/admin/productdetails';
         method='PUT';
     }
     let form=document.getElementById(formId);
@@ -299,7 +345,7 @@ function submitForm(type){
     })
 }
 
-function showErr(data,sub){
+function showErrValid(data,sub){
     if(data.responseJSON.errors!=null) {
         data.responseJSON.errors.forEach(err => {
             $('span#' + err.field + 'Er'+sub).html(err.defaultMessage);
@@ -316,4 +362,8 @@ function addView(){
 
 function resetForm(){
     $("#formEditDetail").trigger("reset");
+}
+
+function resetValid(){
+    $('span.errors').html('');
 }
