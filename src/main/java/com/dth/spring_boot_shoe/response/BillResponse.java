@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -15,7 +16,7 @@ public class BillResponse {
     private BigDecimal totalPrice;
     private String status;
     private String address;
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     public static BillResponse converter(BillEntity entity){
         return BillResponse.builder().id(entity.getId()).userName(entity.getUser().getFullName())

@@ -44,7 +44,4 @@ public class BaseAPI {
         return map;
     }
 
-    public static String getBrand(){
-        return "TEST";
-    }
 }

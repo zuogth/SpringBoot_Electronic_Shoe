@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -19,9 +20,9 @@ public class BaseEntity {
 
     @Column(name = "created_at")
     @CreatedDate
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "modified_at")
     @LastModifiedDate
-    private LocalDate modifiedAt;
+    private LocalDateTime modifiedAt;
 }

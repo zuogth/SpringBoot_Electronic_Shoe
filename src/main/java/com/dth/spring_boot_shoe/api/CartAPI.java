@@ -1,9 +1,12 @@
 package com.dth.spring_boot_shoe.api;
 
+import com.dth.spring_boot_shoe.constant.MessageErr;
 import com.dth.spring_boot_shoe.dto.BillReceiptDTO;
 import com.dth.spring_boot_shoe.dto.ProductDetailDTO;
 import com.dth.spring_boot_shoe.entity.ProductDetailEntity;
 import com.dth.spring_boot_shoe.entity.UserEntity;
+import com.dth.spring_boot_shoe.exception.ApiRequestException;
+import com.dth.spring_boot_shoe.repository.ProductDetailRepository;
 import com.dth.spring_boot_shoe.repository.UserRepository;
 import com.dth.spring_boot_shoe.request.CartRequest;
 import com.dth.spring_boot_shoe.response.CheckQuantity;
@@ -28,16 +31,26 @@ public class CartAPI {
 
     private final BillService billService;
     private final UserService userService;
+    private final ProductService productService;
+    private final ProductDetailRepository productDetailRepository;
 
     //detail.js
     @PostMapping("/cart")
-    public void productDetail(@RequestBody CartRequest request){
-        UserEntity user=userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        billService.addCart(user,request);
+    public ResponseEntity<?> productDetail(@RequestBody CartRequest request,
+                                           @RequestParam("flag") Boolean flag){
+        if(flag){
+            UserEntity user=userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+            return new ResponseEntity<>(billService.addCart(user,request),HttpStatus.OK);
+        }
+        ProductDetailEntity productDetail = productDetailRepository.findByIdAndStatus(request.getProductDetailId(),1)
+                    .orElseThrow(()->new ApiRequestException(MessageErr.NOT_FOUND));
+        return new ResponseEntity<>(productService.findByIdAndColor(productDetail.getId(),productDetail.getColor().getSlug()),HttpStatus.OK);
+
+
     }
 
     //cart.js
-    @PostMapping("/cart/load")
+    @PostMapping("/carts")
     public Map<String,Object> loadCart(@RequestBody CartRequest[] requests){
         List<BillReceiptDTO> details=billService.loadCart(requests);
         List<SizeQuantity> quantities=billService.findQuantityProductDetail(details);
@@ -46,7 +59,7 @@ public class CartAPI {
         map.put("quantities",quantities);
         return map;
     }
-    @GetMapping("/cart/load")
+    @GetMapping("/carts")
     public Map<String,Object> loadCart(){
         HashMap<String,Object> map=new HashMap<>();
         List<BillReceiptDTO> details=billService.loadCart();
@@ -60,13 +73,13 @@ public class CartAPI {
         return map;
     }
 
-    @PutMapping("/cart/update")
+    @PutMapping("/carts")
     public void update(@RequestBody CartRequest request){
         UserEntity user=userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         billService.update(user,request);
     }
 
-    @DeleteMapping("/cart/delete")
+    @DeleteMapping("/carts")
     public void delete(@RequestBody CartRequest request){
         UserEntity user=userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         billService.delete(user,request);
@@ -77,6 +90,13 @@ public class CartAPI {
         List<CheckQuantity> checkQuantities=billService.checkQuantityProductToOrder(requests);
         HashMap<String,Object> map=new HashMap<>();
         map.put("check",checkQuantities);
+        return map;
+    }
+
+    @PostMapping("/carts/fixed")
+    public Map<String,Object> getCartsFixed(@RequestBody CartRequest[] requests){
+        Map<String,Object> map = new HashMap<>();
+        map.put("details",billService.loadCartFixed(requests));
         return map;
     }
 }

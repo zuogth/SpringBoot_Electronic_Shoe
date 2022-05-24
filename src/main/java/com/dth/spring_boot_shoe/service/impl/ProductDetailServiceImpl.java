@@ -53,6 +53,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
             SizeEntity size=sizeRepository.findById(sizeId).orElseThrow(()->new ApiRequestException(MessageErr.NOT_FOUND_SIZE));
             entity.setSize(size);
             entity.setStatus(1);
+            entity.setDiscountId(0l);
             productDetailRepository.save(entity);
 
         });
@@ -102,6 +103,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         entity.setColor(color);
         entity.setSize(size);
         entity.setStatus(1);
+        entity.setDiscountId(0l);
         productDetailRepository.save(entity);
     }
 
@@ -120,6 +122,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         return map;
     }
 
+    //update productdetail phan admin
     @Override
     public void update(ProductDetail productDetail) throws IOException {
         ProductDetailEntity entity=productDetailRepository.findByIdAndStatusNot(productDetail.getId(),-1)

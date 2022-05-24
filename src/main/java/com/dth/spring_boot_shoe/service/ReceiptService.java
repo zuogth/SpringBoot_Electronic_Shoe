@@ -17,4 +17,10 @@ public interface ReceiptService {
     List<ProductDetailResponse> findProductDetails(Long productId,Long colorId, Long sizeId);
 
     void insert(ReceiptRequest receiptRequest);
+
+    Map<String,Object> findDetailsById(Long id);
+
+    void update(ReceiptRequest receiptRequest);
+
+    String ExportReceipt(Long id);
 }

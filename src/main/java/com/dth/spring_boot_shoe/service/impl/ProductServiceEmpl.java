@@ -1,5 +1,6 @@
 package com.dth.spring_boot_shoe.service.impl;
 
+import com.dth.spring_boot_shoe.constant.MessageErr;
 import com.dth.spring_boot_shoe.dto.ProductListDTO;
 import com.dth.spring_boot_shoe.entity.*;
 import com.dth.spring_boot_shoe.exception.ApiRequestException;
@@ -40,6 +41,7 @@ public class ProductServiceEmpl implements ProductService {
     private final BrandRepository brandRepository;
     private final BillRepository billRepository;
     private final UserRepository userRepository;
+    private final DiscountRepository discountRepository;
     private final ImageService imageService;
     private final CommentService commentService;
     private final ModelMapper modelMapper;
@@ -61,18 +63,26 @@ public class ProductServiceEmpl implements ProductService {
 
     @Override
     public ProductDetailDTO findBySlugAndColor(String slug,String color) {
-        ProductDetailEntity prod= productDetailRepository.findByProductSlugAndColorAndStatusNot(slug,color)
-                .orElseThrow(()->new RequestException("Sản phẩm không tồn tại",""));
+        ProductDetailEntity prod= productDetailRepository.findByProductSlugAndColorAndStatus(slug,color)
+                .orElseThrow(()->new RequestException("Sản phẩm không tồn tại","error/404"));
+        return ProductDetailDTO.converter(modelMapper,prod,imageService.findByColorIdAndProductIdAndParent(prod.getColor().getId(),prod.getProduct().getId()));
+    }
+
+    @Override
+    public ProductDetailDTO findByIdAndColor(Long productId, String colorSlug) {
+        ProductDetailEntity prod= productDetailRepository.findByIdAndStatus(productId,1)
+                .orElseThrow(()->new ApiRequestException(MessageErr.NOT_FOUND));
         return ProductDetailDTO.converter(modelMapper,prod,imageService.findByColorIdAndProductIdAndParent(prod.getColor().getId(),prod.getProduct().getId()));
     }
 
     @Override
     public List<SizeQuantity> findAllSizeByProductId(Long id, Long color_id) {
-        List<ProductDetailEntity> detailEntities=productDetailRepository.findByProductIdAndColorIdAndStatusNot(id,color_id,-1);
+        List<ProductDetailEntity> detailEntities=productDetailRepository.findByProductIdAndColorIdAndStatus(id,color_id,1);
         List<SizeQuantity> detailDTOS=new ArrayList<>();
         detailEntities.forEach(entity->{
             List<Object[]> objects=productReceiptRepository.findByProductIdGroupBySizeId(entity.getId());
-            detailDTOS.add(SizeQuantity.converter(objects.get(0)));
+            Integer discount=entity.getDiscountId()==0?0:discountRepository.findById(entity.getDiscountId()).get().getDiscount();
+            detailDTOS.add(SizeQuantity.converter(objects.get(0),discount));
         });
         return detailDTOS;
     }
@@ -87,9 +97,11 @@ public class ProductServiceEmpl implements ProductService {
 
     @Override
     public List<ProductDetailDTO> findBySlug(String slug) {
-        List<ProductDetailEntity> detailEntities=productDetailRepository.findBySlugProduct(slug);
         List<ProductDetailDTO> detailDTOs=new ArrayList<>();
-        detailEntities.forEach(entity->detailDTOs.add(ProductDetailDTO.converter(modelMapper,entity,imageService.findByColorIdAndProductIdAndParent(entity.getColor().getId(),entity.getProduct().getId()))));
+        if(!slug.equals("")){
+            List<ProductDetailEntity> detailEntities=productDetailRepository.findBySlugProduct(slug);
+            detailEntities.forEach(entity->detailDTOs.add(ProductDetailDTO.converter(modelMapper,entity,imageService.findByColorIdAndProductIdAndParent(entity.getColor().getId(),entity.getProduct().getId()))));
+        }
         return detailDTOs;
     }
 
@@ -102,7 +114,7 @@ public class ProductServiceEmpl implements ProductService {
         String querySort="";
         String queryPrice="";
         if(!Objects.equals(productFilter.getPrice(), "")){
-            queryPrice=" and pd.product.price "+productFilter.getPrice();
+            queryPrice=" and pd.product.price <= "+productFilter.getPrice();
         }
         if(!Objects.equals(productFilter.getSort(), "")){
             querySort=" order by pd.product."+productFilter.getSort();
@@ -133,7 +145,7 @@ public class ProductServiceEmpl implements ProductService {
         String querySort="";
         String queryPrice="";
         if(!Objects.equals(productFilter.getPrice(), "")){
-            queryPrice=" and pd.product.price "+productFilter.getPrice();
+            queryPrice=" and pd.product.price <= "+productFilter.getPrice();
         }
         if(!Objects.equals(productFilter.getSort(), "")){
             querySort=" order by pd.product."+productFilter.getSort();
@@ -317,8 +329,8 @@ public class ProductServiceEmpl implements ProductService {
         Map<String,Object> map=new HashMap<>();
         List<String> labels=getMonths(2022);
         List<ChartResponse> responses=new ArrayList<>();
-        responses.add(new ChartResponse("Năm nay","blue","blue",getDataBar(LocalDate.now().getYear())));
         responses.add(new ChartResponse("Năm trước","grey","grey",getDataBar(LocalDate.now().getYear()-1)));
+        responses.add(new ChartResponse("Năm nay","blue","blue",getDataBar(LocalDate.now().getYear())));
         map.put("labels",labels);
         map.put("chart",responses);
         map.put("countBill",Integer.valueOf(billRepository.findByBillTypeAndCreatedAt().get(0)[0].toString()));

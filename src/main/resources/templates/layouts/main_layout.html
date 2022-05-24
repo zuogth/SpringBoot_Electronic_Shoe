@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="image/x-icon" href="http://localhost:8080/img/icons8-trainers-50.ico" rel="shortcut icon"/>
+    <link type="image/x-icon" href="https://firebasestorage.googleapis.com/v0/b/spring-boot-shoe.appspot.com/o/banner%2Ficons8-trainers-50.ico?alt=media" rel="shortcut icon"/>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
           integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link rel="stylesheet" href="/assets/css/slick.css">
@@ -27,7 +27,7 @@
 <!--        <span th:if="${error!=null}" th:text="${error.message}">Mật khẩu không chính xác.</span>-->
 <!--        <span th:unless="${error!=null}"></span>-->
 <!--    </div>-->
-    <div class="header container-cus">
+    <div class="header">
         <div class="logo">
             <a href="/">
                 <img src="/assets/img/1200px-adidas-logo-svg.webp" alt="" width="80px">
@@ -42,23 +42,17 @@
                     <li>
                         <a href="">Trợ giúp</a>
                     </li>
-                    <li>
-                        <a href="">Ngôn ngữ</a>
-                    </li>
                 </ul>
             </div>
             <div class="header-b">
                 <button class="btn-toggler-nav navbar-toggler"><i class="fas fa-bars"></i></button>
                 <nav class="nav-header navbar-toggler" id="navbarSupportedContent">
                     <ul>
-                        <li>
-                            <a th:href="@{/products/adidas}">Adidas</a>
+                        <li th:each="menu:${menus}">
+                            <a th:href="@{'/products/'+${menu.slug}}" th:text="${menu.name}">Adidas</a>
                         </li>
                         <li>
-                            <a th:href="@{/products/nike}">Nike</a>
-                        </li>
-                        <li>
-                            <a th:href="@{/products/converse}">Converse</a>
+                            <a th:href="@{/sales/promotion/all}">Sale off</a>
                         </li>
                     </ul>
                 </nav>
@@ -136,6 +130,36 @@
 <main th:replace="${mainContent}">
     <p style="text-align: center; margin-top: 50px; margin-bottom: 50px;">Nội dung trang web nằm ở đây</p>
 </main>
+<div class="card-fixed" onclick="showCard()">
+    <div>
+        <p>0</p>
+        <i class="fas fa-shopping-bag"></i>
+    </div>
+
+</div>
+<div class="card-fixed-info">
+    <div class="card-fixed-caret"></div>
+    <div class="card-fixed-info-header">
+        <h6>Giỏ hàng<span>(0)</span></h6>
+    </div>
+    <div class="card-fixed-prods">
+
+    </div>
+    <div class="card-fixed-footer">
+        <div class="card-fixed-total">
+            <p>Tổng cộng:</p>
+            <span data="0">0đ</span>
+        </div>
+        <a href="/cart" class="card-fixed-btn">Thanh toán</a>
+    </div>
+</div>
+<div class="social-fixed">
+    <div>
+        <a href=""><i class="fab fa-facebook-f"></i></a>
+        <a href=""><i class="fab fa-instagram"></i></a>
+        <a href=""><i class="fab fa-youtube"></i></a>
+    </div>
+</div>
 <div id="myBtnTop">
     <img src="/assets/img/95.png" alt="">
 </div>

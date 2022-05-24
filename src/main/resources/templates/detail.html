@@ -30,7 +30,7 @@
           </ul>
         </div>
       </div>
-      <div class="same-prod-detail">
+      <div class="same-prod-detail container-cus">
         <div class="same-prod-detail-l">
           <h6>Các màu có sẵn khác</h6>
           <p th:text="'Có '+${sameProd.size()}+' màu'">Có 5 màu</p>
@@ -43,8 +43,43 @@
           </th:block>
         </div>
       </div>
+      <div class="options-parent-res">
+        <div class="margin-top-prod"></div>
+        <div class="options-detail-res">
+          <h4 id="priceRes" th:text="${#numbers.formatDecimal(prod.product.price, 0, 'POINT', 0, 'POINT')}+' VND'" th:price="${prod.product.price}">3.200.000 đ</h4>
+          <p>CHỌN SIZE</p>
+          <div class="filter-size">
+            <form id="formSizeRes">
+              <th:block th:each="size:${sizes}">
+                <label th:for="'sizeres-'+${size.size}" th:data-id="${size.productDetailId}" th:text="${size.size}" th:count="${size.quantity}" th:id="'sizeres-'+${size.productDetailId}" th:discount="${size.discount}">38</label>
+                <input type="radio" name="size" th:id="'sizeres-'+${size.size}" th:value="${size.productDetailId}" hidden>
+              </th:block>
+            </form>
+          </div>
+          <span id="errorSizeRes"></span>
+          <div class="explain-size">
+            <a href=""><i class="fas fa-ruler-horizontal"></i>Bảng kích cỡ</a>
+          </div>
+          <div class="buy-prod">
+            <a onclick="addCart(this)">Thêm vào giỏ hàng <i class="far fa-long-arrow-right"></i></a>
+          </div>
+          <ul>
+            <li><i class="fal fa-shipping-fast"></i>
+              <p>Giao hàng miễn phí</p>
+            </li>
+            <li><i class="fas fa-exchange-alt"></i>
+              <p>Không đúng kích cỡ hoặc màu sắc? Vui lòng truy cập trang Trả lại hàng & Hoàn tiền của
+                chúng
+                tôi để biết chi tiết</p>
+            </li>
+            <li><i class="fal fa-exclamation-triangle"></i>
+              <p>Do ảnh hưởng COVID-19, thời gian giao hàng sẽ dài hơn dự kiến</p>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="menu-prod sticky-top">
-        <ul>
+        <ul class="container-cus">
           <li class="menu-prod-ac">
             <a href-link="#section0">Bộ sưu tập</a>
           </li>
@@ -59,7 +94,7 @@
           </li>
         </ul>
       </div>
-      <div class="content-prod-detail">
+      <div class="content-prod-detail container-cus">
         <div id="section1">
           <div class="description-prod">
             <h4 th:text="'Giày '+${prod.product.name}">GIÀY PUREBOOST 21</h4>
@@ -109,12 +144,14 @@
         </div>
       </div>
       <div id="flag"></div>
-      <div class="prod-popular-pr">
+      <div class="prod-popular-pr container-cus">
         <h3>Sản phẩm mua nhiều</h3>
         <div class="prod-popular">
           <div class="item item-prod" th:each="item:${buyALot}">
-            <a th:href="'/products/'+${item.slug+'/'+item.color}"><img th:src="${item.image}" alt=""></a>
-            <span class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}+' đ'">2.300.000 đ</span>
+            <div class="img">
+              <a th:href="'/products/'+${item.slug+'/'+item.color}"><img th:src="${item.image}" alt=""></a>
+              <span class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'POINT')}+' VND'">2.300.000 đ</span>
+            </div>
             <h6 th:text="'Giày '+${item.name}">Giày Superstar</h6>
             <div class="rateYo" th:data-star="${item.avg}"></div>
           </div>
@@ -129,12 +166,12 @@
           <span th:text="'('+${countStar}+')'">(10)</span>
         </div>
         <h2 th:text="'Giày '+${prod.product.name}">Giày PUREBOOST 21</h2>
-        <p id="price" th:text="${#numbers.formatDecimal(prod.product.price, 0, 'COMMA', 0, 'POINT')}+' VND'" th:price="${prod.product.price}">3.200.000 đ</p>
+        <p id="price" th:text="${#numbers.formatDecimal(prod.product.price, 0, 'POINT', 0, 'POINT')}+' VND'" th:price="${prod.product.price}">3.200.000 đ</p>
         <p>CHỌN SIZE</p>
         <div class="filter-size">
           <form id="formSize">
             <th:block th:each="size:${sizes}">
-              <label th:for="'size-'+${size.size}" th:data-id="${size.productDetailId}" th:text="${size.size}" th:count="${size.quantity}" th:id="'size-'+${size.productDetailId}">38</label>
+              <label th:for="'size-'+${size.size}" th:data-id="${size.productDetailId}" th:text="${size.size}" th:count="${size.quantity}" th:id="'size-'+${size.productDetailId}" th:discount="${size.discount}">38</label>
               <input type="radio" name="size" th:id="'size-'+${size.size}" th:value="${size.productDetailId}" hidden>
             </th:block>
           </form>

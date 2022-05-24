@@ -3,7 +3,6 @@ package com.dth.spring_boot_shoe.controller;
 import com.dth.spring_boot_shoe.dto.UserDTO;
 import com.dth.spring_boot_shoe.entity.UserEntity;
 import com.dth.spring_boot_shoe.service.UserService;
-import com.dth.spring_boot_shoe.utils.SendMailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +10,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -19,7 +20,6 @@ import javax.validation.Valid;
 public class LoginController {
 
     private final UserService userService;
-    private final SendMailService sendMailService;
 
 
     @GetMapping("/login")
@@ -34,13 +34,23 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String register(@Valid @ModelAttribute("user")UserDTO user, BindingResult bindingResult) throws Exception {
+    public String register(@Valid @ModelAttribute("user")UserDTO user,
+                           BindingResult bindingResult,
+                           HttpServletRequest request) throws Exception {
         if(bindingResult.hasErrors()){
             return "/register";
         }
-        //userService.save(user);
-        sendMailService.sendHtml(user.getEmail());
-        return "redirect:/login";
+        userService.save(user,request);
+        return "redirect:/login?verify";
+    }
+
+    @GetMapping("/verify")
+    public String verifyUser(@RequestParam("code") String code){
+        if(userService.verify(code)){
+            return "noti/verify";
+        }else {
+            return "noti/verify_err";
+        }
     }
 
 }

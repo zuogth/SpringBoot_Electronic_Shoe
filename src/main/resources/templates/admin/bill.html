@@ -49,13 +49,14 @@
         <div class="card">
             <div class="card-body" ng-show="listPr">
                 <table id="bill" class="table table-striped table-bordered">
-                    <thead>
+                    <thead class="thead-dark">
                     <tr>
                         <th>Người mua</th>
                         <th>Tổng tiền</th>
                         <th>Trạng thái</th>
                         <th>Địa chỉ giao</th>
                         <th>Ngày tạo</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -70,7 +71,7 @@
                             </select>
                         </td>
                         <td>{{bill.address}}</td>
-                        <td>{{bill.createdDate}}</td>
+                        <td>{{formatDate(bill.createdDate)}}</td>
                         <td>
                             <a href="#" class="btn" ng-click="getById(bill.id,$index)"><i class="fas fa-info"></i></a>
                         </td>
@@ -118,7 +119,7 @@
                     </div>
                 </div>
                 <table class="table table-striped table-bordered">
-                    <thead>
+                    <thead class="thead-dark">
                     <tr>
                         <th>Ảnh</th>
                         <th>Tên sản phẩm</th>

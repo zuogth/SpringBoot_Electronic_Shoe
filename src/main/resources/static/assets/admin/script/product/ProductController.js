@@ -189,7 +189,7 @@ app.controller("ProductController",["$scope","ProductService",function ($scope,P
         $scope.getDetailById($scope.product.id);
     };
 
-    $scope.updateStatus=function (elm,id){
+    $scope.updateStatus=function (id){
         let lock=$('#'+elm+""+id).prop("checked");
         let status;
         if(lock){
@@ -346,6 +346,7 @@ function submitForm(type){
 }
 
 function showErrValid(data,sub){
+    $('span.errors').html('');
     if(data.responseJSON.errors!=null) {
         data.responseJSON.errors.forEach(err => {
             $('span#' + err.field + 'Er'+sub).html(err.defaultMessage);

@@ -1,9 +1,6 @@
 package com.dth.spring_boot_shoe.service;
 
-import com.dth.spring_boot_shoe.dto.BillDTO;
-import com.dth.spring_boot_shoe.dto.BillReceiptDTO;
-import com.dth.spring_boot_shoe.dto.ProductDetailDTO;
-import com.dth.spring_boot_shoe.dto.UserDTO;
+import com.dth.spring_boot_shoe.dto.*;
 import com.dth.spring_boot_shoe.entity.BillEntity;
 import com.dth.spring_boot_shoe.entity.ProductDetailEntity;
 import com.dth.spring_boot_shoe.entity.UserEntity;
@@ -14,14 +11,16 @@ import com.dth.spring_boot_shoe.response.BillResponse;
 import com.dth.spring_boot_shoe.response.CheckQuantity;
 import com.dth.spring_boot_shoe.response.SizeQuantity;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 public interface BillService {
     BillEntity findByUserId(Long userId);
-    void addCart(UserEntity user, CartRequest request);
+    ProductDetailDTO addCart(UserEntity user, CartRequest request);
 
     List<BillReceiptDTO> loadCart(CartRequest[] request);
+    List<BillReceiptDTO> loadCartFixed(CartRequest[] request);
     List<BillReceiptDTO> loadCart();
 
     BillEntity updateCartFromLocal(UserEntity user,CartRequest[] request);
@@ -34,7 +33,7 @@ public interface BillService {
     List<CheckQuantity> checkQuantityProductToOrder(CartRequest[] request);
 
     List<BillReceiptDTO> updateToBill();
-    void updateToBill(UserRequest dto);
+    void updateToBill(UserRequest dto, HttpServletRequest request);
 
     List<BillDTO> findAllBillByUser(Long userId);
 

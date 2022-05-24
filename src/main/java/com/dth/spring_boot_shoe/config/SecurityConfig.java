@@ -2,7 +2,8 @@ package com.dth.spring_boot_shoe.config;
 
 import com.dth.spring_boot_shoe.accessdenied.CustomAccessDeniedHandler;
 import com.dth.spring_boot_shoe.accessdenied.CustomAuthenticationFailureHandler;
-import com.dth.spring_boot_shoe.accessdenied.CustomAuthenticationProvider;
+import com.dth.spring_boot_shoe.accessdenied.CustomAuthenticationSuccessHandler;
+import com.dth.spring_boot_shoe.repository.UserRepository;
 import com.dth.spring_boot_shoe.security.service.CustomOAuth2UserService;
 import com.dth.spring_boot_shoe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +17,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
-        return new CustomAuthenticationFailureHandler();
-    }
 
     @Configuration
     @Order(1)
@@ -58,6 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         private final UserService userService;
         private final CustomOAuth2UserService customOAuth2UserService;
+        private final CustomAuthenticationFailureHandler authenticationFailureHandler;
+        private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
         @Bean
         public BCryptPasswordEncoder passwordEncoder(){
@@ -80,8 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                     .formLogin()
                     .loginPage("/login").usernameParameter("email")
-                    .defaultSuccessUrl("/")
-                    .failureUrl("/login?error")
+                    .successHandler(authenticationSuccessHandler)
+                    .failureHandler(authenticationFailureHandler)
                     .permitAll()
                     .and()
                     .logout()
@@ -92,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .and()
                     .oauth2Login()
-                    .loginPage("/login")
+                    .loginPage("/login").defaultSuccessUrl("/",true)
                     .userInfoEndpoint()
                     .userService(customOAuth2UserService);
         }

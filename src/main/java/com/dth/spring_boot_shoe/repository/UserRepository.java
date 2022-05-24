@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
+    Optional<UserEntity> findByEmailAndStatusAndEnabled(String email,Integer status,Boolean enabled);
     Optional<UserEntity> findByEmailAndStatus(String email,Integer status);
+    Optional<UserEntity> findByVerificationToken(String verificationToken);
     boolean existsByEmail(String email);
 
     Page<UserEntity> findByStatus(Integer status, Pageable pageable);

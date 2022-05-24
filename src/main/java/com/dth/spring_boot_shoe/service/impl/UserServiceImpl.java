@@ -18,8 +18,10 @@ import com.dth.spring_boot_shoe.security.provider.Provider;
 import com.dth.spring_boot_shoe.security.user.CustomOAuth2User;
 import com.dth.spring_boot_shoe.service.RoleService;
 import com.dth.spring_boot_shoe.service.UserService;
+import com.dth.spring_boot_shoe.utils.SendMailService;
 import com.dth.spring_boot_shoe.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.utility.RandomString;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,9 +34,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +52,14 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+    private final SendMailService sendMailService;
+
 
 
     @Override
-    public UserEntity save(UserDTO userDTO){
+    public void save(UserDTO userDTO, HttpServletRequest request){
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new ApiRequestException("Email da ton tai");
+            throw new RequestException("Email đã được đăng ký","login");
         }
         RoleEntity role=roleService.findByCode("ROLE_USER");
         UserEntity user=modelMapper.map(userDTO,UserEntity.class);
@@ -59,19 +67,58 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Arrays.asList(role));
         user.setProvider(Provider.local);
         user.setSlug(StringUtils.removeAccent(userDTO.getFullName()));
-        return userRepository.save(user);
+        String randomCode = RandomString.make(64);
+        user.setVerificationToken(randomCode);
+        user.setEnabled(false);
+        userRepository.save(user);
+        try {
+            sendMailService.verifyCode(user,request);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void resetVerificationToken(UserEntity user, HttpServletRequest request) {
+        String randomCode = RandomString.make(64);
+        user.setVerificationToken(randomCode);
+        userRepository.save(user);
+
+        try {
+            sendMailService.verifyCode(user,request);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean verify(String verificationToken) {
+        Optional<UserEntity> user = userRepository.findByVerificationToken(verificationToken);
+        if(!user.isPresent()){
+            return false;
+        }else {
+            UserEntity entity = user.get();
+            if (entity.getEnabled()) {
+                return false;
+            } else {
+                entity.setVerificationToken(null);
+                entity.setEnabled(true);
+                userRepository.save(entity);
+                return true;
+            }
+        }
     }
 
     @Override
     public UserEntity findByEmail(String email) {
-        return userRepository.findByEmailAndStatus(email,1)
+        return userRepository.findByEmailAndStatusAndEnabled(email,1,true)
                 .orElseThrow(()->new ApiRequestException("User này chưa được đăng ký"));
     }
 
     @Override
     public UserRequest loadUser() {
-        UserEntity user=userRepository.findByEmailAndStatus(SecurityContextHolder.getContext().getAuthentication().getName(),1)
-                .orElseThrow(()->new RequestException("Bạn chưa đăng nhập","login"));
+        UserEntity user=userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),1,true)
+                .orElseThrow(()->new RequestException("Bạn chưa đăng nhập","/login"));
         UserRequest request=modelMapper.map(user,UserRequest.class);
         String address=user.getAddress();
         String[] arrOfStr;
@@ -87,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(InfoRequest request) {
-        UserEntity user=userRepository.findByEmailAndStatus(SecurityContextHolder.getContext().getAuthentication().getName(),1)
+        UserEntity user=userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),1,true)
                         .orElseThrow(()->new ApiRequestException("Qua thời gian chờ, hãy đăng nhập lại"));
         String fullName=request.getLastName()+" "+request.getFirstName();
         user.setFirstName(request.getFirstName());
@@ -104,22 +151,22 @@ public class UserServiceImpl implements UserService {
     //khi load page info
     @Override
     public UserEntity profile() {
-        return userRepository.findByEmailAndStatus(SecurityContextHolder.getContext().getAuthentication().getName(),1)
-                .orElseThrow(()->new RequestException("Bạn chưa đăng nhập tài khoản","login"));
+        return userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),1,true)
+                .orElseThrow(()->new RequestException("Bạn chưa đăng nhập tài khoản","/login"));
     }
 
     //load form detail
     @Override
     public UserEntity profileDetail() {
-        return userRepository.findByEmailAndStatus(SecurityContextHolder.getContext().getAuthentication().getName(),
-                1).orElseThrow(()->new ApiRequestException("Bạn chưa đăng nhập tài khoản"));
+        return userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),
+                1,true).orElseThrow(()->new ApiRequestException("Bạn chưa đăng nhập tài khoản"));
     }
 
     @Override
     public Map<String,String> changePass(ChangePWRequest request) {
         HashMap<String,String> map=new HashMap<>();
-        UserEntity user=userRepository.findByEmailAndStatus(SecurityContextHolder.getContext().getAuthentication().getName(),
-                1).orElseThrow(()->new ApiRequestException("Bạn hãy đăng nhập lại tài khoản"));
+        UserEntity user=userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),
+                1,true).orElseThrow(()->new ApiRequestException("Bạn hãy đăng nhập lại tài khoản"));
         boolean flag=passwordEncoder.matches(request.getPassword(),user.getPassword());
         if(flag){
             user.setPassword(passwordEncoder.encode(request.getPassword_new()));
@@ -133,8 +180,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String,String> createComment(CommentDTO commentDTO) {
-        UserEntity user=userRepository.findByEmailAndStatus(SecurityContextHolder.getContext().getAuthentication().getName(),
-                1).orElseThrow(()->new ApiRequestException("Bạn hãy đăng nhập lại tài khoản"));
+        UserEntity user=userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),
+                1,true).orElseThrow(()->new ApiRequestException("Bạn hãy đăng nhập lại tài khoản"));
         ProductEntity product=productRepository.findById(commentDTO.getProductId()).get();
         CommentEntity comment=modelMapper.map(commentDTO,CommentEntity.class);
         comment.setUser(user);
@@ -157,7 +204,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email){
-        UserEntity user=userRepository.findByEmailAndStatus(email,1)
+        UserEntity user=userRepository.findByEmailAndStatusAndEnabled(email,1,true)
                 .orElseThrow(()->new UsernameNotFoundException("User này chưa được đăng ký"));
         return CustomOAuth2User.createCustomUser(user);
     }

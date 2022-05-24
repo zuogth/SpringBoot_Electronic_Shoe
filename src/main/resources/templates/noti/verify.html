@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác minh tài khoản</title>
+    <th:block id="cssContent">
+        <link rel="stylesheet" href="/assets/css/cart.css">
+    </th:block>
+</head>
+<body>
+<section>
+    <div class="page-error">
+        <h3>Xác nhận tài khoản đăng ký thành công!</h3>
+        <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi, quay lại <a href="/login">đăng nhập</a>.</p>
+    </div>
+</section>
+<th:block id="jsContent">
+    <script src="/assets/js/cart.js"></script>
+</th:block>
+</body>
+</html>

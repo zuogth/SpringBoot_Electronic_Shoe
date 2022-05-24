@@ -8,11 +8,14 @@ import com.dth.spring_boot_shoe.request.InfoRequest;
 import com.dth.spring_boot_shoe.request.UserRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
-    UserEntity save(UserDTO userDTO);
+    void save(UserDTO userDTO, HttpServletRequest request);
+    void resetVerificationToken(UserEntity user, HttpServletRequest request);
+    boolean verify(String verificationToken);
     UserEntity findByEmail(String email);
     UserRequest loadUser();
 

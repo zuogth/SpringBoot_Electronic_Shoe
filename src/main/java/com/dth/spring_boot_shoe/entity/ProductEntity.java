@@ -26,10 +26,6 @@ public class ProductEntity extends BaseEntity {
     @JoinColumn(name = "brand_id")
     private BrandEntity brand;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "discount_id")
-    private DiscountEntity discount;
-
     @Column(name = "description")
     private String description;
 

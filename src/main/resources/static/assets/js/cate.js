@@ -4,9 +4,9 @@ function loadImage(){
         let urlP=$(element).children().children('.same-prods').children().eq(0).children().children().attr("src");
         let href=$(element).children().children('.same-prods').children().eq(0).children().attr("href");
         $(element).children().children('.same-prods').children().eq(0).addClass('same-prods-item-ac');
-        $(element).children().children().eq(0).attr("href",href);
-        $(element).children().children().eq(0).children().attr("src",urlP);
-        $(element).children().children().eq(0).children().attr("data-img",urlP);
+        $(element).children().children().children().eq(0).attr("href",href);
+        $(element).children().children().children().eq(0).children().attr("src",urlP);
+        $(element).children().children().children().eq(0).children().attr("data-img",urlP);
     })
 }
 
@@ -16,8 +16,8 @@ function loadSameProd(element){
     let test=$(element).children().children().eq(1).children().length;
     if(test>=5){
         $(element).children().children().eq(1).slick({
-            slidesToShow: 5,
-            slidesToScroll: 5,
+            slidesToShow: 8,
+            slidesToScroll: 1,
             infinite: false,
             draggable: true,
             arrows: false,
@@ -33,8 +33,8 @@ function unLoadSameProd(element){
     }
     $('.product-hover').removeClass("product-hover-ac");
     $(element).children().eq(0).children().eq(1).removeClass("same-prods-ac");
-    let url=$(element).children().children().eq(0).children().attr("data-img");
-    $(element).children().children().eq(0).children().attr("src",url);
+    let url=$(element).children().children().children().eq(0).children().attr("data-img");
+    $(element).children().children().children().eq(0).children().attr("src",url);
 }
 
 
@@ -63,18 +63,20 @@ $(()=>{
     })
     loadImage();
     $('.filter ul li').click(function(){
-        let check=$(this).attr("flag");
         let id=$(this).attr("data-id");
-        if(check=="true"){
-            $('div.filter-'+id).hide();
-            $(this).attr("flag",false);
-        }else{
-            $('div.filter-child').hide();
-            $('div.filter-'+id).show();
-            $('.filter ul li').attr("flag",false);
-            $(this).attr("flag",true);
-            flag=true;
-        }
+        $('.filter-'+id).toggle();
+        // let check=$(this).attr("flag");
+        // let id=$(this).attr("data-id");
+        // if(check=="true"){
+        //     $('div.filter-'+id).hide();
+        //     $(this).attr("flag",false);
+        // }else{
+        //     $('div.filter-child').hide();
+        //     $('div.filter-'+id).show();
+        //     $('.filter ul li').attr("flag",false);
+        //     $(this).attr("flag",true);
+        //     flag=true;
+        // }
     });
     $('.filter-sizeId label').click(function(){
         $('.filter-sizeId label').removeClass("sizeId-active");
@@ -94,18 +96,27 @@ $(()=>{
 
     $('.filter-item-child i').click(function(){
         let input_name=$(this).parent().attr("id");
-        let id=input_name+'-default';
-        $('.filter-'+input_name+' input').prop("checked",false);
-        $('input#'+id).prop("checked",true);
-        $(this).parent().hide();
-        $('.filter-'+input_name+' label').removeClass(input_name+"-active");
-        $('.filter ul li').attr("flag",false);
-        if(input_name=="sort" || input_name=="price"){
-            $('.filter-'+input_name+'>label>label').html('<i class="far fa-circle"></i>');
+        if(input_name != 'price'){
+            let id=input_name+'-default';
+            $('.filter-'+input_name+' input').prop("checked",false);
+            $('input#'+id).prop("checked",true);
+            $('.filter-'+input_name+' label').removeClass(input_name+"-active");
+            $('.filter ul li').attr("flag",false);
+            if(input_name=="sort" || input_name=="price"){
+                $('.filter-'+input_name+'>label>label').html('<i class="far fa-circle"></i>');
+            }
+        }else {
+            let max=$('#rangeSlider input').attr('max');
+            $('#rangeSlider input').val(max);
+            $('#rangeSlider input').css('background-size',max+'% 100%');
+            let money = toMoney(max*1);
+            $('#rangeSlider label').html('0 - '+money);
         }
+        $(this).parent().hide();
         $('.filter-child').hide();
         searchProduct(this);
     })
+
 
     $(window).scroll(function () {
         let e = $(window).scrollTop();
@@ -117,6 +128,20 @@ $(()=>{
         }
     });
 
+    $('#rangeSlider input').change(function(){
+        searchProduct(this);
+    })
+
+    $('#rangeSlider input').on('input',function(){
+        let min = $(this).attr('min');
+        let max = $(this).attr('max');
+        let val = $(this).val();
+        $(this).css('background-size',(val - min) * 100 / (max - min)+'% 100%');
+        let money = toMoney(val*1);
+        $('#rangeSlider label').html('0 - '+money);
+    });
+    let labelVal = $('#rangeSlider label').html();
+    $('#rangeSlider label').html('0 - '+toMoney(labelVal*1));
 })
 
 function searchProduct(element){
@@ -145,14 +170,17 @@ function searchProduct(element){
                     for (let prod of result.products){
                         html+=`<div class="product"  onmouseenter="loadSameProd(this)" onmouseleave="unLoadSameProd(this)">
                         <div class="product-hover">
-                            <a href="">
-                                <img id="product-${prod.id}" src="" data-img="" alt="">
-                            </a>
+                            <div class="img">
+                                <a href="">
+                                    <img id="product-${prod.id}" src="" data-img="" alt="">
+                                </a>
+                                <span class="price">${toMoney(prod.price)}</span>
+                            </div>
                             <div class="same-prods">`;
                         for(let detail of result.details){
                             if(detail.product.id===prod.id){
                                 html+=`<div class="same-prods-item">
-                                        <a href="/product/${detail.id}"><img onmousemove="loadImgSame(this)" class="product-${prod.id}" src="${detail.image}" alt=""></a>
+                                        <a href="/products/${detail.product.slug}/${detail.color.slug}"><img onmousemove="loadImgSame(this)" class="product-${prod.id}" src="${detail.image}" alt=""></a>
                                     </div>`;
                             }
                         }
@@ -160,7 +188,6 @@ function searchProduct(element){
                         html+=`</div>
                             <div class="info-prod">
                                 <h6>${prod.name}</h6>
-                                <span>${toMoney(prod.price)}</span>
                                 <p>Mới</p>
                             </div>
                         </div>
@@ -178,13 +205,15 @@ function searchProduct(element){
                     for (let detail of result.details){
                         html+=`<div class="product"  onmouseenter="loadSameProd(this)" onmouseleave="unLoadSameProd(this)">
                         <div class="product-hover">
-                            <a href="">
-                                <img id="product-${detail.product.id}" src="${detail.image}"  data-img="${detail.image}" alt="">
-                            </a>
+                            <div class="img">
+                                <a href="">
+                                    <img id="product-${detail.product.id}" src="${detail.image}"  data-img="${detail.image}" alt="">
+                                </a>
+                                <span class="price">${toMoney(detail.product.price)}</span>
+                            </div>
                             <div class="same-prods"></div>
                             <div class="info-prod">
                                 <h6>${detail.product.name}</h6>
-                                <span>${toMoney(detail.product.price)}</span>
                                 <p>Mới</p>
                             </div>
                         </div>

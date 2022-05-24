@@ -5,21 +5,19 @@
     width: 100%;
     max-height: 400px;
 }
-.banner ul{
+.cate-main ul{
     list-style: none;
     display: flex;
-    position: absolute;
     bottom: 0;
     left: 3rem;
 }
-.banner ul li{
+.cate-main ul li{
     padding: 0 .3rem;
 }
-.banner ul li a{
+.cate-main ul li a{
     color: black;
     text-decoration: underline;
 }
-
 /* main */
 .filter{
     display: flex;
@@ -30,6 +28,7 @@
 }
 .filter.active{
     border: 1px solid black;
+    margin: 0 -1rem;
 }
 .sticky-top{
     top: 10px !important;
@@ -51,6 +50,9 @@
 }
 .filter>ul>li:hover{
     border: 1px solid black;
+}
+.filter>ul>li#rangeSlider:hover{
+    border:1px solid transparent;
 }
 .filter ul:first-child li{
     margin-right: 2rem;
@@ -98,6 +100,26 @@
     position: absolute;
     background: white;
     top: -20px;
+}
+.slidecontainer {
+    width: 100%;
+}
+
+.mySlider {
+    -webkit-appearance: none;
+    height: 5px;
+    border-radius: 5px;
+    background-size: 100% 100%;
+    background: #b3b3b3 linear-gradient(#000000, #000000) no-repeat;
+}
+.mySlider::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: rgb(57, 57, 57);
+    border: 2px solid black;
+    cursor: pointer;
 }
 .filter-sort::before{
     right: 40px;
@@ -173,6 +195,40 @@
 .list-product .product:hover .product-hover{
     border: 1px solid black;
 }
+.img{position: relative;}
+.list-product .product:hover div.price{
+    bottom: 1rem;
+}
+.list-product .product:hover p.discountNum{
+    bottom: 2rem;
+}
+.product div.price{
+    position: absolute;
+    background-color: white;
+    left: .5rem;
+    bottom: 0;
+    transition: all .2s;
+    color: black;
+    font-size: .9rem;
+    padding: 0 .3rem;
+}
+.priceBase{
+    text-decoration: line-through;
+    color: rgb(68, 68, 68);
+}
+.priceSale{
+    color: rgb(185, 3, 3);
+}
+.discountNum{
+    position: absolute;
+    bottom: 1rem;
+    left: .5rem;
+    padding: 0 .3rem;
+    font-weight: 700;
+    transition: all .2s;
+    background-color: white;
+    font-size: .9rem;
+}
 .list-product .product img{width: 100%;}
 .product .info-prod{
     padding: .5rem;
@@ -189,7 +245,7 @@
 .same-prods .same-prods-item{
     margin: .1rem;
     border-bottom: 2px solid transparent;
-    width: 19%;
+    width: 12%;
 }
 .same-prods .same-prods-item:hover{
     border-bottom: 2px solid black;

@@ -36,7 +36,9 @@ public class BrandController {
         model.addAttribute("sizes",sizes);
         model.addAttribute("colors",colors);
         model.addAttribute("brands",brands);
+        model.addAttribute("maxPrice",brandRepository.getMaxPrice());
         model.addAttribute("brand",brandRepository.findBySlug(brandSlug));
         return "brand";
     }
+
 }

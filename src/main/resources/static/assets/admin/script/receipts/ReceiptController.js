@@ -4,6 +4,8 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
     $scope.listPr=true;
     $scope.listCh=false;
     $scope.formAdd=false;
+    $scope.btnAdd=false;
+    $scope.btnEdit = false;
 
     //object
     $scope.receipts=[];
@@ -34,6 +36,8 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
         $scope.listPr=true;
         $scope.listCh=false;
         $scope.formAdd=false;
+        $scope.btnAdd=false;
+        $scope.btnEdit = false;
         $scope.currentPageCh=1;
         $scope.brandId='';
         $scope.productDetailSelecteds=[];
@@ -58,6 +62,8 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
         $scope.listPr=false;
         $scope.listCh=false;
         $scope.formAdd=true;
+        $scope.btnAdd=true;
+        $scope.btnEdit = false;
         $scope.receipt.username=$("a#fullNameUser").html();
         $scope.receipt.createdDate=new Date();
     }
@@ -111,25 +117,46 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
         $scope.totalQuantityAndMoney();
     }
 
-    $scope.process=function (){
+    $scope.process=function (type){
         $scope.receiptRequest.brandId=$scope.brandId;
-        $scope.productDetailSelecteds.forEach((e,i)=>$scope.productDetailsArr[i].id=e.id);
-        $scope.receiptRequest.productDetails=[];
-        $scope.productDetailsArr.forEach(e=>$scope.receiptRequest.productDetails.push(e));
-        return ReceiptService.process($scope.receiptRequest).then(function (data){
-            $scope.message={content:data.message,show:true};
+        $scope.receiptRequest.productDetails=$scope.productDetailSelecteds;
+        return ReceiptService.process($scope.receiptRequest,type).then(function (data){
+            $scope.message={content:data.data.message,show:true};
             init();
         },function (error){
             showErr(error);
         })
     }
 
+    $scope.getByIdForEdit=function (id){
+        $scope.listPr=false;
+        $scope.listCh=false;
+        $scope.formAdd=true;
+        $scope.btnAdd=false;
+        $scope.btnEdit = true;
+        return ReceiptService.getDetailsById(id).then(function (_data){
+            $scope.receipt = _data.data.receipt;
+            $scope.productDetailSelecteds = _data.data.productDetails;
+            $scope.quantity = $scope.receipt.quantity;
+            $scope.totalMoneyStr=($scope.receipt.totalPrice).toLocaleString('it-IT');
+            $scope.receipt.createdDate = new Date($scope.receipt.createdDate);
+            $scope.brandId = $scope.receipt.brandId.toString();
+            $scope.receiptRequest.totalMoney = $scope.receipt.totalPrice;
+            $scope.receiptRequest.id = $scope.receipt.id;
+            $scope.products=_data.data.products;
+            $scope.colors=_data.data.colors;
+            $scope.sizes=_data.data.sizes;
+        },function (err){
+            showErr(err);
+        })
+    }
+
     $scope.totalQuantityAndMoney=function (){
         $scope.quantity=0;
         $scope.receiptRequest.totalMoney=0;
-        $scope.productDetailsArr.forEach((e,i)=>{
-            $scope.quantity+=e.quantity?e.quantity:0;
-            $scope.receiptRequest.totalMoney+=e.quantity?e.quantity*$scope.productDetailSelecteds[i].price:0;
+        $scope.productDetailSelecteds.forEach((e,i)=>{
+            $scope.quantity+=e.receipt?e.receipt:0;
+            $scope.receiptRequest.totalMoney+=e.receipt?e.receipt*e.price:0;
         });
         $scope.totalMoneyStr=($scope.receiptRequest.totalMoney).toLocaleString('it-IT');
     }
@@ -149,6 +176,14 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
 
     $scope.pageChangedCh=function (){
         $scope.getById($scope.receipt.id);
+    }
+
+    $scope.exportReceipt=function (id){
+        return ReceiptService.exportReceipt(id).then(function (_data){
+            console.log(_data.data);
+        },function (error){
+            showErr(error)
+        })
     }
 
     $scope.close=function (){

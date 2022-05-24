@@ -17,6 +17,7 @@ public class ProductDetailResponse {
     private String image;
     private Integer sale;
     private String color;
+    private String colorCode;
     private Long colorId;
     private Integer size;
     private Long sizeId;
@@ -31,7 +32,7 @@ public class ProductDetailResponse {
                                                   String image, List<String> images){
         return ProductDetailResponse.builder()
                 .id(entity.getId()).receipt(receipt).images(images).name(entity.getProduct().getName())
-                .color(entity.getColor().getName()).colorId(entity.getColor().getId()).image(image)
+                .color(entity.getColor().getName()).colorId(entity.getColor().getId()).colorCode(entity.getColor().getCode()).image(image)
                 .size(entity.getSize().getName()).sizeId(entity.getSize().getId()).price(entity.getProduct().getPrice())
                 .sold(sold).sale(0).productId(entity.getProduct().getId()).status(entity.getStatus()).build();
     }

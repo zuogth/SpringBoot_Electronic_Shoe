@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,6 +19,6 @@ public class BillDTO{
     private BigDecimal totalPrice;
     private String status;
     private String address;
-    private LocalDate createdAt;
-    private LocalDate modifiedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 }

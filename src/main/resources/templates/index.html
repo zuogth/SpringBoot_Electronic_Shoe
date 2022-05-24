@@ -9,12 +9,12 @@
 </head>
 <body>
 <section>
-    <div class="new-content">
-        <img src="/assets/img/superstar.jpg" alt="" width="100%">
-        <div class="content">
-            <h1>SUPEREARTH SW SUPERSTAR</h1>
-            <p>Out now: a vegan take on the Superstar, designed with Sean Wotherspoon.</p>
-            <a href="">Mua ngay</a>
+    <div class="new-content" th:each="event:${events}">
+        <img th:src="${event.url}" alt="" width="100%">
+        <div th:class="'content '+${event.style}">
+            <h1 th:text="${event.name}">SUPEREARTH SW SUPERSTAR</h1>
+            <p th:text="${event.description}">Out now: a vegan take on the Superstar, designed with Sean Wotherspoon.</p>
+            <a th:href="'/sales/'+${event.slug}">Chi tiết <i class="fal fa-long-arrow-right"></i></a>
         </div>
     </div>
     <div class="prod-popular-parent">
@@ -22,8 +22,10 @@
             <h3>Sản phẩm mua nhiều</h3>
             <div class="prod-popular">
                 <div class="item" th:each="item:${buyALot}">
-                    <a th:href="'/products/'+${item.slug+'/'+item.color}"><img th:src="${item.image}" alt=""></a>
-                    <span class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}+' đ'">2.300.000 đ</span>
+                    <div class="img">
+                        <a th:href="'/products/'+${item.slug+'/'+item.color}"><img th:src="${item.image}" alt=""></a>
+                        <span class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'POINT')}+' VND'">2.300.000 đ</span>
+                    </div>
                     <h6 th:text="'Giày '+${item.name}">Giày Superstar</h6>
                     <div class="rateYo" th:data-star="${item.avg}"></div>
                 </div>
@@ -35,15 +37,17 @@
             <h3>Sản phẩm mới</h3>
             <div class="prod-popular">
                 <div class="item item-new" th:each="item:${productsNew}">
-                    <a th:href="'/products/'+${item.slug+'/'+item.color}"><img th:src="${item.image}" alt=""></a>
-                    <span class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}+' đ'">2.300.000 đ</span>
+                    <div class="img">
+                        <a th:href="'/products/'+${item.slug+'/'+item.color}"><img th:src="${item.image}" alt=""></a>
+                        <span class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'POINT')}+' VND'">2.300.000 đ</span>
+                    </div>
                     <h6 th:text="'Giày '+${item.name}">Giày Superstar</h6>
                     <span>Mới</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="brand-popular row">
+    <div class="container-cus brand-popular row">
         <div class="brand-item col-sm-6">
             <img src="/assets/img/brand-popular-converse.jpg" alt="" width="100%">
             <h5>Converse</h5>

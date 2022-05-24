@@ -10,6 +10,5 @@ import java.math.BigDecimal;
 public class BillReceiptDTO {
 
     private Integer quantity;
-    private ProductDetailDTO detail;
-    private BigDecimal price;
+    private ProductDetail detail;
 }

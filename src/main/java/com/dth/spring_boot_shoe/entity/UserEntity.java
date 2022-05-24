@@ -1,6 +1,7 @@
 package com.dth.spring_boot_shoe.entity;
 
 import com.dth.spring_boot_shoe.security.provider.Provider;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,11 +39,17 @@ public class UserEntity extends BaseEntity {
     @Column(name = "phone", length = 15)
     private String phone;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "status")
     private Integer status;
+
+    @Column(name = "verification_token")
+    private String verificationToken;
+
+    private Boolean enabled;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "provider", length = 45)

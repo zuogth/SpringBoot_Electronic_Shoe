@@ -7,7 +7,7 @@ function closeItem(element,id){
         let flagUser=$('.options-user').attr("flag");
         if(flagUser==="true"){
             $.ajax({
-                url:'/api/cart/delete',
+                url:'/api/carts',
                 type: 'DELETE',
                 contentType: 'application/json',
                 data:JSON.stringify(data),
@@ -20,6 +20,7 @@ function closeItem(element,id){
             })
         }
         $(element).parents().eq(1).remove();
+        $('div.card-fixed-prods #c-f-p-'+id).remove();
         updateLocal();
         let list_cart;
         list_cart=JSON.parse(window.localStorage.getItem('list_cart'));
@@ -32,21 +33,6 @@ function closeItem(element,id){
         totalPrice();
     },1000)
 }
-function totalPrice(){
-    let totalprice=0;
-    let totalcount=0;
-    $('.info-prod').each(function(index,element){
-        let price=$(element).children('.name-prod').children('#price').attr("price");
-        let count=$(element).children('.quantity').children('.quantity-l').children().val();
-        totalcount+=count*1;
-        totalprice+=price*count;
-    })
-    $('.total-prod').children().eq(0).html(totalcount+' Sản phẩm');
-    $('.total-prod').children().eq(1).attr("totalprice",totalprice);
-    $('.total-prod').children().eq(1).html(toMoney(totalprice));
-    let ship=$('.ship-prod').children().eq(1).attr("pay-ship")*1;
-    $('.total-price-child').children().eq(1).html(toMoney(totalprice+ship));
-}
 
 function minus(element,id){
     let count=$(element).parents().eq(1).children('.quantity-l').children().val();
@@ -55,6 +41,7 @@ function minus(element,id){
     }
     count-=1;
     $(element).parents().eq(1).children('.quantity-l').children().val(count);
+    $('span#c-f-p-i-quantity-'+id).html(count);
     updateCartLocal(count,id);
     totalPrice();
 }
@@ -66,6 +53,7 @@ function plus(element,id,countMax){
     }
     count-=-1;
     $(element).parents().eq(1).children('.quantity-l').children().val(count);
+    $('span#c-f-p-i-quantity-'+id).html(count);
     updateCartLocal(count,id);
     totalPrice();
 }
@@ -79,7 +67,7 @@ function updateCartLocal(count,id){
     let flagUser=$('.options-user').attr("flag");
     if(flagUser==="true"){
         $.ajax({
-            url:'/api/cart/update',
+            url:'/api/carts',
             type: 'PUT',
             contentType: 'application/json',
             data:JSON.stringify(data),
@@ -93,26 +81,6 @@ function updateCartLocal(count,id){
 
         })
     }
-}
-function updateLocal(){
-    localStorage.removeItem("list_cart");
-    let list_cart=[];
-    $('.info-prod').each(function (i,e){
-        let price=$(e).children('.name-prod').children().eq(1).attr("price");
-        let quantity=$(e).children(".quantity").children(".quantity-l").children().val();
-        let id=$(e).children(".quantity").children(".quantity-l").children().attr("data-id");
-        let data={};
-        data['productDetailId']=id;
-        data['quantity']=quantity;
-        if(price!=null){
-            data['price']=price;
-        }
-        list_cart.push(data);
-    })
-    if(list_cart.length==0){
-        return;
-    }
-    localStorage.setItem('list_cart', JSON.stringify(list_cart));
 }
 function checkCart(){
     let flag=$('div.options-user').attr("flag");
@@ -161,13 +129,70 @@ function checkCart(){
         })
     }
 }
+
 //Load cart from local storage
 $(()=>{
+    loadCartLocal();
+})
+function totalPrice(){
+    let totalprice=0;
+    let totalcount=0;
+    $('.info-prod').each(function(index,element){
+        let price=$(element).children('.name-prod').children().children('.price').attr("price");
+        let count=$(element).children('.quantity').children('.quantity-l').children().val();
+        totalcount+=count*1;
+        totalprice+=price*count;
+    })
+    $('.total-prod').children().eq(0).html(totalcount+' Sản phẩm');
+    $('.total-prod').children().eq(1).attr("totalprice",totalprice);
+    $('.total-prod').children().eq(1).html(toMoney(totalprice));
+    //change info card fixed
+    $('div.card-fixed div p').html(totalcount);
+    $('div.card-fixed-info-header span').html('('+totalcount+')');
+    $('div.card-fixed-total span').html(toMoney(totalprice));
+    $('div.card-fixed-total span').attr("data",totalprice);
+    let sale=$('.ship-prod').children().eq(1).attr("pay-sale")*1;
+    $('.total-price-child').children().eq(1).html(toMoney(totalprice-sale));
+}
+function updateLocal(_datas){
+    localStorage.removeItem("list_cart");
+    let list_cart=[];
+    if(!_datas){
+        console.log(false);
+        $('.info-prod').each(function (i,e){
+            let price=$(e).children('.name-prod').children().eq(1).attr("price");
+            let quantity=$(e).children(".quantity").children(".quantity-l").children().val();
+            let id=$(e).children(".quantity").children(".quantity-l").children().attr("data-id");
+            let data={};
+            data['productDetailId']=id;
+            data['quantity']=quantity;
+            if(price!=null){
+                data['price']=price;
+            }
+            list_cart.push(data);
+        })
+    }else {
+        console.log(true);
+        for(let cart of _datas){
+            let data={};
+            data['productDetailId']=cart.detail.id;
+            data['quantity']=cart.quantity;
+            data['price']=cart.detail.price*(100-cart.detail.discount*1)/100;
+            list_cart.push(data);
+        }
+    }
+    if(list_cart.length==0){
+        return;
+    }
+    localStorage.setItem('list_cart', JSON.stringify(list_cart));
+}
+//load cart from local storage
+function loadCartLocal(){
     let list_cart=window.localStorage.getItem('list_cart');
     let req;
     if(list_cart){
         req={
-            url:'/api/cart/load',
+            url:'/api/carts',
             type:'POST',
             dataType:'JSON',
             contentType:'application/json',
@@ -175,30 +200,39 @@ $(()=>{
         }
     }else {
         req={
-            url:'/api/cart/load',
+            url:'/api/carts',
             type:'GET',
             dataType:'JSON',
             contentType:'application/json',
         }
     }
-        $.ajax(req).done(function (result){
-            if(result.details==null){
-                return;
-            }
-            let html='<div class="prods-cart">';
-            let index=0;
-            for(let cart of result.details) {
-                html += `<div class="prod-cart">
+    $.ajax(req).done(function (result){
+        if(result.details==null){
+            return;
+        }
+        let html='<div class="prods-cart">';
+        let index=0;
+        for(let cart of result.details) {
+            html += `<div class="prod-cart">
                       <div class="prod-img">
-                        <a href="/products/${cart.detail.product.slug+'/'+cart.detail.color.slug}"><img src="${cart.detail.image}" alt=""></a>
+                        <a href="/products/${cart.detail.productSlug+'/'+cart.detail.colorSlug}"><img src="${cart.detail.image}" alt=""></a>
                       </div>
                       <div class="info-prod">
                         <div class="name-prod">
-                          <span>${cart.detail.product.name}</span>
-                          <span id="price" price="${cart.detail.product.price}">${toMoney(cart.detail.product.price)}</span>
+                          <span>${cart.detail.name}</span>
+                          <div style="display: flex; font-size: .9rem;">`;
+
+                        if(cart.detail.discount>0){
+                            html+=`<span style="color: #676666;text-decoration: line-through;">${toMoney(cart.detail.price)}</span>
+                                    <span class="price" style="color: #a10101" price="${cart.detail.price * (100 - cart.detail.discount) / 100}">${toMoney(cart.detail.price * (100 - cart.detail.discount) / 100)}</span> `;
+                        }else{
+                            html+=`<span class="price" price="${cart.detail.price}">${toMoney(cart.detail.price)}</span>`;
+                        }
+                          html+=`</div>
+                          
                         </div>
-                        <p>${cart.detail.color.name}</p>
-                        <span>Cỡ: </span><span>${cart.detail.size.name}</span>
+                        <p>${cart.detail.color}</p>
+                        <span>Cỡ: </span><span>${cart.detail.size}</span>
                         <div class="quantity">
                           <div class="change-quantity">
                             <a id="minus" onclick="minus(this,${cart.detail.id})"><i class="fas fa-minus"></i></a>
@@ -207,7 +241,7 @@ $(()=>{
                             <input type="number" name="quantity" id="quantity" value="${cart.quantity}" data-id="${cart.detail.id}" readonly>
                           </div>
                           <div class="change-quantity" id="plus-${cart.detail.id}">
-                            <a id="plus" onclick="plus(this,${cart.detail.id},${result.quantities[index++].quantity})"><i class="fas fa-plus"></i></a>
+                            <a id="plus" onclick="plus(this,${cart.detail.id},${result.quantities[index].quantity})"><i class="fas fa-plus"></i></a>
                           </div>
                         </div>
                         <div class="close-item" onclick="closeItem(this,${cart.detail.id})">
@@ -215,8 +249,9 @@ $(()=>{
                         </div>
                       </div>
                     </div>`;
-            }
-            html+=`</div>
+            index++;
+        }
+        html+=`</div>
                       <div class="total-price">
                         <div class="order-info">
                           <h3>Đơn hàng</h3>
@@ -225,8 +260,8 @@ $(()=>{
                             <span totalprice="">7.000.000 đ</span>
                           </div>
                           <div class="ship-prod">
-                            <span>Giao hàng</span>
-                            <span pay-ship="0">Miễn phí</span>
+                            <span>Giảm</span>
+                            <span pay-sale="0">0 VND</span>
                           </div>
                           <div class="total-price-child">
                             <h6>Tổng</h6>
@@ -249,21 +284,14 @@ $(()=>{
                           </div>
                         </div>
                       </div>`;
-            if(result.details.length==0){
-                html=`<h5>Giỏ hàng của bạn trống</h5>`;
-            }
-            $('.content-cart').html(html).ready(function (){
-                totalPrice();
-            });
-            updateLocal();
-        }).fail(function(){
-            alert("Error")
-        })
-})
-
-function toMoney(totalprice){
-    return totalprice.toLocaleString('it-IT', {
-        style: 'currency',
-        currency: 'VND'
-    });
+        if(result.details.length==0){
+            html=`<h5>Giỏ hàng của bạn trống</h5>`;
+        }
+        $('.content-cart').html(html).ready(function (){
+            totalPrice();
+        });
+        updateLocal(result.details);
+    }).fail(function(){
+        alert("Error")
+    })
 }

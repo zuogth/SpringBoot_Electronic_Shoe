@@ -10,11 +10,23 @@
 </head>
 <body>
 <section>
+    <div class="alert-noti" th:if="${error}" style="display: block">
+        <i class="fas fa-times close-alert"></i>
+        <span th:text="${error.message}">Tài khoản hoặc mật khẩu không chính xác.</span>
+    </div>
         <div class="alert-noti" th:if="${param.error}" style="display: block">
             <i class="fas fa-times close-alert"></i>
             <span>Tài khoản hoặc mật khẩu không chính xác.</span>
         </div>
-    <div class="main-login">
+    <div class="alert-noti" th:if="${param.verify}" style="display: block">
+        <i class="fas fa-times close-alert"></i>
+        <span>Chúng tôi vừa gửi mail xác minh tài khoản tới bạn, hãy kiểm tra email.</span>
+    </div>
+    <div class="alert-noti" th:if="${param.unverify}" style="display: block">
+        <i class="fas fa-times close-alert"></i>
+        <span>Tài khoản của bạn chưa được xác minh, hãy kiểm tra email để xác minh tài khoản.</span>
+    </div>
+    <div class="main-login container-cus">
         <div class="login">
             <h1>Đăng nhập</h1>
             <a href="">Quên mật khẩu?</a>

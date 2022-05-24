@@ -14,7 +14,8 @@ import java.util.Map;
 public interface ProductService {
     List<ProductEntity> findByBrandSlug(String brandSlug);
     List<ProductDetailDTO> findByBrandSlugGroupByProductIdAndColorId(String brandSlug);
-    ProductDetailDTO findBySlugAndColor(String slug,String color);
+    ProductDetailDTO findBySlugAndColor(String productSlug,String colorSlug);
+    ProductDetailDTO findByIdAndColor(Long productId,String colorSlug);
     List<SizeQuantity> findAllSizeByProductId(Long id, Long color_id);
     List<ProductDetailDTO> findSameProduct(Long product_id);
     List<ProductDetailDTO> findBySlug(String slug);

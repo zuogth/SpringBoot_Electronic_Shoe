@@ -53,13 +53,32 @@ public class ReceiptAPI {
         Map<String,Object> map=new HashMap<>();
         map.put("colors",colorRepository.findAll());
         map.put("sizes",sizeRepository.findAll());
-        map.put("products",productRepository.findByBrandIdAndStatusNot(brandId,-1));
+        map.put("products",productRepository.findByBrandIdAndStatus(brandId,1));
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ApiException> insert(@RequestBody ReceiptRequest receiptRequest){
-        //receiptService.insert(receiptRequest);
+        receiptService.insert(receiptRequest);
         return new ResponseEntity<>(MessageAdmin.CREATED_SUCCESS,HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<ApiException> update(@RequestBody ReceiptRequest receiptRequest){
+        receiptService.update(receiptRequest);
+        return new ResponseEntity<>(MessageAdmin.UPDATED_SUCCESS,HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> getDetail(@PathVariable("id") Long id){
+        return new ResponseEntity<>(receiptService.findDetailsById(id),HttpStatus.OK);
+    }
+
+    @GetMapping("/export/{id}")
+    public ResponseEntity<?> export(@PathVariable("id") Long id){
+        Map<String,Object> map = new HashMap<>();
+        map.put("pdf",receiptService.ExportReceipt(id));
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 }

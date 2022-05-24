@@ -26,6 +26,15 @@ app.service('BaseServices',function ($http,$log,$q,$rootScope){
         }):'';
     }
 
+    $rootScope.formatDateTime=function (_date){
+        let date = new Date(_date);
+        return date.toLocaleString('it-IT');
+    }
+
+    $rootScope.formatDate=function (_date){
+        let date = new Date(_date);
+        return date.toLocaleDateString("it-IT");
+    }
 
     $rootScope.setTitle=function (title,id) {
         $("h1#title").html(title);

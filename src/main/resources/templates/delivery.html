@@ -115,8 +115,8 @@
                         <span totalprice="">7.000.000 đ</span>
                     </div>
                     <div class="ship-prod">
-                        <span>Giao hàng</span>
-                        <span pay-ship="0">Miễn phí</span>
+                        <span>Giảm</span>
+                        <span pay-sale="0">0 đ</span>
                     </div>
                     <div class="total-price-child">
                         <h6>Tổng</h6>
@@ -136,10 +136,10 @@
                                 <img th:src="${bill.detail.image}" alt="">
                             </div>
                             <div class="item-order-r">
-                                <p th:text="'Giày '+${bill.detail.product.name}">Giày Duramo SL</p>
-                                <p th:text="${bill.detail.color.name}">Black</p>
-                                <span>Cỡ: </span><span th:text="${bill.detail.size.name}">40</span> / <span>Số lượng: </span><span th:text="${bill.quantity}" id="count">1</span>
-                                <p id="price" th:data-price="${bill.detail.product.price}" th:text="${#numbers.formatDecimal(bill.detail.product.price, 0, 'COMMA', 0, 'POINT')}+' VND'">2.500.000 VND</p>
+                                <p th:text="${bill.detail.name}">Giày Duramo SL</p>
+                                <p th:text="${bill.detail.color}">Black</p>
+                                <span>Cỡ: </span><span th:text="${bill.detail.size}">40</span> / <span>Số lượng: </span><span th:text="${bill.quantity}" id="count">1</span>
+                                <p id="price" th:data-price="${bill.detail.price*(100-bill.detail.discount)/100}" th:text="${#numbers.formatDecimal(bill.detail.price*(100-bill.detail.discount)/100, 0, 'POINT', 0, 'POINT')}+' VND'">2.500.000 VND</p>
                             </div>
                         </div>
                     </div>

@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ReceiptPDRequest {
     private Long id;
-    private Integer quantity;
+    private Integer receipt;
 }

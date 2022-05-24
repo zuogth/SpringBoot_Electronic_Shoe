@@ -3,6 +3,7 @@ $(document).ready(function () {
         var e = $(window).scrollTop();
         let h=$('#flag').offset().top;
         let h1=$('.options-detail').height();
+        let w1=$(window).width();
         // if(e<100){
         //     $('.margin-top-prod').css("margin-top",0)
         // }else if(e-100>h-h1){
@@ -11,14 +12,16 @@ $(document).ready(function () {
         //     $('.margin-top-prod').css("margin-top",e-100)
         // }
 
-        if(e>100 && e-100<h-h1){
-            $('.options-parent').addClass("top-fixed");
-            $('.margin-top-prod').css("margin-top",0)
-        }else if(e-100>h-h1){
-            $('.options-parent').removeClass("top-fixed");
-            $('.margin-top-prod').css("margin-top",h-h1)
-        }else{
-            $('.options-parent').removeClass("top-fixed");
+        if(w1 > 991){
+            if(e>100 && e-100<h-h1){
+                $('.options-parent').addClass("top-fixed");
+                $('.margin-top-prod').css("margin-top",0)
+            }else if(e-100>h-h1){
+                $('.options-parent').removeClass("top-fixed");
+                $('.margin-top-prod').css("margin-top",h-h1)
+            }else{
+                $('.options-parent').removeClass("top-fixed");
+            }
         }
         
     });
@@ -63,12 +66,43 @@ $(document).ready(function () {
 
     $('#formSize label').click(function (){
         let count=$(this).attr("count");
-        $('#errorSize').html('Còn '+count+' sản phẩm');
+        let price = $('p#price').attr("price");
+        let discount = $(this).attr("discount");
+        if(count*1<=10){
+            $('#errorSize').html('Còn '+count+' sản phẩm');
+        }else {
+            $('#errorSize').html('');
+        }
+        if(discount*1!=0){
+            $('p#price').html(toMoney(price*(100-discount*1)/100)+'<span style="color: #a40303"> -'+discount+'%</span>');
+        }else {
+            $('p#price').html(toMoney(price*1));
+        }
+
+    })
+
+    $('#formSizeRes label').click(function (){
+        let count=$(this).attr("count");
+        let price = $('h4#priceRes').attr("price");
+        let discount = $(this).attr("discount");
+        if(count*1<=10){
+            $('#errorSizeRes').html('Còn '+count+' sản phẩm');
+        }else {
+            $('#errorSizeRes').html('');
+        }
+        if(discount*1!=0){
+            $('h4#priceRes').html(toMoney(price*(100-discount*1)/100)+'<span style="color: #a40303"> -'+discount+'%</span>');
+        }else {
+            $('h4#priceRes').html(toMoney(price*1));
+        }
+
     })
 })
 
 $(()=>{
-    $('#formSize label').each(function (index,element){
+    let w1=$(window).width();
+    let formId = w1 > 991?'formSize':'formSizeRes';
+    $('#'+formId+' label').each(function (index,element){
         let id=$(element).attr("data-id");
         let count=$(element).attr("count");
         let list_cart=[];
@@ -177,35 +211,79 @@ $(document).ready(function(){
 })
 
 function addCart(event){
-    let data=$('#formSize').serializeArray();
+    let w1=$(window).width();
+    let formId="";
+    let errId="";
+    let sizeId="";
+    if(w1 > 991){
+        formId="formSize";
+        errId="errorSize";
+        sizeId="size";
+    }else{
+        formId="formSizeRes";
+        errId="errorSizeRes";
+        sizeId="sizeres";
+    }
+    let data=$('#'+formId).serializeArray();
     if(data.length===0){
-        $('#errorSize').html('Bạn chưa chọn size');
+        $('#'+errId).html('Bạn chưa chọn size');
     }else {
         let id=data[0].value;
-        let count=$('#formSize label#size-'+id).attr("count");
+        let count=$('#'+formId+' label#'+sizeId+'-'+id).attr("count");
+        let discount = $('#'+formId+' label#'+sizeId+'-'+id).attr("discount");
         if(count>0){
             $(event).children().attr("class","spinner-border spinner-border-sm");
             setTimeout(function (){
                 let flagUser=$('.options-user').attr("flag");
                 let price=$('p#price').attr("price");
-                if(flagUser==="true"){
+
+                price=price*(100-discount*1)/100;
                     let dataCart={};
                     dataCart["productDetailId"]=id;
                     dataCart["price"]=price;
                     $.ajax({
-                        url: "/api/cart",
+                        url: "/api/cart?flag="+flagUser,
                         type: "POST",
                         contentType: 'application/json',
                         data:JSON.stringify(dataCart),
                         success:function (result){
-
+                            let total = $('div.card-fixed-total span').attr("data")*1;
+                            if(check(id)){
+                                let c = $('span#c-f-p-i-quantity-'+id).html();
+                                $('span#c-f-p-i-quantity-'+id).html(c*1+1);
+                                total+=price*1;
+                            }else {
+                                let html = $('div.card-fixed-prods').html();
+                                html +=`<div class="card-fixed-prod" id="c-f-p-${result.id}">
+                                        <img src="${result.image}" alt="">
+                                        <div class="card-fixed-prod-info">
+                                            <p>${result.product.name}</p>
+                                            <p class="unit-price">${toMoney(price*1)}</p>
+                                            <div class="card-fixed-prod-info-size">
+                                                <span>Cỡ</span>
+                                                <span>${result.size.name}</span>
+                                            </div>
+                                            <div class="card-fixed-prod-info-quantity">
+                                                <span>Số lượng</span>
+                                                <span id="c-f-p-i-quantity-${result.id}">1</span>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                                total+=price*1;
+                                $('div.card-fixed-prods').html(html);
+                            }
+                            $('div.card-fixed-total span').html(toMoney(total));
+                            $('div.card-fixed-total span').attr("data",total);
+                            let count = $('div.card-fixed div p').html();
+                            $('div.card-fixed div p').html(count*1+1);
+                            $('div.card-fixed-info-header span').html('('+(count*1+1)+')');
+                            $('.card-fixed-info').show(300);
                         },error:function (result){
                             if(result.responseJSON.httpStatus==="BAD_REQUEST"){
                                 window.location.href="/login";
                             }
                         }
-                    })
-                }
+                    });
                 let list_cart=[];
                 let flag=false;
                 list_cart=JSON.parse(window.localStorage.getItem('list_cart'));
@@ -233,16 +311,19 @@ function addCart(event){
                     list_cart.push(data);
                 }
                 localStorage.setItem('list_cart', JSON.stringify(list_cart));
-                $(event).children().attr("class","fas fa-check");
-                $('#formSize label#size-'+id).attr("count",count*1-1);
-                $('#errorSize').html('Còn '+(count*1-1)+' sản phẩm');
-            },2000)
-
+                $('#'+formId+' label#'+sizeId+'-'+id).attr("count",count*1-1);
+                $('#'+errId).html('Còn '+(count*1-1)+' sản phẩm');
+                $(event).children().attr("class","far fa-long-arrow-right");
+            },2000);
         }else {
-            $('#errorSize').html('Sản phẩm đã hết hàng');
+            $('#'+errId).html('Sản phẩm đã hết hàng');
         }
     }
 
+}
+
+function check(id){
+    return $('#c-f-p-'+id).html();
 }
 
 function avgStar(cmt){

@@ -24,14 +24,27 @@ app.service('ReceiptService',['BaseServices',function (BaseServices){
         return BaseServices.callAPI(urls.process+"/productDetails?h=1"+str,"GET");
     }
 
-    function process(data){
-        return BaseServices.callAPI(urls.process,"POST",data);
+    function process(data,type){
+        if(type == 'insert'){
+            return BaseServices.callAPI(urls.process,"POST",data);
+        }
+        return BaseServices.callAPI(urls.process,'PUT',data);
+    }
+
+    function getDetailsById(id){
+        return BaseServices.callAPI(urls.process+"/details/"+id,'GET');
+    }
+
+    function exportReceipt(id){
+        return BaseServices.callAPI(urls.process+"/export/"+id,'GET');
     }
     return {
         getAll:getAll,
         getById:getById,
         getProductByBrand:getProductByBrand,
         getProductDetails:getProductDetails,
-        process:process
+        process:process,
+        getDetailsById:getDetailsById,
+        exportReceipt:exportReceipt
     };
 }])

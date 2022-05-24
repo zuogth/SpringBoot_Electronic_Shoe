@@ -19,8 +19,4 @@ public class BrandEntity extends BaseEntity {
 
     @Column(name = "url")
     private String url;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "discount_id")
-    private DiscountEntity discount;
 }

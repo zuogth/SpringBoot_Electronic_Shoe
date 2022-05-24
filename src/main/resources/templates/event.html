@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: main},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Sale off</title>
+    <th:block id="cssContent">
+        <link rel="stylesheet" href="/assets/css/category.css">
+    </th:block>
+</head>
+<body>
+<main>
+    <div class="banner">
+        <img th:src="${event.url}" alt="">
+
+    </div>
+    <br/>
+    <br/>
+    <section>
+
+        <div class="container-cus cate-main">
+            <div class="list-product">
+
+                <div class="product" th:each="prod:${products}">
+                    <div class="product-hover">
+                        <div class="img">
+                            <a th:href="'/products/'+${prod.productSlug}+'/'+${prod.colorSlug}">
+                                <img th:id="'product-'+${prod.id}" th:src="${prod.image}" data-img="" alt="">
+                            </a>
+                            <p class="discountNum" th:text="'-'+${prod.discount}+'%'" th:if="${prod.discount>0}">-10%</p>
+                            <div class="price" th:if="${prod.discount>0}">
+                                <span th:text="${#numbers.formatDecimal(prod.price, 0, 'POINT', 0, 'POINT')}+ 'VND'" class="priceBase">2.300.000 đ</span>
+                                <span th:text="${#numbers.formatDecimal(prod.price*(100-prod.discount)/100, 0, 'POINT', 0, 'POINT')}+ 'VND'" class="priceSale">2.300.000 đ</span>
+                            </div>
+                            <div class="price" th:unless="${prod.discount>0}">
+                                <span th:text="${#numbers.formatDecimal(prod.price, 0, 'POINT', 0, 'POINT')}+ 'VND'">2.300.000 đ</span>
+                            </div>
+                        </div>
+
+                        <div class="same-prods">
+                        </div>
+                        <div class="info-prod">
+                            <h6 th:text="${prod.name}">Giày Superstar</h6>
+                            <p>Sale</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="height: 500px" th:unless="${products.size()%4==0}"></div>
+            </div>
+        </div>
+
+    </section>
+</main>
+<th:block id="jsContent">
+</th:block>
+</body>
+</html>

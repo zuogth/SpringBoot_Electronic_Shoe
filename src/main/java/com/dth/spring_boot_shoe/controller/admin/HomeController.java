@@ -32,4 +32,7 @@ public class HomeController {
 
     @GetMapping("/users")
     public String users(){return "/admin/user";}
+
+    @GetMapping("/events")
+    public String discounts(){return "admin/event";}
 }

@@ -34,7 +34,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     //Nhận vào thông tin user, kiểm tra xem có tồn tại hay chưa -> chỉnh sửa hoặc thêm mới
     public OAuth2User processOAuthPostLogin(OAuth2User auth2User,OAuth2UserRequest userRequest) {
-        Optional<UserEntity> existUser = userRepository.findByEmailAndStatus(auth2User.getAttribute("email"),1);
+        Optional<UserEntity> existUser = userRepository.findByEmailAndStatusAndEnabled(auth2User.getAttribute("email"),1,true);
         UserEntity user;
         OAuth2UserInfo auth2UserInfo=new OAuth2UserInfo(auth2User);
         if (existUser.isPresent()) {
@@ -58,6 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setProvider(Provider.valueOf(userRequest.getClientRegistration().getRegistrationId()));
         user.setRoles(Arrays.asList(role.get()));
         user.setStatus(1);
+        user.setEnabled(true);
         user.setSlug(StringUtils.removeAccent(auth2UserInfo.getName()));
         return userRepository.save(user);
     }

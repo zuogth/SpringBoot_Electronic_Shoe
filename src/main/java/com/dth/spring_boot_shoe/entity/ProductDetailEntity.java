@@ -24,9 +24,8 @@ public class ProductDetailEntity extends BaseEntity {
     @JoinColumn(name = "size_id")
     private SizeEntity size;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "discount_id")
-    private DiscountEntity discount;
+    @Column(name = "discount_id")
+    private Long discountId;
 
     private Integer status;
 }

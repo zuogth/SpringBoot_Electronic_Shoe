@@ -76,7 +76,18 @@ public interface ProductReceiptRepository extends JpaRepository<ProductReceiptEn
     Integer findSumReceiptByReceiptIdAndGroupByColor(@Param("receiptId") Long receiptId,
                                                             @Param("colorId") Long colorId,
                                                             @Param("productId") Long productId);
+
+    @Query(value = "select sum(p.quantity) as quantity from ProductReceiptEntity p " +
+            "where p.productDetail.product.id=:productId and p.receipt.id=:receiptId")
+    Integer findSumQuantityEachProductByReceipt(Long productId, Long receiptId);
+
     @Query(value = "select sum(pr.quantity) from ProductReceiptEntity pr " +
             "where pr.productDetail.product.brand.slug=:brandSlug")
     Integer findSumProductByBrand(@Param("brandSlug") String brandSlug);
+
+    List<ProductReceiptEntity> findByReceiptId(Long receiptId);
+    @Query("select pr from ProductReceiptEntity pr " +
+            "where pr.receipt.id=:receiptId " +
+            "group by pr.productDetail.product.id")
+    List<ProductReceiptEntity> findByReceiptIdGroupByProduct(Long receiptId);
 }

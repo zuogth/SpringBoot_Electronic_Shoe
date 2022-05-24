@@ -4,6 +4,8 @@ import com.dth.spring_boot_shoe.entity.ProductReceiptEntity;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 public class ReceiptDetailResponse {

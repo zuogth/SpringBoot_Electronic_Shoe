@@ -26,6 +26,7 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetailEnti
     List<ProductDetailEntity> findBySlugProduct(@Param("slug") String slug);
 
     List<ProductDetailEntity> findByProductIdAndColorIdAndStatusNot(Long productId,Long colorId,Integer status);
+    List<ProductDetailEntity> findByProductIdAndColorIdAndStatus(Long productId,Long colorId,Integer status);
 
     //sản phẩm mua nhiều
     @Query(value = "select pd.* from product_bill pb join product_detail pd on pb.product_detail_id=pd.id " +
@@ -49,14 +50,32 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetailEnti
     Page<ProductDetailEntity> findByProductIdGroupByColor(@Param("product_id") Long product_id, Pageable pageable);
 
     List<ProductDetailEntity> findByProductIdAndStatusNot(Long productId,Integer status);
+    List<ProductDetailEntity> findByProductIdAndStatus(Long productId,Integer status);
 
     Optional<ProductDetailEntity> findByIdAndStatusNot(Long id,Integer status);
+    Optional<ProductDetailEntity> findByIdAndStatus(Long id,Integer status);
 
     @Query(value = "select pd from ProductDetailEntity pd " +
-            "where pd.product.slug=:productSlug and pd.color.slug=:color and pd.status <> -1 " +
+            "where pd.product.slug=:productSlug and pd.color.slug=:colorSlug and pd.status = 1 " +
             "group by pd.product.id")
-    Optional<ProductDetailEntity> findByProductSlugAndColorAndStatusNot(@Param("productSlug") String productSlug,
-                                                                        @Param("color") String color);
+    Optional<ProductDetailEntity> findByProductSlugAndColorAndStatus(@Param("productSlug") String productSlug,
+                                                                        @Param("colorSlug") String colorSlug);
 
     Optional<ProductDetailEntity> findTopByProductIdAndColorIdAndStatusNot(Long productId,Long colorId,Integer status);
+
+    @Query(value = "select p from ProductDetailEntity p " +
+            "where p.product.brand.id=:brandId and p.status=:status")
+    List<ProductDetailEntity> findByBrandIdAndStatus(@Param("brandId") Long brandId,
+                                                     @Param("status") Integer status);
+
+    List<ProductDetailEntity> findByDiscountIdNull();
+
+    @Query(value = "select pd from ProductDetailEntity pd " +
+            "where pd.status=1 and pd.discountId=:discountId " +
+            "group by pd.color.id")
+    List<ProductDetailEntity> findByDiscountIdAndStatus(Long discountId);
+
+    @Query(value = "select pd from ProductDetailEntity pd " +
+            "where pd.status=1 and pd.discountId=:discountId")
+    List<ProductDetailEntity> findAllByDiscountIdAndStatus(Long discountId);
 }

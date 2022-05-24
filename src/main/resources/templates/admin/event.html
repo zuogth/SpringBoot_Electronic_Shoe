@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin_layout :: admin-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Sự kiện và giảm giá</title>
+    <th:block id="cssContent">
+        <style>
+            .selectProd{
+                max-height: 400px;
+                overflow: auto;
+                margin: 1rem 0;
+            }
+            form#receiptRequest input{
+                width: 5rem;
+                border: 2px solid;
+            }
+            .card-color{
+                display: block;
+                width: 2rem;
+                height: 1rem;
+                margin: auto;
+                border: 1px solid;
+            }
+            .inputs-discount,.adds-discount{
+                display: flex;
+            }
+            .labelDis{
+                border: 1px solid black;
+                padding: .5rem;
+                margin-right: 1rem;
+            }
+            .card-color{
+                display: block;
+                width: 2rem;
+                height: 1rem;
+                margin: auto;
+                border: 1px solid;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<section class="content" ng-controller="EventController">
+    {{setTitle('Sự kiện và giảm giá','discount')}}
+    <div class="alert-noti" ng-show="message.show">
+        <i class="fas fa-times close-alert" ng-click="message={}"></i>
+        <span>{{message.content}}</span>
+    </div>
+    <div class="container-fluid">
+        <div class="my-card-header" ng-show="listPr">
+            <div style="display: flex;">
+                <button class="btn btn-default" ng-click="addPr()">Thêm</button>
+            </div>
+            <div style="width: 20%;">
+                <input class="form-control" type="text" id="myInput" placeholder="Search..." onkeyup="searchTable(this,'receipt')"/>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body" ng-show="listPr">
+                <table id="receipt" class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Tên sự kiện</th>
+                        <th>Banner</th>
+                        <th>Mô tả</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Hiển thị trên Web</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="event in events">
+                        <td>{{event.name}}</td>
+                        <td>
+                            <a href="{{event.url}}" target="_blank">Xem banner</a>
+                        </td>
+                        <td>{{event.description}}</td>
+                        <td>{{formatDateTime(event.startAt)}}</td>
+                        <td>{{formatDateTime(event.endAt)}}</td>
+                        <td>
+                            <div class="my-custom-checkbox">
+                                <input type="checkbox" class="my-custom-control-input" id="show{{event.id}}" ng-checked="event.showWeb==1" name="show" value="{{event.showWeb}}">
+                                <label class="my-custom-control-label" ng-if="event.showWeb==1" ng-click="updateShow(event.id)"></label>
+                                <label class="my-custom-control-label my-custom-control-label-un" ng-if="event.showWeb==0" ng-click="updateShow(event.id)"></label>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="#" class="btn" ng-click="getById(event.id)"><i class="fas fa-info"></i></a>
+                            <i class="fas fa-trash-alt btn" ng-click="delete($index)"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <ul uib-pagination total-items="totalItems"
+                    ng-model="currentPage" max-size="3"
+                    class="pagination-sm" rotate="false"
+                    previous-text="&lsaquo;" next-text="&rsaquo;"
+                    ng-change="pageChanged()"></ul>
+            </div>
+            <div class="card-body" ng-show="formAdd">
+                <form action="" name="formAddDis" id="formAddDis" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Tên sự kiện</label>
+                            <input type="text" class="form-control" ng-model="event.name" name="name">
+                            <span id="nameEr" class="errors"></span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Mô tả</label>
+                            <textarea class="form-control" ng-model="event.description" name="description"></textarea>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Thời gian bắt đầu</label>
+                            <input type="datetime-local" class="form-control" ng-model="event.startAt" name="startAt">
+                            <span id="startAtEr" class="errors"></span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Thời gian kết thúc</label>
+                            <input type="datetime-local" class="form-control" ng-model="event.endAt" name="endAt">
+                            <span id="endAtEr" class="errors"></span>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Style</label>
+                            <select ng-model="event.style" name="style" class="form-control">
+                                <option value="light" selected>Light</option>
+                                <option value="dark">Dark</option>
+                            </select>
+                            <span id="styleEr" class="errors"></span>
+                        </div>
+                        <div class="form-group col-sm-8">
+                            <label for="fileBanner" style="display: block;border: 1px solid #ced4da;height: 6rem;">
+                                <img src="{{event.url}}" id="imgBanner" style='width:100%;height: 100%;' alt="Chọn banner">
+                            </label>
+                            <input hidden type="file" id="fileBanner" name="banner" data-img="imgBanner" onchange="selectImg(this)" accept="image/png, image/jpeg, image/jpg">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Hiển thị trên Web</label>
+                            <div class="my-custom-checkbox" style="margin-left: 1rem">
+                                <input type="checkbox" class="my-custom-control-input" ng-checked="event.showWeb==1" name="show" value="{{event.showWeb}}">
+                                <label class="my-custom-control-label" ng-if="event.showWeb==1" ng-click="event.showWeb=0"></label>
+                                <label class="my-custom-control-label my-custom-control-label-un" ng-if="event.showWeb==0 || !event.showWeb" ng-click="event.showWeb=1"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex;">
+                        <label>Các mốc giảm giá (%):</label>
+                        <div style="display: flex;" ng-show="addDis">
+                            <input type="number" class="form-control" style="width: 3rem;" id="valueDisAdd">
+                            <button type="button" class="btn btn-primary" onclick="addDiscount()"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="inputs-discount" ng-show="addDis">
+                    </div>
+                    <div class="adds-discount" ng-hide="addDis">
+                        <div ng-repeat="item in discountItems">
+                            <label class="labelDis">{{item.discount}} % <i class="fas fa-plus" ng-click="addProductDis($index)"></i></label>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="addProductDis" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Danh sách sản phẩm áp dụng giảm giá {{discountItem.discount}}%:</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="formSearchProd" ng-model="search">
+                                        <div class="row">
+                                            <input type="text" id="discountId" class="form-control" value="{{discountItem.id}}" hidden/>
+                                            <div class="col-sm-6">
+                                                <label for="brandId">Brand</label>
+                                                <select class="form-control" id="brandId" ng-model="search.brandId" ng-change="searchProduct()">
+                                                    <option value="">--Chọn hãng--</option>
+                                                    <option ng-repeat="brand in brands" value="{{brand.id}}">{{brand.name}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label for="productId">Giày</label>
+                                                <select class="form-control" ng-model="search.productId" id="productId" ng-change="searchProduct()">
+                                                    <option value="">--Chọn giày--</option>
+                                                    <option ng-repeat="product in products" value="{{product.id}}">{{product.name}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="selectProd">
+                                        <table class="table table-bordered table-striped">
+                                            <thead class="sticky-top thead-dark">
+                                            <tr>
+                                                <th>Ảnh</th>
+                                                <th>Tên</th>
+                                                <th>Màu</th>
+                                                <th>Cỡ</th>
+                                                <th>Chọn</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="product in productDetails">
+                                                <td style="width: 100px;">
+                                                    <img src="{{product.image}}"/>
+                                                </td>
+                                                <td>{{product.name}}</td>
+                                                <td>
+                                                    <span class="card-color" style="background-color: {{product.colorCode}}"></span>
+                                                </td>
+                                                <td>{{product.size}}</td>
+                                                <td>
+                                                    <label class="my-container">
+                                                        <input type="checkbox" class="selectProductDetailIds" name="productDetailIds" value="{{product.id}}">
+                                                        <span class="checkmark"></span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="processProductDis()">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-default" ng-click="process()" ng-show="btnSave">Ghi</button>
+                    <button type="button" class="btn btn-default" ng-click="processDis()" ng-show="btnSaveDis">Lưu danh sách áp dụng</button>
+                </form>
+                <button class="btn btn-default" type="button" ng-click="close()">Thoát</button>
+            </div>
+            <div class="card-body" ng-show="listCh">
+                <div class="row">
+                    <div class="form-group col-sm-12" style="border: 1px solid black;">
+                        <img src="{{event.url}}" style='width:100%;height: 100%;' alt="Banner">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Tên sự kiện</label>
+                        <input type="text" class="form-control" ng-model="event.name" name="name" readonly>
+
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Mô tả</label>
+                        <textarea class="form-control" ng-model="event.description" name="description" readonly></textarea>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label>Thời gian bắt đầu</label>
+                        <input type="text" class="form-control" value="{{getDate(event.startAt)}}" name="startAt" readonly>
+
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label>Thời gian kết thúc</label>
+                        <input type="text" class="form-control" value="{{getDate(event.endAt)}}" name="endAt" readonly>
+
+                    </div>
+                </div>
+
+                <button class="btn btn-default" type="button" ng-click="close()">Thoát</button>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<th:block id="jsContent">
+    <script src="/assets/admin/script/events/EventService.js"></script>
+    <script src="/assets/admin/script/events/EventController.js"></script>
+</th:block>
+</body>
+</html>

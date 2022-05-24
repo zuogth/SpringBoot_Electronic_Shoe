@@ -1,5 +1,6 @@
 package com.dth.spring_boot_shoe.utils;
 
+import com.ibm.icu.text.RuleBasedNumberFormat;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -25,5 +26,17 @@ public class StringUtils {
                 .replaceAll("-{2,}","-")
                 .replaceAll("^-|-$","");
         return temp;
+    }
+
+    public static String convertMoneyToString(Long money){
+        String output="";
+        try {
+            RuleBasedNumberFormat ruleBasedNumberFormat = new RuleBasedNumberFormat(new Locale("vi"), RuleBasedNumberFormat.SPELLOUT);
+            output = ruleBasedNumberFormat.format(money) + " Đồng";
+            output=output.replace("lẻ", "linh");
+        } catch (Exception e) {
+            output = "không đồng";
+        }
+        return output.toUpperCase();
     }
 }

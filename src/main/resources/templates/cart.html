@@ -10,7 +10,11 @@
 </head>
 <body>
 <section>
-  <div class="main-cart">
+  <div class="alert-noti" th:if="${error}" style="display: block">
+    <i class="fas fa-times close-alert"></i>
+    <span th:text="${error.message}">Tài khoản hoặc mật khẩu không chính xác.</span>
+  </div>
+  <div class="main-cart container-cus">
     <h2>Giỏ hàng của bạn</h2>
     <div class="content-cart">
       <h5>Giỏ hàng của bạn trống</h5>

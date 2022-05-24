@@ -98,12 +98,12 @@ li.slick-active {
     border-top: 1px solid silver;
     border-bottom: 1px solid silver;
     background-color: white;
+    padding: 0 2rem;
 }
 
 .menu-prod ul {
     display: flex;
     list-style: none;
-    width: 70%;
     margin: 0 auto;
     justify-content: space-around;
 }
@@ -226,7 +226,14 @@ li.slick-active {
 .options-parent {
     width: 30%;
     background-color: white;
-    padding: 2rem;
+    padding: 2rem 3rem 2rem 2rem;
+    border-left: 1px solid silver;
+}
+.options-parent-res{
+    display: none;
+    width: 100%;
+    background-color: white;
+    padding: 2rem 3rem;
     border-left: 1px solid silver;
 }
 .top-fixed{
@@ -246,18 +253,18 @@ li.slick-active {
     text-decoration: underline;
     cursor: pointer;
 }
-.options-detail h2 {
+.options-detail h2,.options-detail-res h2 {
     text-transform: uppercase;
     font-weight: 400;
     margin: 1rem 0;
 }
 
-.options-detail>p {
+.options-detail>p,.options-detail-res>p {
     font-weight: 500;
     margin: .5rem 0;
 }
 
-.filter-size label {
+.options-parent .filter-size label {
     border: 1px solid silver;
     padding: .7rem 0;
     width: 19%;
@@ -265,7 +272,14 @@ li.slick-active {
     cursor: pointer;
     margin: .1rem 0;
 }
-
+.options-parent-res .filter-size label {
+    border: 1px solid silver;
+    padding: .7rem 0;
+    width: 10%;
+    text-align: center;
+    cursor: pointer;
+    margin: .1rem 0;
+}
 .filter-size label:hover {
     background-color: black;
     color: white;
@@ -313,21 +327,39 @@ li.slick-active {
     box-shadow: 3px 3px rgb(228, 227, 227);
 }
 
-.options-detail ul {
+.options-detail ul,.options-detail-res ul {
     list-style: none;
 }
 
-.options-detail ul li {
+.options-detail ul li,.options-detail-res ul li {
     display: flex;
     align-items: baseline;
     font-size: .8rem;
 }
 
-.options-detail ul li p {
+.options-detail ul li p, .options-detail-re ul li p{
     margin-left: .5rem;
 }
 
-#errorSize{
+#errorSize,#errorSizeRes{
     font-size: .8rem;
     color: #950909;
+}
+/* responsive */
+@media only screen and (max-width:991px){
+    .options-parent-res{
+        display: block;
+    }
+    .options-parent{
+        display: none;
+    }
+    .content-detail{
+        width: 100%;
+    }
+}
+@media only screen and (max-width:578px){
+
+    .menu-prod ul li{
+        padding: 1rem 0;
+    }
 }

@@ -44,8 +44,8 @@ $(()=>{
     }
     $('.total-prod').children().eq(0).html(count+' sản phẩm');
     $('.total-prod').children().eq(1).html(toMoney(totalPrice));
-    let ship=$('.ship-prod').children().eq(1).attr("pay-ship");
-    $('.total-price-child').children('span').html(toMoney(totalPrice+ship*1));
+    let sale=$('.ship-prod').children().eq(1).attr("pay-sale");
+    $('.total-price-child').children('span').html(toMoney(totalPrice+sale*1));
 
     $('.btn-pay button').click(function (){
         localStorage.removeItem('list_cart');

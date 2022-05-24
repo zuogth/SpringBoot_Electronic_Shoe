@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -33,7 +34,7 @@ public class Product {
 
     @NotNull(message = "Loại giày không thể bỏ trống")
     private String brand;
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
     private Integer receipt;
     private Integer sold;
     private List<ProductDetailResponse> detailList;

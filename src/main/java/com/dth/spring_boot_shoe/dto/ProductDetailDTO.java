@@ -17,7 +17,7 @@ public class ProductDetailDTO extends BaseDTO{
     private SizeEntity size;
     private String image;
     private ProductEntity product;
-    private Integer quantity;
+    private Long discountId;
     private Boolean rate;
 
 

@@ -5,7 +5,65 @@ $(window).on("load",function(){
     },1000);
 
 })
-
+//Load cart from local storage
+$(()=>{
+    loadCartLocalMain();
+})
+//load cart from local storage
+function loadCartLocalMain(){
+    let list_cart=window.localStorage.getItem('list_cart');
+    let req;
+    if(list_cart){
+        req={
+            url:'/api/carts/fixed',
+            type:'POST',
+            dataType:'JSON',
+            contentType:'application/json',
+            data:list_cart
+        }
+    }else {
+        req={
+            url:'/api/carts',
+            type:'GET',
+            dataType:'JSON',
+            contentType:'application/json',
+        }
+    }
+    $.ajax(req).done(function (result){
+        if(result.details==null){
+            return;
+        }
+        let html = "";
+        let total=0;
+        let count = 0;
+        for(let cart of result.details){
+            html +=`<div class="card-fixed-prod" id="c-f-p-${cart.detail.id}">
+                        <img src="${cart.detail.image}" alt="">
+                        <div class="card-fixed-prod-info">
+                            <p>${cart.detail.name}</p>
+                            <p class="unit-price">${toMoney(cart.detail.price)}</p>
+                            <div class="card-fixed-prod-info-size">
+                                <span>Cỡ</span>
+                                <span>${cart.detail.size}</span>
+                            </div>
+                            <div class="card-fixed-prod-info-quantity">
+                                <span>Số lượng</span>
+                                <span id="c-f-p-i-quantity-${cart.detail.id}">${cart.quantity}</span>
+                            </div>
+                        </div>
+                    </div>`;
+            total+=cart.detail.price*(100-cart.detail.discount)/100*cart.quantity;
+            count+=cart.quantity*1;
+        }
+        $('div.card-fixed div p').html(count);
+        $('div.card-fixed-info-header span').html('('+count+')');
+        $('div.card-fixed-prods').html(html);
+        $('div.card-fixed-total span').html(toMoney(total));
+        $('div.card-fixed-total span').attr("data",total);
+    }).fail(function(){
+        alert("Error")
+    })
+}
 // Lên đầu trang
 
 $(document).ready(function () {
@@ -77,7 +135,7 @@ function search(elm,genClass){
                                     <h5>${prod.product.name}</h5>
                                     <p>${toMoney(prod.product.price)}</p>
                                 </div>
-                                <a href="/product/${prod.id}">Xem chi tiết</a>
+                                <a href="/products/${prod.product.slug}/${prod.color.slug}">Xem chi tiết</a>
                             </div>`;
             }
             $('.'+genClass).html(html);
@@ -102,13 +160,19 @@ $(()=>{
     if(htmlAlert!=""){
         $('.alert-noti').show();
     }
+    $('.card-fixed-info').hide();
 })
+
 
 function toMoney(totalprice){
     return totalprice.toLocaleString('it-IT', {
         style: 'currency',
         currency: 'VND'
     });
+}
+
+function showCard(){
+    $('.card-fixed-info').toggle(300);
 }
 
 function ChangeToSlug(text) {

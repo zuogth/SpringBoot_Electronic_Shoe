@@ -1,6 +1,7 @@
 package com.dth.spring_boot_shoe.controller;
 
 import com.dth.spring_boot_shoe.dto.BillReceiptDTO;
+import com.dth.spring_boot_shoe.dto.ProductDetail;
 import com.dth.spring_boot_shoe.request.UserRequest;
 import com.dth.spring_boot_shoe.service.BillService;
 import com.dth.spring_boot_shoe.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -37,11 +39,11 @@ public class BillController {
     }
 
     @PostMapping("/delivery")
-    public String updateToBill(@Valid @ModelAttribute("user")UserRequest dto, BindingResult bindingResult){
+    public String updateToBill(@Valid @ModelAttribute("user")UserRequest dto, BindingResult bindingResult, HttpServletRequest request){
         if(bindingResult.hasErrors()){
             return "/delivery";
         }
-        billService.updateToBill(dto);
-        return "redirect:/";
+        billService.updateToBill(dto,request);
+        return "noti/order";
     }
 }
