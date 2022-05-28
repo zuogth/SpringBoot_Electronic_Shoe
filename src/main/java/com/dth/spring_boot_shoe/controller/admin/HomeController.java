@@ -24,7 +24,7 @@ public class HomeController {
     @GetMapping("/bills")
     public String bills(@RequestParam(value = "now",required = false) boolean now, Model model){
         model.addAttribute("now", now);
-        return "/admin/bill";
+        return "admin/bill";
     }
 
     @GetMapping("/properties")
