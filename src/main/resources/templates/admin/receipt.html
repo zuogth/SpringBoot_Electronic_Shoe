@@ -64,7 +64,7 @@
                         <td>
                             <a href="#" class="btn" ng-click="getById(receipt.id)"><i class="fas fa-info"></i></a>
                             <i class="far fa-edit btn" ng-click="getByIdForEdit(receipt.id)"></i>
-                            <a class="btn"><i class="fas fa-file-download" ng-click="exportReceipt(receipt.id)"></i></a>
+                            <a class="btn"><i class="fas fa-file-download" data-toggle="modal" ng-click="setReceiptId(receipt.id)" data-target="#modalExport"></i></a>
                         </td>
                     </tr>
                     </tbody>
@@ -75,6 +75,39 @@
                     previous-text="&lsaquo;" next-text="&rsaquo;"
                     ng-change="pageChanged()"></ul>
             </div>
+            <div class="modal fade" id="modalExport" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalExportTitle">Chọn loại file xuất</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formReport" ng-model="search">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="productId">Tên</label>
+                                        <select class="form-control" id="typeFile" ng-model="typeFile">
+                                            <option value="pdf">PDF</option>
+                                            <option value="word">Word</option>
+                                            <option value="xls">Excel</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="exportReceipt()">Xuất</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a id='downloadpdf' href="#" title='export.pdf' download='export.pdf' style="display:none;" >Download PDF</a>
+            <a id='downloadword' href="#" title='export.doc' download='export.doc' style="display:none;" >Download PDF</a>
+            <a id='downloadxls' href="#" title='export.xls' download='export.xls' style="display:none;" >Download PDF</a>
             <div class="card-body" ng-show="formAdd">
                 <form action="" name="formAddPr">
                     <div class="row">

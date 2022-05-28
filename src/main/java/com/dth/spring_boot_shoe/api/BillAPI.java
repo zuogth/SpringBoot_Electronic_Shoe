@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -14,7 +16,7 @@ public class BillAPI {
     private final BillService billService;
 
     @PutMapping("/bill/update")
-    public void updatePaying(){
+    public void updatePaying(HttpServletRequest request){
         billService.changePaying();
     }
 }

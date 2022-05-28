@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Phương thức thanh toán</title>
+    <th:block id="cssContent">
+        <link rel="stylesheet" href="/assets/css/delivery.css">
+    </th:block>
+</head>
+<body>
+<section>
+    <div class="alert-noti" th:if="${payErr}" style="display: block">
+        <i class="fas fa-times close-alert"></i>
+        <span th:text="${payErr}">Phương thức thanh toán chưa được hố trợ.</span>
+    </div>
+    <div class="main-deli container-cus">
+        <h2>Phương thức thanh toán</h2>
+        <p>Tất cả phương thức thanh toán đều bảo mật</p>
+        <div class="content-pay">
+            <div class="payment-left">
+                <form action="/payment" method="POST">
+                    <div class="card-header-cus">
+                        <label class="pay-onl-selected">
+                            <label for="pay-onl"><i class="far fa-circle"></i></label>
+                            <input type="radio" name="payment" id="pay-onl" value="onl" required>
+                            <span>Thanh toán online</span>
+                        </label>
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                    <div id="payment-online" class="collapse">
+                        <div class="card-body">
+                            Sẽ sớm tích hợp
+                        </div>
+                    </div>
+                    <div class="card-header-cus card-pay-off">
+                        <label class="pay-off-selected">
+                            <label for="pay-off"><i class="far fa-circle"></i></label>
+                            <input type="radio" name="payment" id="pay-off" value="off" required checked>
+                            <span>Thanh toán khi nhận hàng</span>
+                        </label>
+                        <i class="fas fa-money-bill"></i>
+                    </div>
+                    <div id="payment-offline" class="collapse">
+                        <div class="card-body">
+                            <p>Không cần thanh toán trực tuyến - trả tiền mặt bằng cách sử dụng thay đổi chính xác sau khi các mặt hàng của bạn được giao!</p>
+                            <p>Thông tin chi tiết về tài khoản ngân hàng của bạn sẽ chỉ được yêu cầu nếu bạn muốn trả lại bất kỳ sản phẩm nào để được hoàn tiền.</p>
+                        </div>
+                    </div>
+                    <div class="btn-pay">
+                        <button type="submit">Đặt hàng <i class="far fa-long-arrow-right"></i></button>
+                    </div>
+                </form>
+<!--                <div class="content dark">-->
+<!--                    <a href="">Đặt hàng<i class="fal fa-long-arrow-right"></i></a>-->
+<!--                </div>-->
+
+            </div>
+            <div class="total-price">
+                <div class="order-info">
+                    <h3>Đơn hàng</h3>
+                    <div class="total-prod">
+                        <span>3 sản phẩm</span>
+                        <span totalprice="">7.000.000 đ</span>
+                    </div>
+                    <div class="ship-prod">
+                        <span>Giao hàng</span>
+                        <span pay-sale="0">Miễn phí</span>
+                    </div>
+                    <div class="total-price-child">
+                        <h6>Tổng</h6>
+                        <span>7.000.000 đ</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="detail-order">
+                    <h3>Chi tiết đơn hàng</h3>
+                    <div class="detail-order-items">
+                        <div class="prod-item-order" th:each="bill:${bills}">
+                            <div class="item-order-l">
+                                <img th:src="${bill.detail.image}" alt="image">
+                            </div>
+                            <div class="item-order-r">
+                                <p th:text="${bill.detail.name}">Giày Duramo SL</p>
+                                <p th:text="${bill.detail.color}">Black</p>
+                                <span>Cỡ: </span><span th:text="${bill.detail.size}">40</span> / <span>Số lượng: </span><span th:text="${bill.quantity}" id="count">1</span>
+                                <p id="price" th:data-price="${bill.detail.price*(100-bill.detail.discount)/100}" th:text="${#numbers.formatDecimal(bill.detail.price*(100-bill.detail.discount)/100, 0, 'POINT', 0, 'POINT')}+' VND'">2.500.000 VND</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-bill">
+                        <h5>Địa chỉ giao hàng</h5>
+                        <p th:text="${billInfor.user.fullName}">Hiếu Dương</p>
+                        <p th:text="${billInfor.address}">Xã chuyên mỹ, phú xuyên, Hà Nội</p>
+                        <p th:text="${billInfor.user.phone}">0834633431</p>
+                    </div>
+                    <div class="delivery-method">
+                        <h5>Phương thức giao hàng</h5>
+                        <p>Giao hàng tiêu chuẩn</p>
+                        <p>GHN (Thời gian vận chuyển từ 3 - 7 ngày, không tính ngày lễ & cuối tuần)</p>
+                        <p>MIỄN PHÍ</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<th:block id="jsContent">
+    <script src="/assets/js/deli.js"></script>
+</th:block>
+</body>
+</html>

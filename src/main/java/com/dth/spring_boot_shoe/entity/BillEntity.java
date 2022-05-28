@@ -28,6 +28,9 @@ public class BillEntity extends BaseEntity {
     @Column(name = "status", length = 15)
     private String status;
 
+    @Column(name = "payment", length = 4)
+    private String payment;
+
     @Column(name = "address", length = 100)
     private String address;
 }

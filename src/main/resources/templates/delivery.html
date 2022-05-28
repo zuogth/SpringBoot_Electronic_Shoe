@@ -3,7 +3,7 @@
       th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: section},~{:: #cssContent},~{:: #jsContent})}">
 <head>
     <meta charset="UTF-8">
-    <title>Giỏ hàng</title>
+    <title>Thanh toán</title>
     <th:block id="cssContent">
         <link rel="stylesheet" href="/assets/css/delivery.css">
     </th:block>
@@ -35,7 +35,7 @@
                         <div class="form-group getcity">
                             <input type="text" onkeyup="searchProvince(this)" onfocus="listProvince(this)" id="province" onfocusout="unFocusInput(this)"
                                    th:field="*{province}" parent_code="" required>
-                            <span id="province">Thành phố <i>*</i></span>
+                            <span>Thành phố <i>*</i></span>
                             <label class="errorClass"></label>
                             <small style="color:red" th:if="${#fields.hasErrors('province')}"
                                     th:errors="*{province}" class="errorClass"></small>

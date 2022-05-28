@@ -100,8 +100,15 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.17.0</version>
+            <version>6.19.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+
         <dependency>
             <groupId>com.dth.shoe</groupId>
             <artifactId>localFont</artifactId>

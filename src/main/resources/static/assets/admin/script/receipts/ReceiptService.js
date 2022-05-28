@@ -35,8 +35,8 @@ app.service('ReceiptService',['BaseServices',function (BaseServices){
         return BaseServices.callAPI(urls.process+"/details/"+id,'GET');
     }
 
-    function exportReceipt(id){
-        return BaseServices.callAPI(urls.process+"/export/"+id,'GET');
+    function exportReceipt(id,type){
+        return BaseServices.callAPI(urls.process+"/export/"+id+"?type="+type,'GET');
     }
     return {
         getAll:getAll,

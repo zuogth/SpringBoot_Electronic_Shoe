@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
@@ -164,7 +165,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     }
 
     @Override
-    public String ExportReceipt(Long id) {
+    public String ExportReceipt(Long id, String type) {
         UserEntity user = userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),1,true)
                 .orElseThrow(()-> new ApiRequestException("Bạn chưa đăng nhập"));
         ReceiptEntity receipt = receiptRepository.findById(id).orElseThrow(()-> new ApiRequestException("Hóa đơn không tồn tại"));
@@ -176,7 +177,7 @@ public class ReceiptServiceImpl implements ReceiptService {
             Integer quantity = productReceiptRepository.findSumQuantityEachProductByReceipt(e.getProductDetail().getProduct().getId(),receipt.getId());
             exportRequests.add(ProductExportRequest.converter(index.get(),e,quantity));
         });
-        String pdf = "";
+        String str = "";
         try {
             // Ten template
             String templateName = "Receipt_report.jrxml";
@@ -195,13 +196,19 @@ public class ReceiptServiceImpl implements ReceiptService {
             parameters.put("p_totalPrice",receipt.getTotalprice());
             parameters.put("p_totalPriceVN", StringUtils.convertMoneyToString(receipt.getTotalprice().longValue()));
             // Xuat bao cao
-            pdf = exportReport.createPdfReport(templateName, dataSources, parameters);
+            if(type.equals("pdf")){
+                str = exportReport.createPdfReport(templateName, dataSources, parameters);
+            }else if(type.equals("word")){
+                str = exportReport.createWordReport(templateName, dataSources, parameters);
+            }else {
+                str = exportReport.createExcelReport(templateName, dataSources, parameters);
+            }
             System.out.println("Xuat bao cao thanh cong");
         } catch (final Exception e) {
             e.printStackTrace();
             System.out.println("Xuat bao cao that bai");
         }
 
-        return pdf;
+        return str;
     }
 }

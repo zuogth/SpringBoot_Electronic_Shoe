@@ -54,8 +54,9 @@ public class BillServiceImpl implements BillService {
     private final DiscountRepository discountRepository;
 
     @Override
-    public BillEntity findByUserId(Long userId) {
-        return billRepository.findByUserIdAndBillType(userId,0);
+    public BillEntity findByUserId() {
+        UserEntity user = userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),1,true).orElseThrow(()->new RequestException("Bạn chưa đăng nhập","login"));
+        return billRepository.findByUserIdAndBillType(user.getId(),0);
     }
 
     @Override
@@ -192,14 +193,18 @@ public class BillServiceImpl implements BillService {
         BillEntity finalBill = bill;
         Arrays.stream(request).forEach(cart->{
             ProductDetailEntity productDetail=productDetailRepository.findById(cart.getProductDetailId()).get();
+            Optional<DiscountEntity> discount = discountRepository.findById(productDetail.getDiscountId());
+            Integer dis = discount.filter(discountEntity -> discountEntity.getEvent().getEndAt().isAfter(LocalDateTime.now())).map(DiscountEntity::getDiscount).orElse(0);
+            BigDecimal price = productDetail.getProduct().getPrice().multiply(new BigDecimal(100-dis)).divide(new BigDecimal(100));
             ProductBillEntity productBill=productBillRepository.findByBillIdAndProductDetailId(finalBill.getId(),cart.getProductDetailId());
             if(productBill==null){
                 productBill=new ProductBillEntity();
                 productBill.setProductDetail(productDetail);
                 productBill.setBill(finalBill);
-                productBill.setPrice(cart.getPrice());
+                productBill.setPrice(price);
                 productBill.setQuantity(cart.getQuantity());
             }else {
+                productBill.setPrice(price);
                 productBill.setQuantity(cart.getQuantity());
             }
             productBillRepository.save(productBill);
@@ -272,7 +277,7 @@ public class BillServiceImpl implements BillService {
 
     //đặt hàng
     @Override
-    public void updateToBill(UserRequest dto, HttpServletRequest request) {
+    public void updateToBillDelivery(UserRequest dto) {
         UserEntity user=userRepository.findByEmailAndStatusAndEnabled(dto.getEmail(),1,true)
                 .orElseThrow(()->new RequestException("Bạn chưa đăng nhập","login"));
         Integer count = billRepository.getCountBillByUser(user.getId());
@@ -286,12 +291,24 @@ public class BillServiceImpl implements BillService {
         BigDecimal tt2=new BigDecimal(total);
         BigDecimal r=tt1.add(tt2);
         bill.setTotalprice(r);
-        bill.setBillType(1);
-        bill.setPaying(0);
-        bill.setStatus(StatusBill.waiting.toString());
         bill.setCreatedAt(LocalDateTime.now());
         bill.setAddress(dto.getProvince()+"-"+dto.getDistrict()+"-"+dto.getWard()+"-"+dto.getVillage());
-        //userService.update(dto,user);
+        billRepository.save(bill);
+        user.setFullName(dto.getLastName()+" "+dto.getFirstName());
+        user.setPhone(dto.getPhone());
+        userRepository.save(user);
+
+    }
+
+    @Override
+    public void updateToBillForPayment(String payment,HttpServletRequest request) {
+        UserEntity user=userRepository.findByEmailAndStatusAndEnabled(SecurityContextHolder.getContext().getAuthentication().getName(),1,true)
+                .orElseThrow(()->new RequestException("Bạn chưa đăng nhập","login"));
+        BillEntity bill=billRepository.findByUserIdAndBillType(user.getId(),0);
+        bill.setBillType(1);
+        bill.setPaying(0);
+        bill.setPayment(payment);
+        bill.setStatus(StatusBill.waiting.toString());
         billRepository.save(bill);
 
         try {
@@ -355,7 +372,7 @@ public class BillServiceImpl implements BillService {
         Map<String,Object> map=new HashMap<>();
         Pageable pageable= PageRequest.of(page-1,10);
         Page<BillEntity> entities=now?billRepository.findAllByBillTypeAndMonthNow(pageable)
-                :billRepository.findAllByBillType(1,pageable);
+                :billRepository.findAllByBillTypeOrderByCreatedAtDesc(1,pageable);
         List<BillResponse> responses=new ArrayList<>();
         entities.getContent().forEach(e->responses.add(BillResponse.converter(e)));
         map.put("totalItems",entities.getTotalElements());

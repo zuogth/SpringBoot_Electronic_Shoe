@@ -173,3 +173,53 @@ input[type=number]::-webkit-outer-spin-button
 .item-order-r p{
     margin: 0;
 }
+
+/* payment */
+.content-pay{
+    display: flex;
+    justify-content: space-between;
+}
+.payment-left{
+    width: 60%;
+    border-top: 1px solid black;
+    padding-top: 2rem;
+}
+.card-header-cus{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-header-cus>label{
+    display: flex;
+    padding-right: 1rem;
+}
+.card-header-cus>i{
+    font-size: 3rem;
+}
+.card-header-cus>label>label>i{
+    font-size: 1.5rem;
+    padding-right: .5rem;
+}
+.card-header-cus span{
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.card-header-cus input{width: 0;height: 0;}
+.card-pay-off{
+    border-top: 1px solid black;
+    border-top-style: dashed;
+    padding-top: 1rem;
+}
+.content.dark{
+    margin-top: 2rem;
+}
+
+.detail-bill,.delivery-method{
+    padding: 1rem .5rem 0 .5rem;
+}
+.detail-bill h5,.delivery-method h5{
+    text-transform: uppercase;
+}
+.detail-bill p,.delivery-method p{
+    margin: 0;
+}

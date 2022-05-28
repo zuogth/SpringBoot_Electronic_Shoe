@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,9 +78,10 @@ public class ReceiptAPI {
     }
 
     @GetMapping("/export/{id}")
-    public ResponseEntity<?> export(@PathVariable("id") Long id){
+    public ResponseEntity<?> export(@PathVariable("id") Long id,
+                                    @RequestParam("type") String type){
         Map<String,Object> map = new HashMap<>();
-        map.put("pdf",receiptService.ExportReceipt(id));
+        map.put("pdf",receiptService.ExportReceipt(id,type));
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
 }

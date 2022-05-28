@@ -15,7 +15,7 @@ public interface BillRepository extends JpaRepository<BillEntity,Long> {
     List<BillEntity> findByUserIdAndBillTypeAndStatusNot(Long userId, Integer billType, String status);
     List<BillEntity> findByUserIdAndBillTypeAndStatus(Long userId,Integer billType,String status);
 
-    Page<BillEntity> findAllByBillType(Integer billType, Pageable pageable);
+    Page<BillEntity> findAllByBillTypeOrderByCreatedAtDesc(Integer billType, Pageable pageable);
     @Query(value = "select * from bill b where b.bill_type=1 and month(b.created_at)=month(now()) and year(b.created_at)=year(now())",
             countQuery = "select count(*) as count from bill b where b.bill_type=1 and month(b.created_at)=month(now()) and year(b.created_at)=year(now())"
             ,nativeQuery = true)

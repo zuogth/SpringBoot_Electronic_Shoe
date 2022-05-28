@@ -312,7 +312,9 @@ function addCart(event){
                 }
                 localStorage.setItem('list_cart', JSON.stringify(list_cart));
                 $('#'+formId+' label#'+sizeId+'-'+id).attr("count",count*1-1);
-                $('#'+errId).html('Còn '+(count*1-1)+' sản phẩm');
+                if(count*1-1 <= 10){
+                    $('#'+errId).html('Còn '+(count*1-1)+' sản phẩm');
+                }
                 $(event).children().attr("class","far fa-long-arrow-right");
             },2000);
         }else {

@@ -73,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http.csrf().disable();
             http.antMatcher("/**").authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/info/**","/delivery/**").authenticated()
+                    .antMatchers("/info/**","/delivery/**","/payment/**").authenticated()
                     .and()
                     .exceptionHandling().accessDeniedPage("/login?accessDenied")
                     .and()

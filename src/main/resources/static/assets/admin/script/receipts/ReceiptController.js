@@ -20,6 +20,9 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
     $scope.productDetailsArr=[];
     $scope.quantity=0;
     $scope.totalMoneyStr='';
+    $scope.typeFile = "pdf";
+    $scope.receiptId='';
+    $scope.dataBase64='';
 
     $scope.products=[];
     $scope.colors=[];
@@ -178,13 +181,16 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
         $scope.getById($scope.receipt.id);
     }
 
-    $scope.exportReceipt=function (id){
-        return ReceiptService.exportReceipt(id).then(function (_data){
-            console.log(_data.data);
+    $scope.exportReceipt=function (){
+        return ReceiptService.exportReceipt($scope.receiptId,$scope.typeFile).then(function (_data){
+            console.log(_data.data.pdf);
+            downloadPDF(_data.data.pdf,$scope.typeFile);
         },function (error){
             showErr(error)
         })
     }
+
+    $scope.setReceiptId=function (id){$scope.receiptId = id;}
 
     $scope.close=function (){
         init();
@@ -198,3 +204,26 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
         }
     }
 }])
+
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+var isEdge = !isIE && !!window.StyleMedia;
+var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+
+window.downloadPDF = function downloadPDF(str,type) {
+    var base64String = str;
+
+    if(isIE || isEdge){
+        var byteCharacters = atob(base64String);
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        var blob = new Blob([byteArray], {type: 'application/pdf'});
+        window.navigator.msSaveOrOpenBlob(blob, "Sample.pdf");
+    }else{
+        var downloadLink = document.getElementById('download'+type);
+        downloadLink.href = 'data:application/octet-stream;base64,' + base64String;
+        downloadLink.click();
+    }
+}

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface BillService {
-    BillEntity findByUserId(Long userId);
+    BillEntity findByUserId();
     ProductDetailDTO addCart(UserEntity user, CartRequest request);
 
     List<BillReceiptDTO> loadCart(CartRequest[] request);
@@ -33,7 +33,8 @@ public interface BillService {
     List<CheckQuantity> checkQuantityProductToOrder(CartRequest[] request);
 
     List<BillReceiptDTO> updateToBill();
-    void updateToBill(UserRequest dto, HttpServletRequest request);
+    void updateToBillDelivery(UserRequest dto);
+    void updateToBillForPayment(String payment,HttpServletRequest request);
 
     List<BillDTO> findAllBillByUser(Long userId);
 

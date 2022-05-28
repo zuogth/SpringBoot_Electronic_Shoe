@@ -91,7 +91,7 @@
 		</band>
 		<band height="80">
 			<staticText>
-				<reportElement x="0" y="0" width="50" height="30" isPrintWhenDetailOverflows="true" uuid="d31e1ee6-ffcd-47fd-9996-c2d1fe9f9cf4">
+				<reportElement x="0" y="0" width="50" height="30" uuid="d31e1ee6-ffcd-47fd-9996-c2d1fe9f9cf4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -107,7 +107,7 @@
 				<text><![CDATA[STT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="50" y="0" width="250" height="30" isPrintWhenDetailOverflows="true" uuid="f4d26c8a-efba-4f2f-bd8b-3da3ac61b6a4">
+				<reportElement x="50" y="0" width="250" height="30" uuid="f4d26c8a-efba-4f2f-bd8b-3da3ac61b6a4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -123,7 +123,7 @@
 				<text><![CDATA[Tên sản phẩm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="0" width="100" height="30" isPrintWhenDetailOverflows="true" uuid="b0bde3e9-5759-432e-96c9-29f800471e1f"/>
+				<reportElement x="300" y="0" width="100" height="30" uuid="b0bde3e9-5759-432e-96c9-29f800471e1f"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -137,7 +137,7 @@
 				<text><![CDATA[Số lượng]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="550" y="0" width="150" height="30" isPrintWhenDetailOverflows="true" uuid="6e63233a-cc3b-4833-b7f8-6935d7388be7"/>
+				<reportElement x="550" y="0" width="150" height="30" uuid="6e63233a-cc3b-4833-b7f8-6935d7388be7"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -151,7 +151,7 @@
 				<text><![CDATA[Thành tiền (VNĐ)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="400" y="0" width="150" height="30" isPrintWhenDetailOverflows="true" uuid="578961be-e38f-4c9a-bd67-c5dab27faf92">
+				<reportElement x="400" y="0" width="150" height="30" uuid="578961be-e38f-4c9a-bd67-c5dab27faf92">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -167,7 +167,7 @@
 				<text><![CDATA[Đơn giá (VNĐ)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="30" width="50" height="20" isPrintWhenDetailOverflows="true" uuid="726acdad-e354-4cb2-a04b-14adf2cf2926">
+				<reportElement x="0" y="30" width="50" height="20" uuid="726acdad-e354-4cb2-a04b-14adf2cf2926">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -183,7 +183,7 @@
 				<text><![CDATA[(1)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="50" y="30" width="250" height="20" isPrintWhenDetailOverflows="true" uuid="b1dee578-79ab-4e76-9b6c-5e9caf114a35">
+				<reportElement x="50" y="30" width="250" height="20" uuid="b1dee578-79ab-4e76-9b6c-5e9caf114a35">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -199,7 +199,7 @@
 				<text><![CDATA[(2)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="30" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="69dfad5d-6b73-44ec-a2c3-cfc79c1936d8"/>
+				<reportElement x="300" y="30" width="100" height="20" uuid="69dfad5d-6b73-44ec-a2c3-cfc79c1936d8"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -213,7 +213,7 @@
 				<text><![CDATA[(3)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="550" y="30" width="150" height="20" isPrintWhenDetailOverflows="true" uuid="c53d21e9-4a29-4c31-8c02-d06516e9c78e"/>
+				<reportElement x="550" y="30" width="150" height="20" uuid="c53d21e9-4a29-4c31-8c02-d06516e9c78e"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -227,7 +227,7 @@
 				<text><![CDATA[(5)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="400" y="30" width="150" height="20" isPrintWhenDetailOverflows="true" uuid="46012700-74aa-4613-8cec-3277c5d539f6">
+				<reportElement x="400" y="30" width="150" height="20" uuid="46012700-74aa-4613-8cec-3277c5d539f6">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">

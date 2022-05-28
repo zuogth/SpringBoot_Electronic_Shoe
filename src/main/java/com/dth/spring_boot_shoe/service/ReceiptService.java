@@ -5,6 +5,7 @@ import com.dth.spring_boot_shoe.response.ProductDetailResponse;
 import com.dth.spring_boot_shoe.response.ReceiptDetailResponse;
 import com.dth.spring_boot_shoe.response.ReceiptResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -22,5 +23,5 @@ public interface ReceiptService {
 
     void update(ReceiptRequest receiptRequest);
 
-    String ExportReceipt(Long id);
+    String ExportReceipt(Long id, String type);
 }
