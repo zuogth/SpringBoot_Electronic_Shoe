@@ -12,14 +12,14 @@ public class HomeController {
 
     @GetMapping({"/",""})
     public String index(){
-        return "/admin/index";
+        return "admin/index";
     }
 
     @GetMapping("/products")
-    public String products(){return "/admin/product";}
+    public String products(){return "admin/product";}
 
     @GetMapping("/receipts")
-    public String receipts(){return "/admin/receipt";}
+    public String receipts(){return "admin/receipt";}
 
     @GetMapping("/bills")
     public String bills(@RequestParam(value = "now",required = false) boolean now, Model model){
@@ -28,10 +28,10 @@ public class HomeController {
     }
 
     @GetMapping("/properties")
-    public String properties(){return "/admin/properties";}
+    public String properties(){return "admin/properties";}
 
     @GetMapping("/users")
-    public String users(){return "/admin/user";}
+    public String users(){return "admin/user";}
 
     @GetMapping("/events")
     public String discounts(){return "admin/event";}

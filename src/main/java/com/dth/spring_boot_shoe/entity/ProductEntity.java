@@ -34,10 +34,4 @@ public class ProductEntity extends BaseEntity {
 
     @Column(name = "status")
     private Integer status;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "product_material",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "material_id"))
-    private Set<MaterialEntity> materials;
 }
