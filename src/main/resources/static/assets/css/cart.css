@@ -143,7 +143,14 @@ padding: 1rem 0;}
     margin-left: .3rem;
     text-decoration: underline;
 }
-
+.infor-price{
+    display: flex;
+    font-size: .9rem;"
+}
+.infor-price-res{
+    display: none;
+    font-size: .9rem;"
+}
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button
 {
@@ -159,6 +166,23 @@ input[type=number]::-webkit-outer-spin-button
         width: 100%;
     }
     .total-price{
-        width: 50%;
+        width: 100%;
+    }
+    .prod-img{
+        width: 40%;
+    }
+    .info-prod{
+        width: 60%;
+        padding: 1rem;
+    }
+    .infor-price{display: none;}
+    .infor-price-res{display: flex;}
+}
+@media only screen and (max-width:578px){
+    .main-cart{
+        padding: 1rem 1rem 3rem;
+    }
+    .pay-cart-btn a i{
+        margin-left: 5rem;
     }
 }

@@ -13,7 +13,7 @@
 .info-deli{
     width: 65%;
 }
-.total-price{width: 30%;}
+.total-price,.total-price-pay{width: 30%;}
 .main-deli .form-group{
     position: relative;
     padding: .8rem 0;
@@ -142,7 +142,7 @@ input[type=number]::-webkit-outer-spin-button
     justify-content: space-between;
     padding: .5rem 0;
 }
-.total-price h3,.order-info h6,.order-info span{
+.total-price-pay h3,.order-info h6,.order-info span{
     text-transform: uppercase;
 }
 .code-sale{position: relative;
@@ -222,4 +222,25 @@ input[type=number]::-webkit-outer-spin-button
 }
 .detail-bill p,.delivery-method p{
     margin: 0;
+}
+@media only screen and (max-width:768px){
+    .main-deli{
+        padding: 1rem 1rem 3rem;
+    }
+    .content-deli{
+        display: block;
+    }
+    .info-deli{
+        width: 100%;
+    }
+    .total-price{
+        display: none;
+    }
+    .content-pay{display: block;}
+    .payment-left{width: 100%;}
+    .total-price-pay{width: 100%;}
+    .btn-pay{
+        padding-bottom: 2rem;
+    }
+    .btn-pay button i{margin-left: 5rem;}
 }

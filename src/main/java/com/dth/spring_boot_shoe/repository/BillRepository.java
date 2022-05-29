@@ -1,6 +1,5 @@
 package com.dth.spring_boot_shoe.repository;
 
-import com.dth.spring_boot_shoe.constant.StatusBill;
 import com.dth.spring_boot_shoe.entity.BillEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,7 @@ public interface BillRepository extends JpaRepository<BillEntity,Long> {
 
     @Query(value = "select count(*) as count from bill b " +
             "where b.bill_type=1 and month(b.created_at)=month(now()) and year(b.created_at)=year(now())",nativeQuery = true)
-    List<Object[]> findByBillTypeAndCreatedAt();
+    Integer findByBillTypeAndCreatedAt();
 
     @Query(value = "select count(b) from BillEntity b " +
             "where b.user.id=:userId and b.billType=1 and b.status <> 'finished'")

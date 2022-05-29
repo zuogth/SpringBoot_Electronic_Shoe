@@ -56,7 +56,7 @@
                         </li>
                     </ul>
                 </nav>
-                <img src="/assets/img/1200px-adidas-logo-svg.webp" alt="">
+                <a href="/"><img src="/assets/img/1200px-adidas-logo-svg.webp" alt=""></a>
                 <div class="options-header">
                     <ul>
                         <li>
@@ -93,14 +93,14 @@
                         <button type="button" class="h-btn-search"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
-                <div class="h-keyword-field row">
-                    <div class="h-recently-keyword col-sm-12">
-                        <div class="h-recently-head">
-                            <div class="head-keyword">Tìm kiếm gần đây</div>
-                            <div class="clear-keyword">Xóa tất cả</div>
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="h-keyword-field row">-->
+<!--                    <div class="h-recently-keyword col-sm-12">-->
+<!--                        <div class="h-recently-head">-->
+<!--                            <div class="head-keyword">Tìm kiếm gần đây</div>-->
+<!--                            <div class="clear-keyword">Xóa tất cả</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="result-search">
                 </div>
             </div>
@@ -108,7 +108,7 @@
         <div class="nav-resp" id="nav-resp">
             <div class="h-close-search close-nav-resp">
                 <div class="logo-resp">
-                    <a href=""><img src="/assets/img/1200px-adidas-logo-svg.webp" alt="" width="50px"></a>
+                    <a href="/"><img src="/assets/img/1200px-adidas-logo-svg.webp" alt="" width="50px"></a>
                 </div>
                 <div class="close-resp">
                     <a href="#" class="h-btn-close-nav"><i class="fal fa-times"></i></a>
@@ -116,12 +116,12 @@
             </div>
             <div class="nav-resp-content">
                 <ul>
-                    <li><a href="/category.html">Gày Nike</a></li>
-                    <li><a href="">Giày Adidas</a></li>
-                    <li><a href="">Giày Vans</a></li>
-                    <li><a href="">Giày Converse</a></li>
-                    <li><a href="">Giày Balenciaga</a></li>
-                    <li><a href="">Giày MCQueen</a></li>
+                    <li th:each="menu:${menus}">
+                        <a th:href="@{'/products/'+${menu.slug}}" th:text="${menu.name}">Adidas</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/sales/promotion/all}">Sale off</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -168,12 +168,12 @@
         <div class="footer-item">
             <h5>Sản phẩm</h5>
             <ul>
-                <li><a href="">Giày Nike</a></li>
-                <li><a href="">Giày Adidas</a></li>
-                <li><a href="">Giày Vans</a></li>
-                <li><a href="">Giày Converse</a></li>
-                <li><a href="">Giày Balenciaga</a></li>
-                <li><a href="">Giày MCQueen</a></li>
+                <li th:each="menu:${menus}">
+                    <a th:href="@{'/products/'+${menu.slug}}" th:text="${menu.name}">Adidas</a>
+                </li>
+                <li>
+                    <a th:href="@{/sales/promotion/all}">Sale off</a>
+                </li>
             </ul>
         </div>
         <div class="footer-item">

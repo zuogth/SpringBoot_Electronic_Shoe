@@ -333,8 +333,8 @@ public class ProductServiceEmpl implements ProductService {
         responses.add(new ChartResponse("Năm nay","blue","blue",getDataBar(LocalDate.now().getYear())));
         map.put("labels",labels);
         map.put("chart",responses);
-        map.put("countBill",Integer.valueOf(billRepository.findByBillTypeAndCreatedAt().get(0)[0].toString()));
-        map.put("countUser",Integer.valueOf(userRepository.getCountUsers().get(0)[0].toString()));
+        map.put("countBill",billRepository.findByBillTypeAndCreatedAt());
+        map.put("countUser",userRepository.getCountUsers());
         return map;
     }
 

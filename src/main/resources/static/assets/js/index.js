@@ -22,8 +22,8 @@ $(document).ready(function () {
                 }
             }
         ],
-        prevArrow: '<a class="btn-slick-cus btn-slick-pre"><i class="fal fa-long-arrow-left"></i></a>',
-        nextArrow: '<a class="btn-slick-cus btn-slick-next"><i class="fal fa-long-arrow-right"></i></a>'
+        prevArrow: '<a class="btn-slick-cus btn-slick-pre"><i class="fas fa-chevron-left"></i></a>',
+        nextArrow: '<a class="btn-slick-cus btn-slick-next"><i class="fas fa-chevron-right"></i></a>'
     });
 });
 

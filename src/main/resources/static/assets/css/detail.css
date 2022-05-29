@@ -88,7 +88,7 @@ li.slick-active {
 .same-prod-item:hover{
     border-bottom: 2px solid silver;
 }
-.same-prod-item-ac{
+.same-prod-item-ac>a>img{
     border-bottom: 2px solid black;
 }
 .same-prod-item img{
@@ -100,7 +100,11 @@ li.slick-active {
     background-color: white;
     padding: 0 2rem;
 }
-
+.container-cus-menu{
+    max-width: 1600px;
+    margin: auto;
+    padding: 0 3rem;
+}
 .menu-prod ul {
     display: flex;
     list-style: none;
@@ -362,4 +366,19 @@ li.slick-active {
     .menu-prod ul li{
         padding: 1rem 0;
     }
+    #section1{
+        display: block;
+    }
+    #section1 .description-prod {
+        width: 100%;
+    }
+
+    #section1 .image-prod {
+        width: 70%;
+        margin: 0 auto 2rem;
+    }
+    .image-item img{
+        width: 100%;
+    }
+    .container-cus-menu{padding: 0;}
 }

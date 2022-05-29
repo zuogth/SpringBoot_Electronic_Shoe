@@ -220,7 +220,7 @@ function loadCartLocal(){
                       <div class="info-prod">
                         <div class="name-prod">
                           <span>${cart.detail.name}</span>
-                          <div style="display: flex; font-size: .9rem;">`;
+                          <div class="infor-price">`;
 
                         if(cart.detail.discount>0){
                             html+=`<span style="color: #676666;text-decoration: line-through;">${toMoney(cart.detail.price)}</span>
@@ -233,7 +233,15 @@ function loadCartLocal(){
                         </div>
                         <p>${cart.detail.color}</p>
                         <span>Cỡ: </span><span>${cart.detail.size}</span>
-                        <div class="quantity">
+                            <div class="infor-price-res">`;
+                                if(cart.detail.discount>0){
+                                    html+=`<span style="color: #676666;text-decoration: line-through;">${toMoney(cart.detail.price)}</span>
+                                                        <span class="price" style="color: #a10101" price="${cart.detail.price * (100 - cart.detail.discount) / 100}">${toMoney(cart.detail.price * (100 - cart.detail.discount) / 100)}</span> `;
+                                }else{
+                                    html+=`<span class="price" price="${cart.detail.price}">${toMoney(cart.detail.price)}</span>`;
+                                }
+                        html+=`</div>
+                            <div class="quantity">
                           <div class="change-quantity">
                             <a id="minus" onclick="minus(this,${cart.detail.id})"><i class="fas fa-minus"></i></a>
                           </div>
@@ -254,7 +262,7 @@ function loadCartLocal(){
         html+=`</div>
                       <div class="total-price">
                         <div class="order-info">
-                          <h3>Đơn hàng</h3>
+                          <h3>Tóm tắt đơn hàng</h3>
                           <div class="total-prod">
                             <span></span>
                             <span totalprice="">7.000.000 đ</span>

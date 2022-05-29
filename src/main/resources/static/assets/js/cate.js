@@ -206,7 +206,7 @@ function searchProduct(element){
                         html+=`<div class="product"  onmouseenter="loadSameProd(this)" onmouseleave="unLoadSameProd(this)">
                         <div class="product-hover">
                             <div class="img">
-                                <a href="">
+                                <a href="/products/${detail.product.slug}/${detail.color.slug}">
                                     <img id="product-${detail.product.id}" src="${detail.image}"  data-img="${detail.image}" alt="">
                                 </a>
                                 <span class="price">${toMoney(detail.product.price)}</span>

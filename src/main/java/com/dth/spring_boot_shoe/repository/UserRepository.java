@@ -17,6 +17,6 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
 
     Page<UserEntity> findByStatus(Integer status, Pageable pageable);
 
-    @Query(value = "select count(*) from user_role where role_id=2",nativeQuery = true)
-    List<Object[]> getCountUsers();
+    @Query(value = "select count(*) as count from user_role where role_id=2",nativeQuery = true)
+    Integer getCountUsers();
 }
