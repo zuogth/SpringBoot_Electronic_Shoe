@@ -519,6 +519,53 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (1,'tuanhieu3420002@gmail.com','Hiếu','Dương Tuấn','Tuấn Hiếu','tuan-hieu',1,'Hà Nội-Huyện Phú Xuyên-Xã Chuyên Mỹ-Đồng Vinh','0953284856','$2a$10$qx/4Iu05Y8xzebM5SjgkaO525kkimIIqJTWO9YWXy2I1sPDUH8HGa',NULL,_binary '',1,NULL,'2021-11-25 17:00:00','2022-05-06 18:37:21'),(6,'tuanhieu342k1@gmail.com','Hiếu','Dương Tuấn','Dương Tuấn Hiếu','hieu-duong',1,'Hà Nội-Huyện Phú Xuyên-Xã Chuyên Mỹ-Đồng Vinh','0834633431','$2a$10$PUq9VnDwihqHe2D1delvoOitAcH.IxDUuXi4Paxbjw2thjpmT8SK.',NULL,_binary '',1,'google','2021-11-28 17:00:00','2022-05-28 04:37:06'),(7,'duongth34001@gmail.com','Tuan Hieu','Duong','Hieu Duong','hieu-duong',1,NULL,'0834633431','$2a$10$dPUnwDsHkvID8bCSP/TFHeGP47SlBbX3jUH5qLPq4QJljaHayeZJa',NULL,_binary '',1,'facebook','2021-11-29 17:00:00','2022-05-06 17:27:58'),(8,'admin@gmail.com','Hieu','Duong','Duong Hieu','duong-hieu',1,NULL,'0834633431','$2a$10$dPUnwDsHkvID8bCSP/TFHeGP47SlBbX3jUH5qLPq4QJljaHayeZJa',NULL,_binary '',1,NULL,NULL,'2022-05-29 02:09:25'),(9,'tuanhieu@gmail.com','Hiếu','Dương','Dương Hiếu',NULL,1,NULL,NULL,'$2a$10$hcsoQdexphuqdSgzLWZvd.5AWp0mPOgnt04mvQUdXXgPxtMESzQBS',NULL,_binary '',1,'local','2022-03-18 17:00:00','2022-05-06 17:27:58'),(10,'huyen@gmail.com','Huyền','Dương','Dương Huyền','duong-huyen',0,NULL,NULL,'$2a$10$eUrNoQmgY0EPdLZn1yQ46Ok/AZ5DpzcF0LZ6eSIxMOFjF1DPWGxNq',NULL,_binary '',1,'local','2022-03-19 17:00:00','2022-05-06 17:27:58'),(11,'tuanhieu3420001@gmail.com','Hiếu','Dương','Dương Hiếu','duong-hieu',1,NULL,NULL,'$2a$10$qSPka7Ij3evhOMDWrXcibOc4FDXp0LxE9fOUA9tWs0.IEzK1erTju',NULL,_binary '',1,'local','2022-05-06 17:17:17','2022-05-06 17:18:02'),(12,'tuanhieu3420003@gmail.com','Tuấn','Hiếu','Tuấn Hiếu','tuan-hieu',NULL,NULL,NULL,'$2a$10$JvBDkmo2SDGMQVi4I5dtKuTqQ4H255tKBqBLxj5k/wQX6kdSMW526',NULL,_binary '',1,'google','2022-05-11 15:46:29','2022-05-11 15:46:29'),(14,'tuanhieu3420004@gmail.com','Tuấn','Hiếu','Tuấn Hiếu','tuan-hieu',NULL,NULL,NULL,'$2a$10$/Ag6/A3RU4GgW5NKOstv4eiYor.9FaCq5n2c6erfvVqsfIyZFI23W',NULL,_binary '',1,'google','2022-05-17 14:56:48','2022-05-17 14:56:48'),(15,'tuanhieu3420005@gmail.com','Tuấn Hiếu','Dương','Dương Tuấn Hiếu','duong-tuan-hieu',1,NULL,NULL,'$2a$10$6/IpFgrE2qSqDazdVt8izO11I7itWIN34hFnELMSX9fD0/rbeNzCe','vzZQ7ayfuEMyix9KhIgzt52GRuJTq0fVn49dImnZikMYE26uVFxuPCQ9QTrZvvzJ',_binary '',1,'local','2022-05-28 06:34:41','2022-05-28 06:34:41');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'electronic_shoe'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `SUM_BY_BRAND` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SUM_BY_BRAND`(IN brand_id bigint,IN _month int,IN _year int,OUT _sum int)
+BEGIN
+	select if(sum(quantity) is null,0,sum(quantity)) into _sum from product_detail pd left join
+	(select pb.product_detail_id,pb.quantity
+	from product_bill pb join bill on bill.id=pb.bill_id
+	where bill.bill_type=1 and month(bill.created_at)=_month and year(bill.created_at)=_year) as a on pd.id=a.product_detail_id
+	where pd.product_id in (select p.id from products p join brand b on p.brand_id=b.id where b.id=brand_id);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `SUM_PRICE_BY_MONTH` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SUM_PRICE_BY_MONTH`(IN _month int,IN _year int,OUT _sum DECIMAL(18,2))
+BEGIN
+	select if(sum(b.totalprice) is null,0,sum(b.totalprice)) into _sum from bill b 
+	where b.bill_type=1 and month(b.created_at)=_month and year(b.created_at)=_year;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -529,4 +576,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-29 10:30:26
+-- Dump completed on 2022-05-29 11:40:29
