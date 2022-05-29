@@ -533,7 +533,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SUM_BY_BRAND`(IN brand_id bigint,IN _month int,IN _year int,OUT _sum int)
+CREATE PROCEDURE `SUM_BY_BRAND`(IN brand_id bigint,IN _month int,IN _year int,OUT _sum int)
 BEGIN
 	select if(sum(quantity) is null,0,sum(quantity)) into _sum from product_detail pd left join
 	(select pb.product_detail_id,pb.quantity
@@ -556,7 +556,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SUM_PRICE_BY_MONTH`(IN _month int,IN _year int,OUT _sum DECIMAL(18,2))
+CREATE PROCEDURE `SUM_PRICE_BY_MONTH`(IN _month int,IN _year int,OUT _sum DECIMAL(18,2))
 BEGIN
 	select if(sum(b.totalprice) is null,0,sum(b.totalprice)) into _sum from bill b 
 	where b.bill_type=1 and month(b.created_at)=_month and year(b.created_at)=_year;
