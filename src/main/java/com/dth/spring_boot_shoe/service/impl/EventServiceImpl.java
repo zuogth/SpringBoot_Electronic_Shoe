@@ -10,6 +10,7 @@ import com.dth.spring_boot_shoe.request.DiscountRequest;
 import com.dth.spring_boot_shoe.request.EventRequest;
 import com.dth.spring_boot_shoe.response.EventResponse;
 import com.dth.spring_boot_shoe.response.ProductDetailResponse;
+import com.dth.spring_boot_shoe.response.ProductDiscountResponse;
 import com.dth.spring_boot_shoe.service.EventService;
 import com.dth.spring_boot_shoe.service.FirebaseService;
 import com.dth.spring_boot_shoe.service.ImageService;
@@ -80,12 +81,14 @@ public class EventServiceImpl implements EventService {
             e.printStackTrace();
         }
         EventEntity event = eventRepository.save(eventEntity);
-        discount.getDiscounts().forEach(dis->{
-            DiscountEntity discountEntity = new DiscountEntity();
-            discountEntity.setDiscount(dis);
-            discountEntity.setEvent(event);
-            discountRepository.save(discountEntity);
-        });
+        if(discount != null){
+            discount.getDiscounts().forEach(dis->{
+                DiscountEntity discountEntity = new DiscountEntity();
+                discountEntity.setDiscount(dis);
+                discountEntity.setEvent(event);
+                discountRepository.save(discountEntity);
+            });
+        }
         return event;
     }
 
@@ -95,10 +98,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponse getById(Long id) {
+    public Map<String,Object> getById(Long id) {
+        Map<String,Object> map = new HashMap<>();
         EventEntity event = eventRepository.findById(id).orElseThrow(()-> new ApiRequestException("Sự kiện không tồn tại"));
         List<DiscountEntity> discounts =  discountRepository.findByEventId(event.getId());
-        return EventResponse.converter(event,discounts);
+        List<ProductDiscountResponse> responses = new ArrayList<>();
+        if(discounts != null){
+            discounts.forEach(dis->{
+                List<ProductDetailEntity> detailEntities = productDetailRepository.findByDiscountIdAndStatus(dis.getId());
+                detailEntities.forEach(detail->responses.add(ProductDiscountResponse.converter(detail,
+                        imageService.findByColorIdAndProductIdAndParent(detail.getColor().getId(),detail.getProduct().getId()),dis.getDiscount())));
+            });
+        }
+        map.put("event",EventResponse.converter(event,discounts));
+        map.put("products",responses);
+        return map;
     }
 
     @Override

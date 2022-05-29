@@ -28,29 +28,31 @@
             <div class="card-body row">
                 <div class="col-sm-12">
                     <label>Brand</label>
-                    <table class="table table-bordered table-striped">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th>Banner</th>
-                            <th>Tên</th>
-                            <th>Số lượng đã nhập</th>
-                            <th>Số lượng đã bán</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="brand in brands">
-                            <td style="width: 200px;">
-                                <img src="{{brand.info.url}}" alt="banner" width="200px"/>
-                            </td>
-                            <td>{{brand.info.name}}</td>
-                            <td>{{brand.receipt}}</td>
-                            <td>{{brand.sold}}</td>
-                            <td><i class="far fa-edit btn" data-toggle="modal"
-                                   data-target="#brandOption" ng-click="getBrandById($index)"></i></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-cus">
+                        <table class="table table-bordered table-striped" style="min-width: 500px;">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Banner</th>
+                                <th>Tên</th>
+                                <th>Số lượng đã nhập</th>
+                                <th>Số lượng đã bán</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="brand in brands">
+                                <td style="width: 200px;">
+                                    <img src="{{brand.info.url}}" alt="banner" width="200px"/>
+                                </td>
+                                <td>{{brand.info.name}}</td>
+                                <td>{{brand.receipt}}</td>
+                                <td>{{brand.sold}}</td>
+                                <td><i class="far fa-edit btn" data-toggle="modal"
+                                       data-target="#brandOption" ng-click="getBrandById($index)"></i></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <!--modal edit brand-->
                     <div class="modal fade" id="brandOption" tabindex="-1" role="dialog"
                          aria-labelledby="exampleModalLongTitle" aria-hidden="true">

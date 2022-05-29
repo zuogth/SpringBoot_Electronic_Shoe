@@ -58,41 +58,43 @@
         </div>
         <div class="card">
             <div class="card-body" ng-show="listPr">
-                <table id="receipt" class="table table-striped table-bordered">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>Tên sự kiện</th>
-                        <th>Banner</th>
-                        <th>Mô tả</th>
-                        <th>Ngày bắt đầu</th>
-                        <th>Ngày kết thúc</th>
-                        <th>Hiển thị trên Web</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="event in events">
-                        <td>{{event.name}}</td>
-                        <td>
-                            <a href="{{event.url}}" target="_blank">Xem banner</a>
-                        </td>
-                        <td>{{event.description}}</td>
-                        <td>{{formatDateTime(event.startAt)}}</td>
-                        <td>{{formatDateTime(event.endAt)}}</td>
-                        <td>
-                            <div class="my-custom-checkbox">
-                                <input type="checkbox" class="my-custom-control-input" id="show{{event.id}}" ng-checked="event.showWeb==1" name="show" value="{{event.showWeb}}">
-                                <label class="my-custom-control-label" ng-if="event.showWeb==1" ng-click="updateShow(event.id)"></label>
-                                <label class="my-custom-control-label my-custom-control-label-un" ng-if="event.showWeb==0" ng-click="updateShow(event.id)"></label>
-                            </div>
-                        </td>
-                        <td>
-                            <a href="#" class="btn" ng-click="getById(event.id)"><i class="fas fa-info"></i></a>
-                            <i class="fas fa-trash-alt btn" ng-click="delete($index)"></i>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="table-cus">
+                    <table id="receipt" class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Tên sự kiện</th>
+                            <th>Banner</th>
+                            <th>Mô tả</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Hiển thị trên Web</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="event in events">
+                            <td>{{event.name}}</td>
+                            <td>
+                                <a href="{{event.url}}" target="_blank">Xem banner</a>
+                            </td>
+                            <td>{{event.description}}</td>
+                            <td>{{formatDateTime(event.startAt)}}</td>
+                            <td>{{formatDateTime(event.endAt)}}</td>
+                            <td>
+                                <div class="my-custom-checkbox">
+                                    <input type="checkbox" class="my-custom-control-input" id="show{{event.id}}" ng-checked="event.showWeb==1" name="show" value="{{event.showWeb}}">
+                                    <label class="my-custom-control-label" ng-if="event.showWeb==1" ng-click="updateShow(event.id)"></label>
+                                    <label class="my-custom-control-label my-custom-control-label-un" ng-if="event.showWeb==0" ng-click="updateShow(event.id)"></label>
+                                </div>
+                            </td>
+                            <td class="option-table">
+                                <a href="#" class="btn" ng-click="getById(event.id)"><i class="fas fa-info"></i></a>
+                                <i class="fas fa-trash-alt btn" ng-click="delete($index)"></i>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <ul uib-pagination total-items="totalItems"
                     ng-model="currentPage" max-size="3"
                     class="pagination-sm" rotate="false"
@@ -188,7 +190,7 @@
                                             </div>
                                         </div>
                                     </form>
-                                    <div class="selectProd">
+                                    <div class="selectProd table-cus">
                                         <table class="table table-bordered table-striped">
                                             <thead class="sticky-top thead-dark">
                                             <tr>
@@ -257,7 +259,32 @@
 
                     </div>
                 </div>
-
+                <div class="table-cus">
+                    <table class="table table-bordered table-striped">
+                        <thead class="sticky-top thead-dark">
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Tên</th>
+                            <th>Màu</th>
+                            <th>Cỡ</th>
+                            <th>Giảm giá</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="product in productDetailDiscounts">
+                            <td style="width: 100px;">
+                                <img src="{{product.image}}"/>
+                            </td>
+                            <td>{{product.name}}</td>
+                            <td>
+                                <span class="card-color" style="background-color: {{product.colorCode}}"></span>
+                            </td>
+                            <td>{{product.size}}</td>
+                            <td>{{product.discount}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <button class="btn btn-default" type="button" ng-click="close()">Thoát</button>
             </div>
         </div>

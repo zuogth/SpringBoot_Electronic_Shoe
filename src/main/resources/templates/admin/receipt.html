@@ -43,32 +43,35 @@
         </div>
         <div class="card">
             <div class="card-body" ng-show="listPr">
-                <table id="receipt" class="table table-striped table-bordered">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>Người nhập</th>
-                        <th>Nhà cung cấp</th>
-                        <th>Số lượng</th>
-                        <th>Tổng tiền</th>
-                        <th>Ngày nhập</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="receipt in receipts">
-                        <td>{{receipt.userName}}</td>
-                        <td>{{receipt.brandName}}</td>
-                        <td>{{receipt.quantity}}</td>
-                        <td>{{toMoney(receipt.totalPrice)}}</td>
-                        <td>{{formatDate(receipt.createdDate)}}</td>
-                        <td>
-                            <a href="#" class="btn" ng-click="getById(receipt.id)"><i class="fas fa-info"></i></a>
-                            <i class="far fa-edit btn" ng-click="getByIdForEdit(receipt.id)"></i>
-                            <a class="btn"><i class="fas fa-file-download" data-toggle="modal" ng-click="setReceiptId(receipt.id)" data-target="#modalExport"></i></a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="table-cus">
+                    <table id="receipt" class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Người nhập</th>
+                            <th>Nhà cung cấp</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+                            <th>Ngày nhập</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="receipt in receipts">
+                            <td>{{receipt.userName}}</td>
+                            <td>{{receipt.brandName}}</td>
+                            <td>{{receipt.quantity}}</td>
+                            <td>{{toMoney(receipt.totalPrice)}}</td>
+                            <td>{{formatDate(receipt.createdDate)}}</td>
+                            <td class="option-table">
+                                <a href="#" class="btn" ng-click="getById(receipt.id)"><i class="fas fa-info"></i></a>
+                                <i class="far fa-edit btn" ng-click="getByIdForEdit(receipt.id)"></i>
+                                <a class="btn"><i class="fas fa-file-download" data-toggle="modal" ng-click="setReceiptId(receipt.id)" data-target="#modalExport"></i></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <ul uib-pagination total-items="totalItems"
                     ng-model="currentPage" max-size="3"
                     class="pagination-sm" rotate="false"

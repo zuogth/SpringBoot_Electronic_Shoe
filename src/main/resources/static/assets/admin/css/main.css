@@ -1,4 +1,16 @@
-
+.brand-link .brand-image{
+    float: none !important;
+}
+.table-cus{
+    overflow-y: auto;
+}
+/*.table-cus>table{min-width: 500px;}*/
+.table>thead>tr{
+    white-space: nowrap;
+}
+.option-table{
+    white-space: nowrap;
+}
 /*loader*/
 .preloader-cus{
     background-color: rgb(238, 237, 237);

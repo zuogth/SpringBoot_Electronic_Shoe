@@ -19,7 +19,7 @@ public interface EventService {
     EventEntity insert(EventRequest discount);
     void update(EventRequest discount);
 
-    EventResponse getById(Long id);
+    Map<String,Object> getById(Long id);
 
     List<ProductDetailResponse> findProductDetails(Long brandId,Long productId);
 

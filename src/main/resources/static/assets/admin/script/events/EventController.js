@@ -17,6 +17,7 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
     $scope.products=[];
     $scope.productDetails=[];
     $scope.search={};
+    $scope.productDetailDiscounts=[];
 
     $scope.listPr=true;
     $scope.formAdd=false;
@@ -53,6 +54,8 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
         $scope.event={};
         resetValid();
         $(".inputs-discount").html('');
+        $("#imgBanner").attr("src","");
+        $("#fileBanner").val("");
     }
 
     $scope.pageChanged=function (){
@@ -61,7 +64,7 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
 
     $scope.process=function (){
         return submitForm().then(function (_data){
-            $scope.message = {content: _data.message.message, show: true};
+            $scope.message = {content: _data.message, show: true};
             $scope.event = _data.event;
             $scope.getByIdForEdit($scope.event.id);
         },function (error){
@@ -76,7 +79,8 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
         $scope.btnSaveDis=false;
         $scope.addDis=false;
         return EventService.getById(id).then(function (_data){
-            $scope.event = _data.data;
+            $scope.event = _data.data.event;
+            $scope.productDetailDiscounts = _data.data.products;
         },function (error){
             showErr(error);
         })
@@ -177,7 +181,9 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
             }
             $scope.btnSaveDis=true;
             $scope.btnSave=false;
+
         }
+        $scope.message = {content: "Danh sách áp dụng được lưu tạm", show: true};
     }
 
     $scope.processDis=function (){
