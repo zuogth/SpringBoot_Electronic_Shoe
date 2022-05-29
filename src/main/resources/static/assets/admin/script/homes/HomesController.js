@@ -13,15 +13,17 @@ app.controller('HomesController',['$scope','HomesService',function ($scope,Homes
     $scope.salesChart;
 
     init();
-    getChart();
 
     function init(){
         return HomesService.getAll().then(function (_data){
-            $scope.datasetsB=_data.data.chart;
-            $scope.labelsB=_data.data.labels;
-            $scope.countBill=_data.data.countBill;
-            $scope.countUser=_data.data.countUser;
+            $scope.datasetsB=_data.data.initRes.chart;
+            $scope.labelsB=_data.data.initRes.labels;
+            $scope.countBill=_data.data.initRes.countBill;
+            $scope.countUser=_data.data.initRes.countUser;
+            $scope.datasetsCh=_data.data.getChartRes.chart;
+            $scope.labelsCh=_data.data.getChartRes.labels;
             chartBar();
+            chartLine();
         },function (err){
             showErr(err);
         })

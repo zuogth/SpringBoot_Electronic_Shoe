@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +23,11 @@ public class HomeAPI {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Map<String,Object>> index(){
-        return new ResponseEntity<>(productService.getAll(),HttpStatus.OK);
+    public ResponseEntity<?> index(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("initRes",productService.getAll());
+        map.put("getChartRes",productService.getChart(LocalDate.now().getYear()));
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
     @GetMapping("/chart")
