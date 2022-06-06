@@ -16,7 +16,7 @@ public interface ProductReceiptRepository extends JpaRepository<ProductReceiptEn
             "(select pd.*,if(a.count is null,0,a.count)-if(sum(pbb.quantity) is null,0,sum(pbb.quantity)) as count " +
             "from product_detail pd left join (select pb.* " +
             "from product_bill pb join bill on bill.id=pb.bill_id " +
-            "where bill.bill_type=1 or bill.paying=1) as pbb on pbb.product_detail_id=pd.id join " +
+            "where (bill.bill_type=1 or bill.paying=1) and bill.status <> 'cancel') as pbb on pbb.product_detail_id=pd.id join " +
             "(select pd.id,sum(pr.quantity) as count " +
             "from product_detail pd left join product_receipt pr on pd.id=pr.product_detail_id " +
             "group by pd.id) as a on a.id=pd.id " +
@@ -27,7 +27,7 @@ public interface ProductReceiptRepository extends JpaRepository<ProductReceiptEn
             "(select pd.*,if(prb.count is null,0,prb.count)-if(sum(pbb.quantity) is null,0,sum(pbb.quantity)) as count " +
             "from product_detail pd left join (select pb.product_detail_id,pb.quantity " +
             "from product_bill pb join bill on bill.id=pb.bill_id " +
-            "where bill.bill_type=1 or bill.paying=1) as pbb on pbb.product_detail_id=pd.id join " +
+            "where (bill.bill_type=1 or bill.paying=1) and bill.status <> 'cancel') as pbb on pbb.product_detail_id=pd.id join " +
             "(select pd.id, pd.product_id,sum(pr.quantity) as count " +
             "from product_detail pd left join product_receipt pr on pd.id=pr.product_detail_id " +
             "group by pd.id) as prb on prb.id=pd.id " +

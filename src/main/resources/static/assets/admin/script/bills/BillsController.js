@@ -38,7 +38,9 @@ app.controller('BillsController',['$scope','BillsService',function ($scope,Bills
     }
 
     $scope.update=function (index){
+        $(".preloader-cus2").removeClass("non-active-loader2");
         return BillsService.update($scope.bills[index]).then(function (data){
+            $(".preloader-cus2").addClass("non-active-loader2");
             $scope.message = {content: data.data.message, show: true};
         },function (error){
             showErr(error);
@@ -50,6 +52,16 @@ app.controller('BillsController',['$scope','BillsService',function ($scope,Bills
             $scope.message = {content: data.data.message, show: true};
         },function (error){
             showErr(error);
+        })
+    }
+
+    $scope.exportBill=function (id){
+        $(".preloader-cus2").removeClass("non-active-loader2");
+        return BillsService.exportBill(id).then(function (_data){
+            $(".preloader-cus2").addClass("non-active-loader2");
+            downloadPDF(_data.data.pdf,'pdf');
+        },function (error){
+            showErr(error)
         })
     }
 
@@ -69,3 +81,11 @@ app.controller('BillsController',['$scope','BillsService',function ($scope,Bills
     }
 
 }])
+
+window.downloadPDF = function downloadPDF(str,type) {
+    let base64String = str;
+    let downloadLink = document.getElementById('download'+type);
+    downloadLink.href = 'data:application/octet-stream;base64,' + base64String;
+    downloadLink.click();
+
+}

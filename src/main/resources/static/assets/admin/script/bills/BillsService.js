@@ -19,9 +19,14 @@ app.service('BillsService',['BaseServices',function (BaseServices){
         return BaseServices.callAPI(urls.process+"/"+bill.id+"?status="+bill.status,"PUT");
     }
 
+    function exportBill(id){
+        return BaseServices.callAPI(urls.process+"/export/"+id,'GET');
+    }
+
     return {
         getAll:getAll,
         getById:getById,
-        update:update
+        update:update,
+        exportBill:exportBill
     }
 }])

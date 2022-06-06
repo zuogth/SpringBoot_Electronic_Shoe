@@ -35,4 +35,9 @@ public class BaseController {
     public String promotion(Model model){
         return "event";
     }
+
+    @GetMapping("/aboutus")
+    public String aboutUs(Model model){
+        return "about";
+    }
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BillDTO{
 
+    private Long id;
     private List<BillReceiptDTO> dtos;
     private BigDecimal totalPrice;
     private String status;

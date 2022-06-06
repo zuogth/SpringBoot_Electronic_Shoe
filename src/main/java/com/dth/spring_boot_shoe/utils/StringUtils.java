@@ -3,7 +3,9 @@ package com.dth.spring_boot_shoe.utils;
 import com.ibm.icu.text.RuleBasedNumberFormat;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.Normalizer;
+import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -38,5 +40,12 @@ public class StringUtils {
             output = "không đồng";
         }
         return output.toUpperCase();
+    }
+
+    public static String toMoney(BigDecimal price){
+        Locale locale = new Locale("it","IT");
+        NumberFormat vn =  NumberFormat.getInstance(locale);
+        long price2=price.longValue();
+        return vn.format(price2);
     }
 }

@@ -27,6 +27,9 @@ public class BrandController {
     @GetMapping("/{brandSlug}")
     public String shop(Model model, @PathVariable("brandSlug") String brandSlug){
         List<ProductEntity> products=productService.findByBrandSlug(brandSlug);
+        if(products.size()<1){
+            return "error/404";
+        }
         List<ProductDetailDTO> details=productService.findByBrandSlugGroupByProductIdAndColorId(brandSlug);
         List<SizeEntity> sizes=sizeRepository.findSizeByProduct(brandSlug);
         List<ColorEntity> colors=colorRepository.findColorByProduct(brandSlug);

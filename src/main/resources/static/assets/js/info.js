@@ -8,6 +8,8 @@ $(()=>{
         $(this).addClass('active');
         showContent();
     })
+
+    $('.alert-noti').hide();
 })
 
 function showContent(){
@@ -317,3 +319,67 @@ function checkInput(){
         }
     })
 }
+
+function cancelBill(id){
+    $("#loader-order-"+id).removeClass("non-active-loader-order");
+    $.ajax({
+        url:'/api/info/bill/'+id,
+        type:'PUT',
+        dataType:'JSON',
+        contentType:'application/json',
+        success:function (result){
+            // location.reload();
+            $('div#order-item-'+id).remove();
+            $('.alert-noti span').html("Hủy đơn hàng thành công!");
+            $('.alert-noti').show();
+        },
+        error:function (err){
+            console.log(err);
+        }
+    })
+}
+
+$("#info-cancel-order").click(function (){
+    $.ajax({
+        url:'/api/info/cancelBill/',
+        type:'GET',
+        dataType:'JSON',
+        contentType:'application/json',
+        success:function (result){
+            if(result.length>0){
+                let html = '';
+                for(let bill of result){
+                    html += `<div class="order-item">
+                              <div class="info-item">
+                                <h4>Thông tin đơn</h4>
+                                <p>Tổng tiền: <i>${toMoney(bill.totalPrice)}</i> | Phí: <i>Miễn phí</i></p>
+                                <p>Ngày đặt: <i>${formatDate(bill.createdAt)}</i></p>
+                                <p>Ngày hủy: <i>${formatDate(bill.modifiedAt)}</i></p>
+                                <p>Địa chỉ: <i>${bill.address}</i></p>
+                              </div>
+                              <div class="list-item">`;
+                    for(let item of bill.dtos){
+                        html +=`<div class="prod-item-order">
+                                  <div class="item-order-l">
+                                    <img src="${item.detail.image}" alt="image">
+                                  </div>
+                                  <div class="item-order-r">
+                                    <p>${item.detail.name}</p>
+                                    <p>${item.detail.color}</p>
+                                    <span>Cỡ: </span><span>${item.detail.size}</span> / <span>Số lượng: </span><span>${item.quantity}</span>
+                                    <p>${toMoney(item.detail.price)}</p>
+                                  </div>
+                                </div>`;
+                    }
+
+                    html += `</div>
+                            </div>`;
+                }
+                $(".info-cancel-order .order-list-items").html(html);
+            }
+        },
+        error:function (err){
+            console.log(err);
+        }
+    })
+})

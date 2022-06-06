@@ -349,6 +349,16 @@ li.slick-active {
     font-size: .8rem;
     color: #950909;
 }
+.close-modal{
+    position: absolute;
+    z-index: 1051;
+    top: 0;
+    right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+}
+
 /* responsive */
 @media only screen and (max-width:991px){
     .options-parent-res{

@@ -1,19 +1,24 @@
 package com.dth.spring_boot_shoe.api;
 
+import com.dth.spring_boot_shoe.constant.MessageAdmin;
+import com.dth.spring_boot_shoe.dto.BillDTO;
 import com.dth.spring_boot_shoe.dto.CommentDTO;
 import com.dth.spring_boot_shoe.entity.UserEntity;
 import com.dth.spring_boot_shoe.exception.RequestException;
 import com.dth.spring_boot_shoe.request.ChangePWRequest;
 import com.dth.spring_boot_shoe.request.InfoRequest;
+import com.dth.spring_boot_shoe.service.BillService;
 import com.dth.spring_boot_shoe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.xml.transform.OutputKeys;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,6 +27,7 @@ import java.util.Map;
 public class InfoAPI {
 
     private final UserService userService;
+    private final BillService billService;
 
     @GetMapping("/info/detail")
     public ResponseEntity<UserEntity> detail(){
@@ -45,5 +51,19 @@ public class InfoAPI {
     @PostMapping("/info/comment")
     public Map<String,String> addComment(@Valid @RequestBody CommentDTO commentDTO){
         return userService.createComment(commentDTO);
+    }
+
+    @PutMapping("/info/bill/{id}")
+    public ResponseEntity<?> cancelBill(@PathVariable("id") String id,
+                                        HttpServletRequest request){
+        billService.updateBill(Long.valueOf(id),"cancel",request);
+        return new ResponseEntity<>(MessageAdmin.UPDATED_SUCCESS,HttpStatus.OK);
+    }
+
+    @GetMapping("/info/cancelBill")
+    public ResponseEntity<?> getCancelBill(){
+        UserEntity user=userService.profile();
+        List<BillDTO> cancelOrder=billService.findAllCancelBillByUser(user.getId());
+        return new ResponseEntity<>(cancelOrder,HttpStatus.OK);
     }
 }

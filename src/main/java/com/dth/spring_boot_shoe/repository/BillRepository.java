@@ -11,7 +11,7 @@ import java.util.List;
 public interface BillRepository extends JpaRepository<BillEntity,Long> {
     BillEntity findByUserIdAndBillType(Long userId,Integer billType);
 
-    List<BillEntity> findByUserIdAndBillTypeAndStatusNot(Long userId, Integer billType, String status);
+    List<BillEntity> findByUserIdAndBillTypeAndStatusNotAndStatusNot(Long userId, Integer billType, String status,String status2);
     List<BillEntity> findByUserIdAndBillTypeAndStatus(Long userId,Integer billType,String status);
 
     Page<BillEntity> findAllByBillTypeOrderByCreatedAtDesc(Integer billType, Pageable pageable);

@@ -169,9 +169,14 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
         $scope.listCh=true;
         $scope.formAdd=false;
         $scope.receipt.id=id;
-        return ReceiptService.getById(id,$scope.currentPageCh).then(function (data){
-            $scope.receiptDetails=data.data.receiptDetails;
-            $scope.totalItemChs=data.data.totalItemChs;
+        return ReceiptService.getById(id,$scope.currentPageCh).then(function (_data){
+            $scope.receipt = _data.data.receipt;
+            $scope.receipt.createdAt = new Date($scope.receipt.createdAt);
+            $scope.brandId = $scope.receipt.brand.id.toString();
+            $scope.receiptDetails=_data.data.receiptDetails;
+            $scope.totalItemChs=_data.data.totalItemChs;
+            $scope.quantity = _data.data.quantity;
+            $scope.totalMoneyStr=($scope.receipt.totalprice).toLocaleString('it-IT');
         },function (error){
             showErr(error);
         })
@@ -182,8 +187,9 @@ app.controller('ReceiptController',['$scope','ReceiptService',function ($scope,R
     }
 
     $scope.exportReceipt=function (){
+        $(".preloader-cus2").removeClass("non-active-loader2");
         return ReceiptService.exportReceipt($scope.receiptId,$scope.typeFile).then(function (_data){
-            console.log(_data.data.pdf);
+            $(".preloader-cus2").addClass("non-active-loader2");
             downloadPDF(_data.data.pdf,$scope.typeFile);
         },function (error){
             showErr(error)

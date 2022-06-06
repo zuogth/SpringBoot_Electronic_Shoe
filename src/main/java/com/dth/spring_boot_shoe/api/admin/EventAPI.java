@@ -11,6 +11,7 @@ import com.dth.spring_boot_shoe.request.EventRequest;
 import com.dth.spring_boot_shoe.response.ProductDetailResponse;
 import com.dth.spring_boot_shoe.service.EventService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/admin/events")
 @RequiredArgsConstructor
+@Slf4j
 public class EventAPI {
 
     private final EventService eventService;
@@ -76,6 +78,13 @@ public class EventAPI {
         map.put("event",eventService.insert(discount));
         map.put("message","Thêm sự kiện thành công, hãy chọn các sản phẩm áp dụng khuyến mãi");
         return new ResponseEntity<>(map,HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(@Valid EventRequest discount){
+        log.info("Update event");
+        eventService.update(discount);
+        return new ResponseEntity<>(MessageAdmin.UPDATED_SUCCESS,HttpStatus.CREATED);
     }
 
     @GetMapping("/discounts/{eventId}")

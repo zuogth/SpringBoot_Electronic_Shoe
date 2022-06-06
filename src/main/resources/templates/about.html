@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main_layout :: main-fragment(~{:: title},~{:: main},~{:: #cssContent},~{:: #jsContent})}">
+<head>
+    <meta charset="UTF-8">
+    <title>About Use</title>
+    <th:block id="cssContent">
+        <link rel="stylesheet" href="/assets/css/category.css">
+    </th:block>
+</head>
+<body>
+    <main>
+        <div class="container-cus">
+            <h1>About Us</h1>
+            <p>Đây là trang giới thiệu về chúng tôi</p>
+        </div>
+
+    </main>
+<th:block id="jsContent">
+</th:block>
+</body>
+</html>

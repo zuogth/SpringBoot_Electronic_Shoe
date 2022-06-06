@@ -69,7 +69,11 @@ $(document).ready(function () {
         let price = $('p#price').attr("price");
         let discount = $(this).attr("discount");
         if(count*1<=10){
-            $('#errorSize').html('Còn '+count+' sản phẩm');
+            if(count*1>0){
+                $('#errorSize').html('Còn '+count+' sản phẩm');
+            }else{
+                $('#errorSize').html('Sản phẩm đã hết hàng');
+            }
         }else {
             $('#errorSize').html('');
         }
@@ -86,7 +90,12 @@ $(document).ready(function () {
         let price = $('h4#priceRes').attr("price");
         let discount = $(this).attr("discount");
         if(count*1<=10){
-            $('#errorSizeRes').html('Còn '+count+' sản phẩm');
+            if(count*1>0){
+                $('#errorSizeRes').html('Còn '+count+' sản phẩm');
+            }else{
+                $('#errorSizeRes').html('Sản phẩm đã hết hàng');
+            }
+
         }else {
             $('#errorSizeRes').html('');
         }
@@ -313,7 +322,12 @@ function addCart(event){
                 localStorage.setItem('list_cart', JSON.stringify(list_cart));
                 $('#'+formId+' label#'+sizeId+'-'+id).attr("count",count*1-1);
                 if(count*1-1 <= 10){
-                    $('#'+errId).html('Còn '+(count*1-1)+' sản phẩm');
+                    if(count*1-1 > 0){
+                        $('#'+errId).html('Còn '+(count*1-1)+' sản phẩm');
+                    }else{
+                        $('#'+errId).html('Sản phẩm đã hết hàng');
+                    }
+
                 }
                 $(event).children().attr("class","far fa-long-arrow-right");
             },2000);

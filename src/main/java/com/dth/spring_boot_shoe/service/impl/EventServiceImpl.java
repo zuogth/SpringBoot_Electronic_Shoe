@@ -94,7 +94,25 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void update(EventRequest discount) {
-
+        EventEntity eventEntity = eventRepository.findById(discount.getId()).orElseThrow(()->new ApiRequestException("Sự kiện không tồn tại"));
+        eventEntity.setName(discount.getName());
+        eventEntity.setSlug(StringUtils.removeAccent(discount.getName()));
+        eventEntity.setStartAt(LocalDateTime.parse(discount.getStartAt()));
+        eventEntity.setEndAt(LocalDateTime.parse(discount.getEndAt()));
+        eventEntity.setDescription(discount.getDescription());
+        eventEntity.setStyle(discount.getStyle());
+        Integer show=discount.getShow()==null?0:discount.getShow();
+        eventEntity.setShowWeb(show);
+        try {
+            firebaseService.deleteImage(eventEntity.getBanner(),"banner");
+            String banner=firebaseService.upLoadFile(discount.getBanner(),"banner");
+            String url=firebaseService.getUrl(banner,"banner");
+            eventEntity.setBanner(banner);
+            eventEntity.setUrl(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        eventRepository.save(eventEntity);
     }
 
     @Override
@@ -105,7 +123,7 @@ public class EventServiceImpl implements EventService {
         List<ProductDiscountResponse> responses = new ArrayList<>();
         if(discounts != null){
             discounts.forEach(dis->{
-                List<ProductDetailEntity> detailEntities = productDetailRepository.findByDiscountIdAndStatus(dis.getId());
+                List<ProductDetailEntity> detailEntities = productDetailRepository.findAllByDiscountIdAndStatus(dis.getId());
                 detailEntities.forEach(detail->responses.add(ProductDiscountResponse.converter(detail,
                         imageService.findByColorIdAndProductIdAndParent(detail.getColor().getId(),detail.getProduct().getId()),dis.getDiscount())));
             });
@@ -179,6 +197,7 @@ public class EventServiceImpl implements EventService {
             });
             discountRepository.delete(dis);
         });
+        firebaseService.deleteImage(event.getBanner(),"banner");
         eventRepository.delete(event);
     }
 

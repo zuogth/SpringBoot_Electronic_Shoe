@@ -16,6 +16,10 @@
                 width: 5rem;
                 border: 2px solid;
             }
+            .cancel{
+                background: #8a0101 !important;
+                color: white;
+            }
             .finished{
                 background: green;
                 color: white;
@@ -65,7 +69,8 @@
                             <td>{{bill.userName}}</td>
                             <td>{{toMoney(bill.totalPrice)}}</td>
                             <td>
-                                <select class="form-control" ng-class="bill.status" ng-model="bill.status" ng-change="update($index)">
+                                <select class="form-control" ng-class="bill.status" ng-model="bill.status" ng-change="update($index)" ng-disabled="bill.status=='cancel'">
+                                    <option class="cancel" value="cancel">Hủy</option>
                                     <option class="waiting" value="waiting">Đang xử lý</option>
                                     <option class="delivering" value="delivering">Đang giao</option>
                                     <option class="finished" value="finished">Hoàn thành</option>
@@ -75,6 +80,7 @@
                             <td>{{formatDate(bill.createdDate)}}</td>
                             <td>
                                 <a href="#" class="btn" ng-click="getById(bill.id,$index)"><i class="fas fa-info"></i></a>
+                                <a class="btn"><i class="fas fa-file-download" ng-click="exportBill(bill.id)"></i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -87,7 +93,8 @@
                     previous-text="&lsaquo;" next-text="&rsaquo;"
                     ng-change="pageChanged()"></ul>
             </div>
-            <div class="card-body" ng-show="billDetail"     >
+            <a id='downloadpdf' href="#" title='export.pdf' download='export.pdf' style="display:none;" >Download PDF</a>
+            <div class="card-body" ng-show="billDetail">
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <label>Người mua</label>
@@ -104,7 +111,7 @@
                     </div>
                     <div class="form-group col-sm-4">
                         <label>Ngày tạo</label>
-                        <input type="text" class="form-control" ng-model="bill.createdDate" readonly/>
+                        <input type="text" class="form-control" value="{{formatDate(bill.createdDate)}}" readonly/>
                     </div>
                 </div>
                 <div class="row">
@@ -114,7 +121,8 @@
                     </div>
                     <div class="form-group col-sm-4">
                         <label>Trạng thái</label>
-                        <select class="form-control" ng-class="bill.status" ng-model="bill.status" ng-change="updateBill()">
+                        <select class="form-control" ng-class="bill.status" ng-model="bill.status" ng-change="updateBill()" ng-disabled="bill.status=='cancel'">
+                            <option class="cancel" value="cancel">Hủy</option>
                             <option class="waiting" value="waiting">Đang xử lý</option>
                             <option class="delivering" value="delivering">Đang giao</option>
                             <option class="finished" value="finished">Hoàn thành</option>

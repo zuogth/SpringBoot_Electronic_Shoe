@@ -171,6 +171,11 @@ function toMoney(totalprice){
     });
 }
 
+function formatDate(date){
+    let newDate = new Date(date);
+    return newDate.toLocaleDateString("it-IT");
+}
+
 function showCard(){
     $('.card-fixed-info').toggle(300);
 }

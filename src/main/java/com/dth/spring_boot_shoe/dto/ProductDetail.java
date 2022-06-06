@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Builder
 public class ProductDetail {
     private Long id;
+    private Long productId;
     private String name;
     private String productSlug;
     private String colorSlug;
@@ -23,6 +24,6 @@ public class ProductDetail {
     public static ProductDetail converter(ProductDetailEntity entity,String image,Integer discount){
         return ProductDetail.builder().id(entity.getId()).name(entity.getProduct().getName()).productSlug(entity.getProduct().getSlug())
                 .color(entity.getColor().getName()).colorSlug(entity.getColor().getSlug()).size(entity.getSize().getName()).image(image)
-                .price(entity.getProduct().getPrice()).discount(discount).build();
+                .price(entity.getProduct().getPrice()).discount(discount).productId(entity.getProduct().getId()).build();
     }
 }

@@ -1,5 +1,6 @@
 package com.dth.spring_boot_shoe.request;
 
+import com.dth.spring_boot_shoe.entity.ProductBillEntity;
 import com.dth.spring_boot_shoe.entity.ProductReceiptEntity;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,8 @@ import java.math.BigDecimal;
 public class ProductExportRequest {
     private Integer no;
     private String productName;
+    private String color;
+    private Integer size;
     private Integer quantity;
     private BigDecimal price;
     private BigDecimal totalPrice;
@@ -24,5 +27,12 @@ public class ProductExportRequest {
         BigDecimal q = new BigDecimal(quantity);
         return ProductExportRequest.builder().no(index).productName(entity.getProductDetail().getProduct().getName())
                 .price(entity.getProductDetail().getProduct().getPrice()).quantity(quantity).totalPrice(entity.getProductDetail().getProduct().getPrice().multiply(q)).build();
+    }
+
+    public static ProductExportRequest converterBill(Integer index, ProductBillEntity entity, Integer quantity){
+        BigDecimal q = new BigDecimal(quantity);
+        return ProductExportRequest.builder().no(index).productName(entity.getProductDetail().getProduct().getName())
+                .price(entity.getProductDetail().getProduct().getPrice()).quantity(quantity).totalPrice(entity.getProductDetail().getProduct().getPrice().multiply(q))
+                .color(entity.getProductDetail().getColor().getName()).size(entity.getProductDetail().getSize().getName()).build();
     }
 }

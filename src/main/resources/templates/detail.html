@@ -135,7 +135,7 @@
               <p th:text="${cmt.getContent()}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit optio magnam officia rerum
                 eaque modi quidem. Tempora animi recusandae, nemo laborum mollitia exercitationem
                 nostrum facere, eos id asperiores labore est?</p>
-              <span th:text="${cmt.getCreatedAt()}">2021-11-20</span>
+              <span th:text="${#temporals.format(cmt.createdAt,'dd-MM-yyyy HH:mm')}">2021-11-20</span>
               <span> / </span>
               <span th:text="${cmt.user.fullName}">Dương Tuấn Hiếu</span>
 
@@ -178,7 +178,7 @@
         </div>
         <span id="errorSize"></span>
         <div class="explain-size">
-          <a href=""><i class="fas fa-ruler-horizontal"></i>Bảng kích cỡ</a>
+          <a href="#" data-toggle="modal" data-target="#pickSize"><i class="fas fa-ruler-horizontal"></i>Bảng kích cỡ</a>
         </div>
         <div class="buy-prod">
           <a onclick="addCart(this)">Thêm vào giỏ hàng <i class="far fa-long-arrow-right"></i></a>
@@ -199,6 +199,16 @@
       </div>
     </div>
 
+  </div>
+  <div class="modal fade" id="pickSize">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <button type="button" class="close-modal" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+        <div class="modal-body form-info-detail">
+          <img src="/assets/img/pick_size.jpg" alt="" style="width:100%">
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 <th:block id="jsContent">

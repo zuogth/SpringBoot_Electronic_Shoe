@@ -25,6 +25,8 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
     $scope.btnSaveDis=false;
     $scope.btnSave=true;
     $scope.addDis=true;
+    $scope.labelDis = true;
+    $scope.btnUpdate = false;
     init();
     function init(){
 
@@ -34,6 +36,8 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
         $scope.btnSaveDis=false;
         $scope.btnSave=true;
         $scope.addDis=true;
+        $scope.labelDis = true;
+        $scope.btnUpdate = false;
         $scope.events=[];
         $scope.event={};
         return EventService.getAll($scope.currentPage).then(function (_data){
@@ -51,6 +55,7 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
         $scope.listCh=false;
         $scope.btnSaveDis=false;
         $scope.addDis=true;
+        $scope.btnUpdate = false;
         $scope.event={};
         resetValid();
         $(".inputs-discount").html('');
@@ -78,11 +83,35 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
         $scope.listCh=true;
         $scope.btnSaveDis=false;
         $scope.addDis=false;
+        $scope.btnUpdate = false;
         return EventService.getById(id).then(function (_data){
             $scope.event = _data.data.event;
             $scope.productDetailDiscounts = _data.data.products;
         },function (error){
             showErr(error);
+        })
+    }
+
+    $scope.getByIdEdit=function (index){
+        $scope.event = $scope.events[index];
+        $scope.event.startAt = new Date($scope.event.startAt);
+        $scope.event.endAt = new Date($scope.event.endAt);
+        $scope.listPr=false;
+        $scope.formAdd=true;
+        $scope.listCh=false;
+        $scope.btnSaveDis=false;
+        $scope.btnSave = false;
+        $scope.addDis=false;
+        $scope.labelDis = false;
+        $scope.btnUpdate = true;
+    }
+
+    $scope.update=function (){
+        return submitFormEdit().then(function (_data){
+            $scope.message = {content: _data.message, show: true};
+            init()
+        },function (error){
+            showErrValid(error,'');
         })
     }
 
@@ -92,12 +121,10 @@ app.controller('EventController',['$scope','EventService',function ($scope,Event
         $scope.listCh=false;
         $scope.btnSaveDis=false;
         $scope.addDis=false;
+        $scope.btnUpdate = false;
         resetValid();
-        return EventService.getById(id).then(function (_data){
-            $scope.event=_data.data;
-            $scope.discountItems = _data.data.discounts;
-            $scope.event.startAt=new Date($scope.event.startAt);
-            $scope.event.endAt=new Date($scope.event.endAt);
+        return EventService.getDiscounts(id).then(function (_data){
+            $scope.discountItems = _data.data;
         },function (error){
             showErr(error);
         })
@@ -284,6 +311,19 @@ function submitForm(){
     return $.ajax({
         url:"/api/admin/events",
         type:"POST",
+        data:data,
+        cache:false,
+        contentType:false,
+        processData:false
+    })
+}
+
+function submitFormEdit(){
+    let form=document.getElementById("formAddDis");
+    let data=new FormData(form);
+    return $.ajax({
+        url:"/api/admin/events",
+        type:"PUT",
         data:data,
         cache:false,
         contentType:false,

@@ -9,7 +9,7 @@ html {
     font-size: 16px;
 }
 /*loader*/
-.preloader-cus{
+.preloader-cus,.preloader-cus2{
     background-color: rgb(238, 237, 237);
     display: flex;
     height: 100%;
@@ -19,9 +19,15 @@ html {
     z-index: 1100;
     transition: height 1s;
 }
+.preloader-cus2{
+    background-color: rgba(238, 237, 237, 0.55);
+}
 .non-active-loader{
     height: 0px;
     transition-timing-function: ease;
+}
+.non-active-loader2{
+    display: none;
 }
 .non-active-loader img{
     display: none;

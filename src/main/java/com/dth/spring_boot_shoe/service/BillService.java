@@ -40,6 +40,8 @@ public interface BillService {
 
     List<BillDTO> findAllHisOrderByUser(Long userId);
 
+    List<BillDTO> findAllCancelBillByUser(Long userId);
+
     void changePaying();
 
     //admin
@@ -48,6 +50,8 @@ public interface BillService {
 
     List<BillDetailResponse> findByBillId(Long billId);
 
-    void updateBill(Long id,String status);
+    void updateBill(Long id,String status,HttpServletRequest request);
+
+    String ExportBill(Long billId);
 
 }

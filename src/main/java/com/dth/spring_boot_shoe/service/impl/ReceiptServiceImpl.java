@@ -61,6 +61,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Override
     public Map<String,Object> findReceiptDetailById(Long id, int page) {
         Map<String,Object> map=new HashMap<>();
+        ReceiptEntity receipt = receiptRepository.findById(id).orElseThrow(()->new ApiRequestException("Hóa đơn không tồn tại"));
         Pageable pageable=PageRequest.of(page-1,10);
         Page<ProductReceiptEntity> entities=productReceiptRepository.findByReceiptIdAndGroupByProductAndColor(id,pageable);
         map.put("totalItemChs",entities.getTotalElements());
@@ -70,7 +71,10 @@ public class ReceiptServiceImpl implements ReceiptService {
                 productReceiptRepository.findSumReceiptByReceiptIdAndGroupByColor(id,
                         e.getProductDetail().getColor().getId(),
                         e.getProductDetail().getProduct().getId()))));
+        Integer quantity = productReceiptRepository.findQuantityTotal(id);
         map.put("receiptDetails",responses);
+        map.put("receipt",receipt);
+        map.put("quantity",quantity);
         return map;
     }
 

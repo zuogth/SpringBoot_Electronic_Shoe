@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +34,20 @@ public class BillsAPI {
         return new ResponseEntity<>(billService.findByBillId(id),HttpStatus.OK);
     }
 
+    @GetMapping("/export/{id}")
+    public ResponseEntity<?> export(@PathVariable("id") Long id){
+        Map<String,Object> map = new HashMap<>();
+        map.put("pdf",billService.ExportBill(id));
+        return new ResponseEntity<>(map,HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiException> update(@PathVariable("id") Long id,
-                                               @RequestParam("status") String status){
-        billService.updateBill(id,status);
+                                               @RequestParam("status") String status,
+                                               HttpServletRequest request){
+        billService.updateBill(id,status,request);
         return new ResponseEntity<>(MessageAdmin.UPDATED_SUCCESS,HttpStatus.OK);
     }
+
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 public class EventRequest {
+    private Long id;
     @NotBlank(message = "Tên sự kiện không được bỏ trống")
     private String name;
     private String description;

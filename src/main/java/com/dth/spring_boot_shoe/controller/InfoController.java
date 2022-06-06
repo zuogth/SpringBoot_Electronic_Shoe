@@ -31,9 +31,11 @@ public class InfoController {
         UserEntity user=userService.profile();
         List<BillDTO> dtos=billService.findAllBillByUser(user.getId());
         List<BillDTO> hisOrder=billService.findAllHisOrderByUser(user.getId());
+        List<BillDTO> cancelOrder=billService.findAllCancelBillByUser(user.getId());
         model.addAttribute("user",user);
         model.addAttribute("bills",dtos);
         model.addAttribute("orders",hisOrder);
+        model.addAttribute("cancelOrders",cancelOrder);
         return "info";
     }
 

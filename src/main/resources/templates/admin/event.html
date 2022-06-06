@@ -89,6 +89,7 @@
                             </td>
                             <td class="option-table">
                                 <a href="#" class="btn" ng-click="getById(event.id)"><i class="fas fa-info"></i></a>
+                                <i class="far fa-edit btn" ng-click="getByIdEdit($index)"></i>
                                 <i class="fas fa-trash-alt btn" ng-click="delete($index)"></i>
                             </td>
                         </tr>
@@ -146,11 +147,12 @@
                             </div>
                         </div>
                     </div>
-                    <div style="display: flex;">
+                    <input type="text" class="form-control" ng-model="event.id" name="id" hidden>
+                    <div style="display: flex;" ng-show="labelDis">
                         <label>Các mốc giảm giá (%):</label>
                         <div style="display: flex;" ng-show="addDis">
-                            <input type="number" class="form-control" style="width: 3rem;" id="valueDisAdd">
-                            <button type="button" class="btn btn-primary" onclick="addDiscount()"><i class="fas fa-plus"></i></button>
+                            <input type="number" class="form-control" style="width: 3rem;" ng-model="dis" name="valueDisAdd" id="valueDisAdd">
+                            <button type="button" class="btn btn-primary" ng-disabled="formAddDis.valueDisAdd.$error.number" onclick="addDiscount()"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                     <div class="inputs-discount" ng-show="addDis">
@@ -228,7 +230,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <button type="button" class="btn btn-default" ng-click="update()" ng-show="btnUpdate">Ghi</button>
                     <button type="button" class="btn btn-default" ng-click="process()" ng-show="btnSave">Ghi</button>
                     <button type="button" class="btn btn-default" ng-click="processDis()" ng-show="btnSaveDis">Lưu danh sách áp dụng</button>
                 </form>

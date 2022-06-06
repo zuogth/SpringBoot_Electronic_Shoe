@@ -10,12 +10,17 @@
 </head>
 <body>
 <section>
+  <div class="alert-noti" style="display: none">
+    <i class="fas fa-times close-alert"></i>
+    <span>Tài khoản hoặc mật khẩu không chính xác.</span>
+  </div>
   <div class="main-info container-cus">
     <div class="options-info">
       <ul>
         <li id="info-profile">Thông tin cá nhân</li>
         <li id="info-order">Đơn đặt hàng</li>
         <li id="info-history-order">Lịch sử đặt hàng</li>
+        <li id="info-cancel-order">Đơn hàng hủy</li>
       </ul>
     </div>
     <div class="info-profile main-info-item">
@@ -41,13 +46,14 @@
       <h2>Đơn đặt hàng của bạn</h2>
       <h5 th:unless="${bills.size()>0}">Bạn không có đơn đặt hàng nào</h5>
       <div class="order-list-items" th:if="${bills.size()>0}">
-        <div class="order-item" th:each="bill:${bills}">
+        <div class="order-item" th:each="bill:${bills}" th:id="'order-item-'+${bill.id}">
           <div class="info-item">
             <h4>Thông tin đơn</h4>
             <p>Tổng tiền: <i th:text="${#numbers.formatDecimal(bill.totalPrice, 0, 'POINT', 0, 'POINT')}+' VND'">10.500.000 VND</i> | Phí: <i>Miễn phí</i></p>
             <p>Ngày đặt: <i th:text="${#temporals.format(bill.createdAt,'dd-MM-yyyy HH:mm')}">12/3/2021</i></p>
             <p>Trạng thái đơn hàng: <i th:text="${bill.status=='waiting'?'Chờ xác nhận':'Đang giao'}">Đang giao</i></p>
             <p>Địa chỉ: <i th:text="${bill.address}">Hà Nội</i></p>
+            <a href="#" th:onclick="|cancelBill('${bill.id}')|" th:if="${bill.status=='waiting'}">Hủy</a>
           </div>
           <div class="list-item">
             <div class="prod-item-order" th:each="prod:${bill.dtos}">
@@ -61,6 +67,9 @@
                 <p th:text="${#numbers.formatDecimal(prod.detail.price, 0, 'POINT', 0, 'POINT')}+' VND'">2.500.000 VND</p>
               </div>
             </div>
+          </div>
+          <div class="loader-order justify-content-center align-items-center non-active-loader-order" th:id="'loader-order-'+${bill.id}">
+            <img src="/assets/img/loader2.gif" alt="loading" height="100" width="100">
           </div>
         </div>
       </div>
@@ -88,7 +97,35 @@
                 <span>Cỡ: </span><span th:text="${prod.detail.size}">40</span> / <span>Số lượng: </span><span th:text="${prod.quantity}">1</span>
                 <p th:text="${#numbers.formatDecimal(prod.detail.price, 0, 'POINT', 0, 'POINT')}+' VND'">2.500.000 VND</p>
                 <a class="ratting" th:if="${prod.detail.rate}" >Đã đánh giá</a>
-                <a class="ratting" th:unless="${prod.detail.rate}" th:id="'rate-'+${prod.detail.id}" data-toggle="modal" data-target="#ratting-prod" th:data-id="${prod.detail.id}">Đánh giá</a>
+                <a class="ratting" th:unless="${prod.detail.rate}" th:id="'rate-'+${prod.detail.id}" data-toggle="modal" data-target="#ratting-prod" th:data-id="${prod.detail.productId}">Đánh giá</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-cancel-order main-info-item">
+      <h2>Đơn hàng đã hủy của bạn</h2>
+      <h5 th:unless="${cancelOrders.size()>0}">Bạn chưa có đơn hàng nào hủy</h5>
+      <div class="order-list-items" th:if="${cancelOrders.size()>0}">
+        <div class="order-item" th:each="cancel:${cancelOrders}">
+          <div class="info-item">
+            <h4>Thông tin đơn</h4>
+            <p>Tổng tiền: <i th:text="${#numbers.formatDecimal(cancel.totalPrice, 0, 'POINT', 0, 'POINT')}+' VND'">10.500.000 VND</i> | Phí: <i>Miễn phí</i></p>
+            <p>Ngày đặt: <i th:text="${#temporals.format(cancel.createdAt,'dd-MM-yyyy HH:mm')}">12/3/2021</i></p>
+            <p>Ngày hủy: <i th:text="${#temporals.format(cancel.modifiedAt,'dd-MM-yyyy HH:mm')}">12/10/2021</i></p>
+            <p>Địa chỉ: <i th:text="${cancel.address}">Hà Nội</i></p>
+          </div>
+          <div class="list-item">
+            <div class="prod-item-order" th:each="prod:${cancel.dtos}">
+              <div class="item-order-l">
+                <img th:src="${prod.detail.image}" alt="">
+              </div>
+              <div class="item-order-r">
+                <p th:text="${prod.detail.name}">Giày Duramo SL</p>
+                <p th:text="${prod.detail.color}">Black</p>
+                <span>Cỡ: </span><span th:text="${prod.detail.size}">40</span> / <span>Số lượng: </span><span th:text="${prod.quantity}">1</span>
+                <p th:text="${#numbers.formatDecimal(prod.detail.price, 0, 'POINT', 0, 'POINT')}+' VND'">2.500.000 VND</p>
               </div>
             </div>
           </div>

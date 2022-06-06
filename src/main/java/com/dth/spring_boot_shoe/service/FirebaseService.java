@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FirebaseService {
@@ -45,6 +43,20 @@ public class FirebaseService {
                 .build();
         storage.create(blobInfo,file.getInputStream());
         return imageName;
+    }
+
+    public String upLoadFileText(String base64) throws IOException {
+        byte[] decoder = Base64.getDecoder().decode(base64);
+        String fileName = UUID.randomUUID().toString()+".pdf";
+        Map<String, String> map = new HashMap<>();
+        map.put("firebaseStorageDownloadTokens", fileName);
+        BlobId blobId = BlobId.of("spring-boot-shoe.appspot.com", "export/"+fileName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setMetadata(map)
+                .setContentType("application/pdf")
+                .build();
+        storage.create(blobInfo,decoder);
+        return fileName;
     }
 
     public void deleteImage(String imageName,String folderName){
