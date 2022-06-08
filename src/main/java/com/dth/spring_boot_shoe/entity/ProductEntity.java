@@ -32,6 +32,9 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "properties")
+    private String properties;
+
     @Column(name = "status")
     private Integer status;
 }
